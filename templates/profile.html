@@ -11,12 +11,15 @@
 
 	<!-- Embedded CSS, overwrites external CSS -->
     <style type="text/css">
+		html, body {
+			background-color: black;
+		}
     </style>
 
   </head>
   
   <body>
-	<h1>Game Page</h1>
+	<p class="title"> Login Successful! Hello {{ session['username'] }}.</p>
   </body>
   
 </html>

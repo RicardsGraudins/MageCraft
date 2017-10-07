@@ -11,11 +11,45 @@
 
 	<!-- Embedded CSS, overwrites external CSS -->
     <style type="text/css">
+		html, body {
+			background-color: black;
+		}
     </style>
 
   </head>
   
   <body>
+  
+	<!-- Form groups for login -->
+	<div class="containerLogin">
+		<div class="row">
+			<div class="col col-offset">
+				<form method=POST action="{{ url_for('login') }}">
+					<div class="form-group">
+						<label for="exampleInputEmail1"><span class="content2">Username</span></label>
+						<input type="text" class="form-control" name="username" placeholder="Username">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1"><span class="content2">Password</span></label>
+						<input type="password" class="form-control" name="pass" placeholder="Password">
+					</div>
+					<button type="submit" class="button2">Log In</button>
+				</form>
+				<br>
+				<div>
+				<!-- Flashing message, if message exists and loop -->
+				{% with messages = get_flashed_messages() %}
+					{% if messages %}
+						{% for message in messages %}
+							<h3 class="content2"> {{ message }} </h3>
+						{% endfor %}
+					{% endif %}
+				{% endwith %}
+					<p class="content2"> Don't have an account? <a class="link4" href="{{ url_for('register') }}">Sign up here</a>. </p>
+				</div>
+			</div>
+		</div>
+	</div>
   </body>
   
 </html>

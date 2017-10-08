@@ -170,3 +170,33 @@
    text-align: -o-center;
    text-align: -ms-center;
 }
+
+.menu {
+	position: absolute;
+	top: 400px;
+	left: 900px;
+	font-weight:bold;
+	color:#FFFFFF;
+	font-family:comic sans, comic sans ms, cursive, verdana, arial, sans-serif;
+	font-size: 30px;
+	cursor: default;
+	display: block;
+	text-shadow:1px 1px 1px rgba(46,39,26,1);
+}
+
+table, td, th {    
+	text-align: left;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	padding: 15px;
+}
+
+td:hover {
+	color: #FFD700;
+}

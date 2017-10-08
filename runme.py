@@ -17,6 +17,10 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def index():
+	return render_template('home.html')
+	
+@app.route('/game')
+def game():
 	return render_template('game.html')
 	
 class RegisterForm(FlaskForm):

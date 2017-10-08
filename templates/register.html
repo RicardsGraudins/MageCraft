@@ -62,6 +62,13 @@
 						</ul>
 						{{ form.email.label(class_="content2") }}
 						{{ form.email(class_="form-control") }}
+						<br>
+						{{ form.recaptcha(class_="g-recaptcha") }}
+						<ul>
+							{% for error in form.recaptcha.errors %}
+								<li class="content3">{{ error }}</li>
+							{% endfor %}
+						</ul>
 					</div>
 					<button type="submit" value="Submit" class="button2">Register</button>
 				</form>

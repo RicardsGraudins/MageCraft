@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, flash, url_for
 from flask_pymongo import PyMongo
 import bcrypt
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length, Email
 
@@ -9,6 +9,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecret'
 app.config['MONGO_DBNAME'] = 'magecraft_login'
 app.config['MONGO_URI'] = 'mongodb://Richard:987654321@ds040637.mlab.com:40637/magecraft_login'
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LfeojMUAAAAABjPzNB2ylVl-YZ0AmLG7-vdhB9F'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6LfeojMUAAAAACJFOQTATc4oawWKHsdr9qv5L8Aa'
+app.config['TESTING'] = False
 
 mongo = PyMongo(app)
 
@@ -20,6 +23,7 @@ class RegisterForm(FlaskForm):
 	username = StringField('Username', validators=[InputRequired('Username is required!'), Length(min=4, max=12, message='Must be between 4 and 12 characters.')])
 	password = PasswordField('Password', validators=[InputRequired('Password is required!'), Length(min=4, max=12, message='Must be between 4 and 12 characters.')])
 	email = StringField('Email', validators=[InputRequired('Email address is required!'), Email('A valid email is required!')])
+	recaptcha = RecaptchaField()
 
 	
 @app.route('/register', methods=['POST', 'GET'])

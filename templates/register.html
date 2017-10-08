@@ -19,28 +19,54 @@
   </head>
   
   <body>
-	
-	<!-- Form groups for registration -->
+  <!-- Form groups for registration -->
 	<div class="containerLogin">
 		<div class="row">
 			<div class="col col-offset">
 				<form method=POST action="{{ url_for('register') }}">
 					<div class="form-group">
-						<label for="InputUsername"><span class="content2">Username</span></label>
-						<input type="text" class="form-control" name="username" placeholder="Username">
+						{{ form.csrf_token }}
+						<ul>
+							{% for error in form.username.errors %}
+								<li class="content3">{{ error }}</li>
+							{% endfor %}
+						</ul>
+						<ul>
+						{% with messages = get_flashed_messages() %}
+							{% if messages %}
+								{% for message in messages %}
+									<li class="content3"> {{ message }} </li>
+								{% endfor %}
+							{% endif %}
+						{% endwith %}
+						</ul>
+						{{ form.username.label(class_="content2") }}
+						{{ form.username(class_="form-control") }}
 					</div>
+					
 					<div class="form-group">
-						<label for="InputPassword"><span class="content2">Password</span></label>
-						<input type="password" class="form-control" name="pass" placeholder="Password">
+						<ul>
+							{% for error in form.password.errors %}
+								<li class="content3">{{ error }}</li>
+							{% endfor %}
+						</ul>
+						{{ form.password.label(class_="content2") }}
+						{{ form.password(class_="form-control") }}
 					</div>
+					
 					<div class="form-group">
-						<label for="InputEmail"><span class="content2">Email</span></label>
-						<input type="text" class="form-control" name="email" placeholder="Email@gmail.com">
+						<ul>
+							{% for error in form.email.errors %}
+								<li class="content3">{{ error }}</li>
+							{% endfor %}
+						</ul>
+						{{ form.email.label(class_="content2") }}
+						{{ form.email(class_="form-control") }}
 					</div>
-					<button type="submit" class="button2">Register</button>
+					<button type="submit" value="Submit" class="button2">Register</button>
 				</form>
 				<br>
-					<p class="content2"> Already have an account? <a class="link4" href="{{ url_for('profile') }}">Sign in here</a>. </p>
+					<p class="content2"> Already have an account? <a class="link4" href="{{ url_for('profile') }}">Sign in here</a>.</p>
 			</div>
 		</div>
 	</div>

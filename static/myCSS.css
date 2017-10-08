@@ -141,6 +141,18 @@
 	text-shadow:1px 1px 1px rgba(46,39,26,1);
 }
 
+/* WTForms */
+.content3 {
+	color:#990F0F;
+	font-weight: bold;
+	font-size: 100%;
+	font-family:comic sans, comic sans ms, cursive, verdana, arial, sans-serif;
+	text-align:center;
+	word-spacing:2pt;
+	text-shadow:1px 1px 1px rgba(46,39,26,1);
+	list-style-type: none;
+}
+
 .containerLogin {
 	padding-right:15px;
 	padding-left:15px;

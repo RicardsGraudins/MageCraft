@@ -4,6 +4,7 @@ import bcrypt
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length, Email
+from flask_socketio import SocketIO, send
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecret'
@@ -12,6 +13,7 @@ app.config['MONGO_URI'] = 'mongodb://Richard:987654321@ds040637.mlab.com:40637/m
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LfeojMUAAAAABjPzNB2ylVl-YZ0AmLG7-vdhB9F'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LfeojMUAAAAACJFOQTATc4oawWKHsdr9qv5L8Aa'
 app.config['TESTING'] = False
+socketio = SocketIO(app)
 
 mongo = PyMongo(app)
 
@@ -28,6 +30,11 @@ class RegisterForm(FlaskForm):
 	password = PasswordField('Password', validators=[InputRequired('Password is required!'), Length(min=4, max=12, message='Must be between 4 and 12 characters.')])
 	email = StringField('Email', validators=[InputRequired('Email address is required!'), Email('A valid email is required!')])
 	recaptcha = RecaptchaField()
+	
+@socketio.on('message')
+def handleMessage(msg):
+	print('Message: ' + msg)
+	send(msg, broadcast=True)
 
 	
 @app.route('/register', methods=['POST', 'GET'])
@@ -71,4 +78,5 @@ def profile():
     return render_template('login.html')
 
 if __name__ == "__main__":
-	app.run(debug=True)
+	#app.run(debug=True)
+	socketio.run(app)

@@ -31,6 +31,11 @@ class RegisterForm(FlaskForm):
 	email = StringField('Email', validators=[InputRequired('Email address is required!'), Email('A valid email is required!')])
 	recaptcha = RecaptchaField()
 	
+class NewPasswordForm(FlaskForm):
+	oldPassword = PasswordField('Current Password', validators=[InputRequired('Enter your old password!')])
+	newPassword = PasswordField('New Password', validators=[InputRequired('Enter new password!'), Length(min=4, max=12, message='Must be between 4 and 12 characters.')])
+	confirmNewPassword = PasswordField('Confirm New Password', validators=[InputRequired('Re-enter your new password!'), Length(min=4, max=12, message='Must be between 4 and 12 characters.')])
+	
 @socketio.on('message')
 def handleMessage(msg):
 	print('Message: ' + msg)
@@ -80,17 +85,19 @@ def profile():
 @app.route('/changePassword', methods=['GET', 'POST'])
 def changePassword():
 	if 'username' in session:
+		passwordForm = NewPasswordForm()
 		if request.method == 'POST':
 			users = mongo.db.users
 			user = users.find_one({'name' : session['username']})
 			if bcrypt.hashpw(request.form['oldPassword'].encode('utf-8'), user['password']) == user['password']:
 				if request.form['newPassword'] == request.form['confirmNewPassword']:
-					newHashpass = bcrypt.hashpw(request.form['newPassword'].encode('utf-8'), bcrypt.gensalt())
-					user['password'] = newHashpass
-					users.save(user)
-					return('Password sucessfully changed, you can now login using your new password.')
+					if passwordForm.validate_on_submit():
+						newHashpass = bcrypt.hashpw(request.form['newPassword'].encode('utf-8'), bcrypt.gensalt())
+						user['password'] = newHashpass
+						users.save(user)
+						return('Password sucessfully changed, you can now login using your new password.')
 			flash('Invalid data entered!')
-		return render_template('changePassword.html')
+		return render_template('changePassword.html', passwordForm=passwordForm)
 	
 	return redirect(url_for('profile'))
 

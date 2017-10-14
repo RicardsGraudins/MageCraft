@@ -76,6 +76,23 @@ def profile():
         return render_template('profile.html')
 
     return render_template('login.html')
+	
+@app.route('/changePassword', methods=['GET', 'POST'])
+def changePassword():
+	if 'username' in session:
+		if request.method == 'POST':
+			users = mongo.db.users
+			user = users.find_one({'name' : session['username']})
+			if bcrypt.hashpw(request.form['oldPassword'].encode('utf-8'), user['password']) == user['password']:
+				if request.form['newPassword'] == request.form['confirmNewPassword']:
+					newHashpass = bcrypt.hashpw(request.form['newPassword'].encode('utf-8'), bcrypt.gensalt())
+					user['password'] = newHashpass
+					users.save(user)
+					return('Password sucessfully changed, you can now login using your new password.')
+			flash('Invalid data entered!')
+		return render_template('changePassword.html')
+	
+	return redirect(url_for('profile'))
 
 if __name__ == "__main__":
 	#app.run(debug=True)

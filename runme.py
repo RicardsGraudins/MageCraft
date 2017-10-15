@@ -45,6 +45,10 @@ def index():
 @app.route('/game')
 def game():
 	return render_template('game.html')
+	
+@app.route('/FAQ')
+def faq():
+	return render_template('FAQ.html')
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -104,7 +108,8 @@ def changePassword():
 					emailMessage = Message(body = 'Your password has been changed.\nIf this was not you follow this link to reset your password: ',
 					subject = 'Changed Password', sender = 'testing984566@gmail.com', recipients = [emailToString])
 					mail.send(emailMessage)
-					return render_template('profile.html', displayMessage = displayMessage)
+					session.pop('username', None)
+					return render_template('FAQ.html', displayMessage = displayMessage)
 				flash('Wrong password!')
 		return render_template('changePassword.html', passwordForm=passwordForm)
 	return redirect(url_for('profile'))
@@ -125,9 +130,11 @@ def resetPassword():
 			emailPassword = Message(body = 'Your password has been sucessfully reset.\nYour new password is: ' + resetPassword,
 			subject = 'Reset Password', sender = 'testing984566@gmail.com', recipients = [emailToString])
 			mail.send(emailPassword)
-			flash('An email has been sent to the registered email address of the username that was entered.')
-		displayMessage = 'That user does not exist.'
-		return render_template('resetPassword.html', displayMessage = displayMessage)
+			displayMessage = 'An email has been sent to the registered email address of the username that was entered.'
+			if session:
+				session.pop('username', None)
+			return render_template('FAQ.html', displayMessage = displayMessage)
+		flash('That username does not exist.')
 	return render_template('resetPassword.html')
 
 if __name__ == "__main__":

@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request, session, redirect, flash, url_for
 from flask_pymongo import PyMongo
-import bcrypt
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 from flask_socketio import SocketIO, send
+from flask_mail import Mail, Message
+import bcrypt
+import random
+import string
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecret'
@@ -13,17 +16,11 @@ app.config['MONGO_URI'] = 'mongodb://Richard:987654321@ds040637.mlab.com:40637/m
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LfeojMUAAAAABjPzNB2ylVl-YZ0AmLG7-vdhB9F'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LfeojMUAAAAACJFOQTATc4oawWKHsdr9qv5L8Aa'
 app.config['TESTING'] = False
+app.config.from_pyfile('config.cfg')
 socketio = SocketIO(app)
 
 mongo = PyMongo(app)
-
-@app.route('/')
-def index():
-	return render_template('home.html')
-	
-@app.route('/game')
-def game():
-	return render_template('game.html')
+mail = Mail(app)
 	
 class RegisterForm(FlaskForm):
 	username = StringField('Username', validators=[InputRequired('Username is required!'), Length(min=4, max=12, message='Must be between 4 and 12 characters.')])
@@ -40,8 +37,15 @@ class NewPasswordForm(FlaskForm):
 def handleMessage(msg):
 	print('Message: ' + msg)
 	send(msg, broadcast=True)
-
 	
+@app.route('/')
+def index():
+	return render_template('home.html')
+	
+@app.route('/game')
+def game():
+	return render_template('game.html')
+
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	form = RegisterForm()
@@ -95,10 +99,36 @@ def changePassword():
 					user['password'] = newHashpass
 					users.save(user)
 					displayMessage = "Password sucessfully changed, you can now login using your new password."
+					userEmail = user['email']
+					emailToString = str(userEmail)
+					emailMessage = Message(body = 'Your password has been changed.\nIf this was not you follow this link to reset your password: ',
+					subject = 'Changed Password', sender = 'testing984566@gmail.com', recipients = [emailToString])
+					mail.send(emailMessage)
 					return render_template('profile.html', displayMessage = displayMessage)
 				flash('Wrong password!')
 		return render_template('changePassword.html', passwordForm=passwordForm)
 	return redirect(url_for('profile'))
+	
+@app.route('/resetPassword', methods = ['GET', 'POST'])
+def resetPassword():
+	if request.method == 'POST':
+		users = mongo.db.users
+		user = users.find_one({'name' : request.form['username']})
+		if user:
+			#ref random string https://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits-in-python/23728630#23728630
+			resetPassword = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(12))
+			resetPasswordHash = bcrypt.hashpw(resetPassword.encode('utf-8'), bcrypt.gensalt())
+			user['password'] = resetPasswordHash
+			users.save(user)
+			userEmail = user['email']
+			emailToString = str(userEmail)
+			emailPassword = Message(body = 'Your password has been sucessfully reset.\nYour new password is: ' + resetPassword,
+			subject = 'Reset Password', sender = 'testing984566@gmail.com', recipients = [emailToString])
+			mail.send(emailPassword)
+			flash('An email has been sent to the registered email address of the username that was entered.')
+		displayMessage = 'That user does not exist.'
+		return render_template('resetPassword.html', displayMessage = displayMessage)
+	return render_template('resetPassword.html')
 
 if __name__ == "__main__":
 	#app.run(debug=True)

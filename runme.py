@@ -3,7 +3,7 @@ from flask_pymongo import PyMongo
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, send, emit
 from flask_mail import Mail, Message
 import bcrypt
 import random
@@ -136,6 +136,26 @@ def resetPassword():
 			return render_template('FAQ.html', displayMessage = displayMessage)
 		flash('That username does not exist.')
 	return render_template('resetPassword.html')
+	
+@socketio.on('leftArrow')
+def leftArrow(msg):
+	print(msg)
+	emit('leftArrow', msg, broadcast=True)
+	
+@socketio.on('upArrow')
+def upArrow(msg):
+	print(msg)
+	emit('upArrow', msg, broadcast=True)
+	
+@socketio.on('rightArrow')
+def rightArrow(msg):
+	print(msg)
+	emit('rightArrow', msg, broadcast=True)
+	
+@socketio.on('downArrow')
+def downArrow(msg):
+	print(msg)
+	emit('downArrow', msg, broadcast=True)
 
 if __name__ == "__main__":
 	#app.run(debug=True)

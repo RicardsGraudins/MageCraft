@@ -11,6 +11,9 @@
 
 	<!-- Embedded CSS, overwrites external CSS -->
     <style type="text/css">
+		canvas {
+			background-color: teal;
+		}
     </style>
 
   </head>
@@ -19,7 +22,30 @@
 	<h1>Game Page</h1>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<canvas id="myCanvas" height="800" width="800"></canvas>
 	<script type="text/javascript">
+	//gets a handle to the element with id myCanvas
+	var canvas = document.getElementById("myCanvas");
+	//get a 2D context for the canvas
+	var ctx = canvas.getContext("2d");
+
+	function player(x,y) {
+		this.x = x;
+		this.y = y;
+		
+		this.draw = function(){
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.beginPath();
+			ctx.fillStyle = "orange";
+			ctx.rect(this.x, this.y, 150, 80);
+			ctx.fill();
+		}
+	}
+	
+	p = new player(50, 50);
+	p.draw();
+	
+	
 	$(document).ready(function() {
 		var socket = io.connect('http://127.0.0.1:5000');
 		
@@ -35,6 +61,61 @@
 		$('#sendbutton').on('click', function(){
 			socket.send($('#myMessage').val());
 			$('#myMessage').val('');
+		});
+		
+		window.addEventListener("keypress", function(event) { 
+		  //log the event to the console.
+		  console.log(event);
+		});
+		
+		//keypresses with jQuery
+		$(document.body).on('keydown', function(e) {
+		  console.log(e.which);
+		  switch (e.which) {
+		  //key code for left arrow
+		  case 37:
+			  socket.emit('leftArrow', "pressed left arrow");
+			  break;
+			  
+		  //key code for up arrow
+		  case 38:
+			  socket.emit('upArrow', "pressed up arrow");
+			  break;
+		  //key code for right arrow
+		  case 39:
+			 socket.emit('rightArrow', "pressed right arrow");
+			  break;
+			  
+		  //key code for down arrow
+		  case 40:
+			  socket.emit('downArrow', "pressed down arrow");
+			  break;
+		  }
+		});
+		
+		socket.on('leftArrow', function(msg) {
+			console.log(msg)
+			p.x -= 5;
+			p.draw();
+		});
+
+
+		socket.on('upArrow', function(msg) {
+			console.log(msg)
+			p.y -= 5;
+			p.draw();
+		});
+
+		socket.on('rightArrow', function(msg) {
+			console.log(msg)
+			p.x += 5;
+			p.draw();
+		});
+
+		socket.on('downArrow', function(msg) {
+			console.log(msg)
+			p.y += 5;
+			p.draw();
 		});
 	});
 	</script>

@@ -137,6 +137,11 @@ def resetPassword():
 		flash('That username does not exist.')
 	return render_template('resetPassword.html')
 	
+@app.route('/logout')
+def logout():
+	session.pop('username', None)
+	return redirect(url_for('profile'))
+	
 @socketio.on('leftArrow')
 def leftArrow(msg):
 	print(msg)

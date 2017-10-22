@@ -20,6 +20,16 @@
   
   <body>
 	<p class="title"> Login Successful! Hello {{ session['username'] }}.</p>
+	<!-- Placeholder navigation menu -->
+	<div id='cssmenu'>
+	<ul>
+	   <li class='active'><a href="{{ url_for('profile') }}"><span>Profile</span></a></li>
+	   <li><a href="{{ url_for('game') }}"><span>Play</span></a></li>
+	   <li><a href="{{ url_for('changePassword') }}"><span>Change Password</span></a></li>
+	   <li><a href="{{ url_for('resetPassword') }}"><span>Reset Password</span></a></li>
+	   <li class='last'><a href="{{ url_for('logout') }}"><span>Logout</span></a></li>
+	</ul>
+	</div>
   </body>
   
 </html>

@@ -25,6 +25,12 @@
 			left: 0;
 			bottom: 0;
 		}
+		
+		.placeholderCords {
+			position: fixed;
+			right: 0;
+			bottom: 0;
+		}
     </style>
 
   </head>
@@ -34,11 +40,24 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<canvas id="myCanvas"></canvas>
+	<div class="chatbox">
+		<ul id="messages"></ul>
+		<input type="text" id="myMessage">
+		<button id="sendbutton">Send</button>
+	</div>
+	
+	<div class="placeholderCords">
+		<span id="playerCords" class="content">Move the mouse!</span>
+	</div>
 	<script type="text/javascript">
 	//gets a handle to the element with id myCanvas
 	var canvas = document.getElementById("myCanvas");
 	//get a 2D context for the canvas
 	var ctx = canvas.getContext("2d");
+	
+	var clientCoords;
+	var topPos = canvas.offsetTop;
+	var leftPos = canvas.offsetLeft;
 
 	function player(x,y) {
 		this.x = x;
@@ -56,6 +75,12 @@
 	p = new player(50, 50);
 	p.draw();
 	
+	
+	//hide the default menu that appears when you right click in a browser
+	//disabling this allows me to use right click as a keybind for player movement
+	canvas.oncontextmenu = function (e) {
+		e.preventDefault();
+	};
 	
 	$(document).ready(function() {
 		canvas.width = window.innerWidth;
@@ -77,7 +102,7 @@
 		});
 		
 		window.addEventListener("keypress", function(event) { 
-		  //log the event to the console.
+		  //log the event to the console
 		  console.log(event);
 		});
 		
@@ -107,36 +132,80 @@
 		});
 		
 		socket.on('leftArrow', function(msg) {
-			console.log(msg)
+			console.log(msg);
 			p.x -= 5;
 			p.draw();
 		});
 
 
 		socket.on('upArrow', function(msg) {
-			console.log(msg)
+			console.log(msg);
 			p.y -= 5;
 			p.draw();
 		});
 
 		socket.on('rightArrow', function(msg) {
-			console.log(msg)
+			console.log(msg);
 			p.x += 5;
 			p.draw();
 		});
 
 		socket.on('downArrow', function(msg) {
-			console.log(msg)
+			console.log(msg);
 			p.y += 5;
 			p.draw();
 		});
+		
+		socket.on('movedX', function(data) {
+			console.log("X cord is: "+ data);
+			p.x = data;
+		});
+		
+		socket.on('movedY', function(data) {
+			console.log("Y cord is: "+ data);
+			p.y = data;
+			p.draw();
+		});
+		
+		//track the player's mouse location
+		$( 'canvas' ).mousemove(function( event ) {
+		  //var pageCoords = "( " + event.pageX + ", " + event.pageY + " )";
+		  clientCoords = "( " + event.clientX + ", " + event.clientY + " )";
+		  //$( "#playerCords" ).text( "( event.pageX, event.pageY ) : " + pageCoords );
+		  $( "#playerCords" ).text( "( event.clientX, event.clientY ) : " + clientCoords );
+		});
+		
+		$( 'canvas' ).mousedown(function( event ) {
+			switch (event.which) {
+				case 1:
+					console.log("Left mouse button pressed" + clientCoords);
+					//just draw the object at the new location
+					//p.x = event.clientX - leftPos;
+					//p.y = event.clientY - topPos;
+					//p.draw();
+					//socket.emit('moved', data = (event.clientX));
+					socket.emit('moved', event.clientX - leftPos, event.clientY - topPos);
+					break;
+				case 2:
+					console.log("Middle mouse button pressed" + clientCoords);
+					break;
+				case 3:
+					console.log("Right mouse button pressed" + clientCoords);
+					break;
+				default:
+					console.log("You have a strange mouse!")
+			}
+		});
 	});
+	
+	/*
+	function init(){
+		p.draw();
+	}
+	
+	requestAnimationFrame(init);
+	*/
 	</script>
-	<div class="chatbox">
-		<ul id="messages"></ul>
-		<input type="text" id="myMessage">
-		<button id="sendbutton">Send</button>
-	</div>
   </body>
   
 </html>

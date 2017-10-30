@@ -162,6 +162,14 @@ def downArrow(msg):
 	print(msg)
 	emit('downArrow', msg, broadcast=True)
 
+@socketio.on('moved')
+def moved(xpos, ypos):
+	print(xpos, ypos)
+	#recieving null on clientside if sending both x and y therefore sending them seperately for now
+	#emit('moved', data=(xpos, ypos), broadcast=True)
+	emit('movedX', xpos, broadcast=True)
+	emit('movedY', ypos, broadcast=True)
+
 if __name__ == "__main__":
 	#app.run(debug=True)
 	socketio.run(app)

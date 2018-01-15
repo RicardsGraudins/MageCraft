@@ -10,46 +10,58 @@ import random
 import string
 
 app = Flask(__name__)
+#setting CSRF encryption key
 app.config['SECRET_KEY'] = 'mysecret'
+#setting up connection to mongoDB hosted on mlab
 app.config['MONGO_DBNAME'] = 'magecraft_login'
 app.config['MONGO_URI'] = 'mongodb://Richard:987654321@ds040637.mlab.com:40637/magecraft_login'
+#setting google recaptcha keys
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LfeojMUAAAAABjPzNB2ylVl-YZ0AmLG7-vdhB9F'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LfeojMUAAAAACJFOQTATc4oawWKHsdr9qv5L8Aa'
+#temporarily disabling recaptcha
 app.config['TESTING'] = False
+#loading settings for flask-mail from file config.cfg
 app.config.from_pyfile('config.cfg')
-socketio = SocketIO(app)
 
+#reference variables
+socketio = SocketIO(app)
 mongo = PyMongo(app)
 mail = Mail(app)
 	
+#handles the new user registration form @ register.html - WTForms integrated, validator conditions must be met for successful registration
+#uses recaptcha to prevent unsophisticated bots from creating accounts
 class RegisterForm(FlaskForm):
 	username = StringField('Username', validators=[InputRequired('Username is required!'), Length(min=4, max=12, message='Must be between 4 and 12 characters.')])
 	password = PasswordField('Password', validators=[InputRequired('Password is required!'), Length(min=4, max=12, message='Must be between 4 and 12 characters.')])
 	email = StringField('Email', validators=[InputRequired('Email address is required!'), Email('A valid email is required!')])
 	recaptcha = RecaptchaField()
 	
+#handles the changing password form @ changePassword.html - WTForms integrated, validator conditions must be met to successfully change password
 class NewPasswordForm(FlaskForm):
 	oldPassword = PasswordField('Current Password', validators=[InputRequired('Enter your old password!')])
 	newPassword = PasswordField('New Password', validators=[InputRequired('Enter new password!'), Length(min=4, max=12, message='Must be between 4 and 12 characters.'), EqualTo('confirmNewPassword', message='Passwords must match!')])
 	confirmNewPassword = PasswordField('Confirm New Password')
 	
-@socketio.on('message')
-def handleMessage(msg):
-	print('Message: ' + msg)
-	send(msg, broadcast=True)
-	
+#return home.html
 @app.route('/')
 def index():
 	return render_template('home.html')
 	
+#return game.html
 @app.route('/game')
 def game():
 	return render_template('game.html')
 	
+#return FAQ.html
 @app.route('/FAQ')
 def faq():
 	return render_template('FAQ.html')
 
+#handles new user registration @ register.html
+#if the registration form is valid on submission - check for the entered username in the database, if the username does not exist then add the record to the database
+#password is hashed using bcrypt for security and the hashpass value is stored in the database
+#session is then created and redirects the user to their profile
+#note session is secure and difficult to access due to flask design
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	form = RegisterForm()
@@ -69,6 +81,9 @@ def register():
 		
 	return render_template('register.html', form=form)
 	
+#handles user login @ login.html
+#if the username exists in the database then check if the correct password is entered
+#on success, create session and redirect to profile
 @app.route('/login', methods=['POST'])
 def login():
     users = mongo.db.users
@@ -83,6 +98,7 @@ def login():
     flash('Wrong username/password!')
     return render_template('login.html')
 	
+#if the user is logged in return profile.html otherwise render login.html
 @app.route('/profile')
 def profile():
     if 'username' in session:
@@ -90,6 +106,12 @@ def profile():
 
     return render_template('login.html')
 	
+#handles change password functionality @ changePassword.html
+#user must be logged in otherwise redirect occurs
+#if the password form is valid on submission - find the user in the database and compare the old password to the new password
+#on success, hash the new password and overwrite the password in the database with the new hashed password then save the data
+#send an email to the user notifying them that their password has been changed
+#lastly logout the user and redirect to FAQ.html where a message is displayed
 @app.route('/changePassword', methods=['GET', 'POST'])
 def changePassword():
 	if 'username' in session:
@@ -114,6 +136,11 @@ def changePassword():
 		return render_template('changePassword.html', passwordForm=passwordForm)
 	return redirect(url_for('profile'))
 	
+#handles reset password functionality @ resetPassword.html
+#check if the user exists in the database
+#if the user exists generate a random string, hash it, overwrite the existing password and save the data
+#send the user an email notifying that their password has been reset and include the reset password
+#the user can now log in using the password sent in the email 
 @app.route('/resetPassword', methods = ['GET', 'POST'])
 def resetPassword():
 	if request.method == 'POST':
@@ -137,10 +164,17 @@ def resetPassword():
 		flash('That username does not exist.')
 	return render_template('resetPassword.html')
 	
+#when routed to /logout remove the session(logout the user) and redirect
 @app.route('/logout')
 def logout():
 	session.pop('username', None)
 	return redirect(url_for('profile'))
+	
+#using socketio for multiplayer - work in progress
+@socketio.on('message')
+def handleMessage(msg):
+	print('Message: ' + msg)
+	send(msg, broadcast=True)
 	
 @socketio.on('leftArrow')
 def leftArrow(msg):

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-
+<!-- Login page - allows users to log into their account -->
 <html>
 
   <head>
     <meta charset="UTF-8">
-    <title>Placeholder Title</title>
+    <title>MageCraft Login</title>
 	
 	<!-- External CSS Page -->
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='myCSS.css')}}">
@@ -46,6 +46,7 @@
 					{% endif %}
 				{% endwith %}
 					<p class="content2"> Don't have an account? <a class="link4" href="{{ url_for('register') }}">Sign up here</a>. </p>
+					<p class="content2"> Forgot password? <a class="link4" href="{{ url_for('resetPassword') }}">Reset password here</a>. </p>
 				</div>
 			</div>
 		</div>

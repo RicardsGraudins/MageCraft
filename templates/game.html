@@ -36,20 +36,25 @@
   </head>
   
   <body>
-	<h1>Game Page</h1>
+	<h1>MageCraft</h1>
+	<canvas id="myCanvas"></canvas>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-	<canvas id="myCanvas"></canvas>
-	<div class="chatbox">
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/babylon.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/lava_material.js') }}"></script>
+	<!--script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/game.js') }}"--></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/background.js') }}"></script>
+	<!--div class="chatbox">
 		<ul id="messages"></ul>
 		<input type="text" id="myMessage">
 		<button id="sendbutton">Send</button>
-	</div>
+	</div-->
 	
-	<div class="placeholderCords">
+	<!--div class="placeholderCords">
 		<span id="playerCords" class="content">Move the mouse!</span>
-	</div>
+	</div-->
 	<script type="text/javascript">
+	/*
 	//gets a handle to the element with id myCanvas
 	var canvas = document.getElementById("myCanvas");
 	//get a 2D context for the canvas

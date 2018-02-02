@@ -7,7 +7,7 @@ This project revolves around re-creating the arcade game MageCraft from the Star
 The following image depicts the proposed technologies to be used from the October 2017 presentation:
 
 <p align="center">
-  <img width="875" height="648" src="https://github.com/RicardsGraudins/MageCraft/blob/master/resources/October_Design.png">
+  <img width="875" height="648" src="https://github.com/RicardsGraudins/MageCraft/blob/master/static/resources/images/October_Design.png">
 </p>
 
 ## What is MageCraft:
@@ -83,6 +83,7 @@ Simple commit summary for project supervisor to keep track of progress.
 11. Canvas Tweak + Placeholder Profile Menu: Added menu to profile for testing various functionalities.
 12. Player Movement: Essentially testing SocketIO - multiple users controlling one object.
 13. Documentation: Added documentation for overall project.
+14. BabylonJS Setup & Background Texture: Setting up BabylonJS and adding lava texture background.
 
 ## References:
 * [Flask](http://flask.pocoo.org/docs/0.12/)  
@@ -96,3 +97,4 @@ Simple commit summary for project supervisor to keep track of progress.
 * [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/)
 * [Flask-WTF](https://flask-wtf.readthedocs.io/en/stable/)
 * [Bcrypt](https://en.wikipedia.org/wiki/Bcrypt)
+* [BabylonJS](https://www.babylonjs.com/)

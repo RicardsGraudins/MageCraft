@@ -46,13 +46,20 @@ var lavaBackground = function() {
 	lavaMaterial.fogColor = new BABYLON.Color3(1, 0, 0);
 
 	sphere.material = lavaMaterial;
-
+	
+	//show debug layer
+	//scene.debugLayer.show();
+	
 	return scene;
 }//lavaBackground
 
 var background = lavaBackground();
+var fpsLabel = document.getElementById("fpsLabel");
 
 //render loop 60 fps, just render the scene
 engine.runRenderLoop(function(){
 	background.render();
+	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });
+
+//use sceneOptimiser later if frame issues for low end devices..

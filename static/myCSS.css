@@ -200,3 +200,12 @@ th, td {
 td:hover {
 	color: #FFD700;
 }
+
+/* FPS Label */
+#fpsLabel {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	color: #999;
+	cursor: default;
+}

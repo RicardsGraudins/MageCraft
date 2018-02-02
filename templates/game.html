@@ -12,12 +12,12 @@
 	<!-- Embedded CSS, overwrites external CSS -->
     <style type="text/css">
 		canvas {
-			background-color: teal;
+			background-color: black;
 		}
 		
 		html, body {
 			overflow: hidden;
-			background-color: teal;
+			background-color: black;
 		}
 		
 		.chatbox {
@@ -36,13 +36,15 @@
   </head>
   
   <body>
+	<label id="fpsLabel"></label>
 	<canvas id="myCanvas"></canvas>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/socketio_min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/jquery_min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/babylon.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/lava_material.js') }}"></script>
-	<!--script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/game.js') }}"--></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/background.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/game.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/babylon_inspector_bundle.js') }}"></script>
 	<!--div class="chatbox">
 		<ul id="messages"></ul>
 		<input type="text" id="myMessage">

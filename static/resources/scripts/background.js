@@ -2,6 +2,8 @@
 var canvas = document.getElementById("myCanvas");
 //gets a handle on BABYLON JS
 var engine = new BABYLON.Engine(canvas,true);
+//creates a basic babylon scene object (non-mesh)
+var scene = new BABYLON.Scene(engine);
 
 //hide the default menu that appears when you right click in a browser
 //disabling this allows me to use right click as a keybind for player movement
@@ -10,20 +12,21 @@ canvas.oncontextmenu = function (e) {
 };
 
 //wait until document is ready
-$(document).ready(function() {
+//$(document).ready(function() {
 	//resize the canvas
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-	console.log("Background Ready!")
-});
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+console.log("Background Ready!")
+//});
 
 var lavaBackground = function() {
 	//creates a basic babylon scene object (non-mesh)
-	var scene = new BABYLON.Scene(engine);
+	//var scene = new BABYLON.Scene(engine);
 
 	//creates and positions a free camera (non-mesh)
 	//var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 300, -250), scene);
 	var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 350, -300), scene);
+	//var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 4, BABYLON.Vector3.Zero(), scene);
 	
 	//targets the camera to scene origin
 	camera.setTarget(BABYLON.Vector3.Zero());
@@ -40,8 +43,8 @@ var lavaBackground = function() {
 	
 	//lava material creation
 	var lavaMaterial = new BABYLON.LavaMaterial("lava", scene);	
-	lavaMaterial.noiseTexture = new BABYLON.Texture("static/resources/images/lava.png", scene); //set the bump texture
-	lavaMaterial.diffuseTexture = new BABYLON.Texture("static/resources/images/lava.png", scene); //set the diffuse texture
+	lavaMaterial.noiseTexture = new BABYLON.Texture("static/resources/images/textures/lava.png", scene); //set the bump texture
+	lavaMaterial.diffuseTexture = new BABYLON.Texture("static/resources/images/textures/lava.png", scene); //set the diffuse texture
 	lavaMaterial.speed = 1.5;
 	lavaMaterial.fogColor = new BABYLON.Color3(1, 0, 0);
 
@@ -57,9 +60,9 @@ var background = lavaBackground();
 var fpsLabel = document.getElementById("fpsLabel");
 
 //render loop 60 fps, just render the scene
-engine.runRenderLoop(function(){
-	background.render();
-	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
-});
+//engine.runRenderLoop(function(){
+//	background.render();
+//	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
+//});
 
 //use sceneOptimiser later if frame issues for low end devices..

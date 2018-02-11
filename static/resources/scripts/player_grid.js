@@ -31,6 +31,10 @@ var planeN = "static/resources/images/testing_images/n.png";
 var planeO = "static/resources/images/testing_images/o.png";
 var planeP = "static/resources/images/testing_images/p.png";
 
+//textures
+var customTile0 = "static/resources/images/textures/customTile0.png";
+var customTile1 = "static/resources/images/textures/customTile1.png";
+
 //player grid object
 var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 	this.x = x;
@@ -413,4 +417,209 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			planesP[i].material = hide;
 		}//for
 	}//hideGrid
+	
+	//set the actual textures for the grid
+	this.setTextures = function(){
+		var gridMaterial0 = new BABYLON.StandardMaterial("gridMaterial0", scene);
+		gridMaterial0.diffuseTexture = new BABYLON.Texture(customTile0, scene);
+		
+		//loop over planes array and change material of each element
+		for (i = 0; i < planes.length; i++){
+			planes[i].material = gridMaterial0;
+		}//for
+		
+		//loop over planesA-P arrays and change material of each element
+		for(i = 0; i < planeNum - 2; i++){
+			planesA[i].material = gridMaterial0;
+			planesB[i].material = gridMaterial0;
+			planesC[i].material = gridMaterial0;
+			planesD[i].material = gridMaterial0;
+			planesE[i].material = gridMaterial0;
+			planesF[i].material = gridMaterial0;
+			planesG[i].material = gridMaterial0;
+			planesH[i].material = gridMaterial0;
+			planesI[i].material = gridMaterial0;
+			planesJ[i].material = gridMaterial0;
+			planesK[i].material = gridMaterial0;
+			planesL[i].material = gridMaterial0;
+			planesM[i].material = gridMaterial0;
+			planesN[i].material = gridMaterial0;
+			planesO[i].material = gridMaterial0;
+			planesP[i].material = gridMaterial0;
+		}//for
+	}//setTextures
+	
+	//decrease size of grid over time
+	this.fadeOutAnimation = function(){
+		//change to a different material:
+		//using a different material for each array despite them all using the same texture (customTile1,
+		//easier to change texture for specific array later and need material.alpha = 1 for each array regardless...
+		var gridMaterial1 = new BABYLON.StandardMaterial("gridMaterial1", scene);
+		gridMaterial1.diffuseTexture = new BABYLON.Texture(customTile1, scene);
+		gridMaterial1.alpha = 1;
+		
+		//very picky...
+		//gridMaterial1.diffuseTexture.hasAlpha = true; doesnt do anything...
+		planes[0].material.diffuseTexture.hasAlpha = true; //allows alpha for all..
+		
+		//wait...
+		setTimeout(function() {
+			//change planes elements to gridMaterial1
+			console.log("changing planes to red!");
+			for (i = 0; i < planes.length; i++){
+				planes[i].material = gridMaterial1;
+			}//for
+		}, 1000);
+		
+		
+		//wait...
+		setTimeout(function() {
+			//decrease opacity
+			for (var i = 0; i < 10; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  gridMaterial1.alpha = gridMaterial1.alpha - 0.1;
+				}, 35*i);
+			  })(i);
+			};
+		}, 5000);		
+		
+		//---------------------------------------------------------
+		//change to a different material
+		var gridMaterial2 = new BABYLON.StandardMaterial("gridMaterial2", scene);
+		gridMaterial2.diffuseTexture = new BABYLON.Texture(customTile1, scene);
+		gridMaterial2.alpha = 1;
+		
+		//change elements...
+		setTimeout(function() {
+			for (i = 0; i < 1; i++){
+				planesA[i].material = gridMaterial2;
+				planesB[i].material = gridMaterial2;
+				planesC[i].material = gridMaterial2;
+				planesD[i].material = gridMaterial2;
+				planesE[i].material = gridMaterial2;
+				planesF[i].material = gridMaterial2;
+				planesG[i].material = gridMaterial2;
+				planesH[i].material = gridMaterial2;
+				planesI[i].material = gridMaterial2;
+				planesJ[i].material = gridMaterial2;
+				planesK[i].material = gridMaterial2;
+				planesL[i].material = gridMaterial2;
+				planesM[i].material = gridMaterial2;
+				planesN[i].material = gridMaterial2;
+				planesO[i].material = gridMaterial2;
+				planesP[i].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			//used planesNum - 2 for setting materials for these arrays in setTextures so to select last element planesNum - 3
+			//using planesNum over a specific number since may alter elements of that array in the future however planeNum - 3 will always be the last element..
+			for (i = 0; i < 1; i++){
+				planesA[planeNum - 3].material = gridMaterial2;
+				planesB[planeNum - 3].material = gridMaterial2;
+				planesC[planeNum - 3].material = gridMaterial2;
+				planesD[planeNum - 3].material = gridMaterial2;
+				planesE[planeNum - 3].material = gridMaterial2;
+				planesF[planeNum - 3].material = gridMaterial2;
+				planesG[planeNum - 3].material = gridMaterial2;
+				planesH[planeNum - 3].material = gridMaterial2;
+				planesI[planeNum - 3].material = gridMaterial2;
+				planesJ[planeNum - 3].material = gridMaterial2;
+				planesK[planeNum - 3].material = gridMaterial2;
+				planesL[planeNum - 3].material = gridMaterial2;
+				planesM[planeNum - 3].material = gridMaterial2;
+				planesN[planeNum - 3].material = gridMaterial2;
+				planesO[planeNum - 3].material = gridMaterial2;
+				planesP[planeNum - 3].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			for (i = 1; i < planeNum - 3 ; i++){
+				planesA[i].material = gridMaterial2;
+				planesP[i].material = gridMaterial2;
+			}//for
+		}, 7000);
+		
+		//wait...
+		setTimeout(function() {
+			//decrease opacity
+			for (var i = 0; i < 10; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  gridMaterial2.alpha = gridMaterial2.alpha - 0.1;
+				}, 35*i);
+			  })(i);
+			};
+		}, 8000);
+		//---------------------------------------------------------
+		//change to a different material
+		var gridMaterial3 = new BABYLON.StandardMaterial("gridMaterial3", scene);
+		gridMaterial3.diffuseTexture = new BABYLON.Texture(customTile1, scene);
+		gridMaterial3.alpha = 1;
+		
+		//change elements...
+		setTimeout(function() {
+			for (i = 1; i < 2; i++){
+				//planesA[i].material = gridMaterial3;
+				planesB[i].material = gridMaterial3;
+				planesC[i].material = gridMaterial3;
+				planesD[i].material = gridMaterial3;
+				planesE[i].material = gridMaterial3;
+				planesF[i].material = gridMaterial3;
+				planesG[i].material = gridMaterial3;
+				planesH[i].material = gridMaterial3;
+				planesI[i].material = gridMaterial3;
+				planesJ[i].material = gridMaterial3;
+				planesK[i].material = gridMaterial3;
+				planesL[i].material = gridMaterial3;
+				planesM[i].material = gridMaterial3;
+				planesN[i].material = gridMaterial3;
+				planesO[i].material = gridMaterial3;
+				//planesP[i].material = gridMaterial3;
+			}//for
+			
+			//change elements...
+			//used planesNum - 2 for setting materials for these arrays in setTextures...
+			//planesNum - 4 is 2nd last
+			for (i = 0; i < 1; i++){
+				//planesA[planeNum - 4].material = gridMaterial3;
+				planesB[planeNum - 4].material = gridMaterial3;
+				planesC[planeNum - 4].material = gridMaterial3;
+				planesD[planeNum - 4].material = gridMaterial3;
+				planesE[planeNum - 4].material = gridMaterial3;
+				planesF[planeNum - 4].material = gridMaterial3;
+				planesG[planeNum - 4].material = gridMaterial3;
+				planesH[planeNum - 4].material = gridMaterial3;
+				planesI[planeNum - 4].material = gridMaterial3;
+				planesJ[planeNum - 4].material = gridMaterial3;
+				planesK[planeNum - 4].material = gridMaterial3;
+				planesL[planeNum - 4].material = gridMaterial3;
+				planesM[planeNum - 4].material = gridMaterial3;
+				planesN[planeNum - 4].material = gridMaterial3;
+				planesO[planeNum - 4].material = gridMaterial3;
+				//planesP[planeNum - 4].material = gridMaterial3;
+			}//for
+			
+			//change elements...
+			for (i = 1; i < planeNum - 3 ; i++){
+				planesB[i].material = gridMaterial3;
+				planesO[i].material = gridMaterial3;
+			}//for
+		}, 10000);
+		
+		//wait...
+		setTimeout(function() {
+			//decrease opacity
+			for (var i = 0; i < 10; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  gridMaterial3.alpha = gridMaterial3.alpha - 0.1;
+				}, 35*i);
+			  })(i);
+			};
+		}, 12000);
+		//---------------------------------------------------------
+		//similar bug as material.diffuseColor = new BABYLON.Color3(1,0,0); occuring...
+		//meshes being registered as same material even though they arent...
+	}//fadeOutAnimation
 }//playerGrid

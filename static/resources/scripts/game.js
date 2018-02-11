@@ -9,7 +9,9 @@ var grid = new playerGrid(-200,10,250, 25,25,16);
 //draw the grid
 grid.drawParameter();
 grid.drawGrid();
-grid.testingMaterial();
+//grid.testingMaterial();
+grid.setTextures();
+grid.fadeOutAnimation();
 
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){

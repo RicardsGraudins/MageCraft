@@ -1,0 +1,80 @@
+<!Doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Opacity bug</title>
+		
+		<style>
+			html, body {
+				overflow: hidden;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+		
+			#myCanvas {
+				width: 100%;
+				height: 100%;
+				background-color: black;
+			}
+		</style>
+		
+		<script src="https://cdn.babylonjs.com/babylon.max.js"></script>
+	</head>
+	
+	<body>
+		<canvas id="myCanvas"></canvas>
+		
+		<script>
+			//open with firefox 58 and a different browser:
+			//chrome - 1.0 alpha sphere, 0.1 alpha sphere
+			//firefox 58 - 1.0 alpha sphere, 1.0 alpha sphere
+			var canvas = document.getElementById("myCanvas");
+			var engine = new BABYLON.Engine(canvas,true);
+
+			var createScene = function() {
+				//create scene
+				var scene = new BABYLON.Scene(engine);
+				//create camera
+				var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 4, BABYLON.Vector3.Zero(), scene);
+				//attach control
+				camera.attachControl(canvas, true);
+				//create a light
+				var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+				
+				//create spheres
+				var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, diameterX: 2}, scene);
+				var sphere1 = BABYLON.MeshBuilder.CreateSphere("sphere1", {diameter: 2, diameterX: 2}, scene);
+				
+				//position, side by side
+				sphere.setPositionWithLocalVector(new BABYLON.Vector3(-1.5, 0, 0));
+				sphere1.setPositionWithLocalVector(new BABYLON.Vector3(1.5, 0, 0));
+				
+				//materials
+				var materialA = new BABYLON.StandardMaterial("A", scene);
+				var materialB = new BABYLON.StandardMaterial("B", scene);
+				
+				//materialA.hasAlpha = true;
+				//materialB.hasAlpha = true;
+				
+				//material alpha
+				materialA.alpha = 1;
+				materialB.alpha = 0.1;
+				
+				//assign material to sphere
+				sphere.material = materialA;
+				sphere1.material = materialB;
+				
+				return scene;
+			}//playerGrid
+			
+			var scene = createScene();
+			
+			//render the scene
+			engine.runRenderLoop(function(){
+				scene.render();
+			});
+		</script>
+	</body>
+</html>

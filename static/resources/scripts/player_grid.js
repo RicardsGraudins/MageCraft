@@ -419,6 +419,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 	}//hideGrid
 	
 	//set the actual textures for the grid
+	//currently only using 1 texture - customTile0
 	this.setTextures = function(){
 		var gridMaterial0 = new BABYLON.StandardMaterial("gridMaterial0", scene);
 		gridMaterial0.diffuseTexture = new BABYLON.Texture(customTile0, scene);
@@ -449,23 +450,29 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 		}//for
 	}//setTextures
 	
-	//decrease size of grid over time
+	//decrease size of grid over time:
+	//the following function reduces the size of the grid using a sort of rectangle shape i.e
+	//using the various arrays we take elements off the top,bottom,right and left planes,
+	//each plane "rectangle" turns red before fading and reduces the area where the player can move without taking damage.
+	//left some obsolete commented code that should be not be touched and only exists as a recap for myself in case
+	//I decide to change it a bit.
 	this.fadeOutAnimation = function(){
 		//change to a different material:
-		//using a different material for each array despite them all using the same texture (customTile1,
-		//easier to change texture for specific array later and need material.alpha = 1 for each array regardless...
+		//using a different material for each array despite them all using the same texture (customTile1),
+		//easier to change texture for specific array later and need material.alpha = 1 for each array in any case
 		var gridMaterial1 = new BABYLON.StandardMaterial("gridMaterial1", scene);
 		gridMaterial1.diffuseTexture = new BABYLON.Texture(customTile1, scene);
 		gridMaterial1.alpha = 1;
 		
-		//very picky...
-		//gridMaterial1.diffuseTexture.hasAlpha = true; doesnt do anything...
-		planes[0].material.diffuseTexture.hasAlpha = true; //allows alpha for all..
+		//there are quite a lot of number of bugs with babylonjs to do with materials and textures
+		//when using firefox version 58. Ref github readme, will demonstrate a few bugs @ bugs folder
+		//gridMaterial1.diffuseTexture.hasAlpha = true; //not working as intended for firefox
+		planes[0].material.diffuseTexture.hasAlpha = true; //allows alpha for all materials and planes array in firefox...(and other browsers)
 		
 		//wait...
 		setTimeout(function() {
-			//change planes elements to gridMaterial1
-			console.log("changing planes to red!");
+			//change planes[] elements to gridMaterial1
+			//console.log("Changing planes[] to red texture...");
 			for (i = 0; i < planes.length; i++){
 				planes[i].material = gridMaterial1;
 			}//for
@@ -474,7 +481,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 		
 		//wait...
 		setTimeout(function() {
-			//decrease opacity
+			//decrease opacity of gridMaterial1, smooth animation
 			for (var i = 0; i < 10; i++) {
 			  (function (i) {
 				setTimeout(function () {
@@ -542,7 +549,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 		
 		//wait...
 		setTimeout(function() {
-			//decrease opacity
+			//decrease opacity of gridMaterial2
 			for (var i = 0; i < 10; i++) {
 			  (function (i) {
 				setTimeout(function () {
@@ -560,7 +567,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 		//change elements...
 		setTimeout(function() {
 			for (i = 1; i < 2; i++){
-				//planesA[i].material = gridMaterial3;
+				//planesA[i].material = gridMaterial2;
 				planesB[i].material = gridMaterial3;
 				planesC[i].material = gridMaterial3;
 				planesD[i].material = gridMaterial3;
@@ -575,14 +582,14 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				planesM[i].material = gridMaterial3;
 				planesN[i].material = gridMaterial3;
 				planesO[i].material = gridMaterial3;
-				//planesP[i].material = gridMaterial3;
+				//planesP[i].material = gridMaterial2;
 			}//for
 			
 			//change elements...
 			//used planesNum - 2 for setting materials for these arrays in setTextures...
 			//planesNum - 4 is 2nd last
 			for (i = 0; i < 1; i++){
-				//planesA[planeNum - 4].material = gridMaterial3;
+				//planesA[planeNum - 3].material = gridMaterial2;
 				planesB[planeNum - 4].material = gridMaterial3;
 				planesC[planeNum - 4].material = gridMaterial3;
 				planesD[planeNum - 4].material = gridMaterial3;
@@ -597,7 +604,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				planesM[planeNum - 4].material = gridMaterial3;
 				planesN[planeNum - 4].material = gridMaterial3;
 				planesO[planeNum - 4].material = gridMaterial3;
-				//planesP[planeNum - 4].material = gridMaterial3;
+				//planesP[planeNum - 3].material = gridMaterial2;
 			}//for
 			
 			//change elements...
@@ -609,7 +616,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 		
 		//wait...
 		setTimeout(function() {
-			//decrease opacity
+			//decrease opacity of gridMaterial3
 			for (var i = 0; i < 10; i++) {
 			  (function (i) {
 				setTimeout(function () {
@@ -619,7 +626,266 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			};
 		}, 12000);
 		//---------------------------------------------------------
-		//similar bug as material.diffuseColor = new BABYLON.Color3(1,0,0); occuring...
-		//meshes being registered as same material even though they arent...
+		//change to a different material
+		var gridMaterial4 = new BABYLON.StandardMaterial("gridMaterial4", scene);
+		gridMaterial4.diffuseTexture = new BABYLON.Texture(customTile1, scene);
+		gridMaterial4.alpha = 1;
+		
+		//change elements...
+		setTimeout(function() {
+			for (i = 2; i < 3; i++){
+				//planesA[i].material = gridMaterial2;
+				//planesB[i].material = gridMaterial3;
+				planesC[i].material = gridMaterial4;
+				planesD[i].material = gridMaterial4;
+				planesE[i].material = gridMaterial4;
+				planesF[i].material = gridMaterial4;
+				planesG[i].material = gridMaterial4;
+				planesH[i].material = gridMaterial4;
+				planesI[i].material = gridMaterial4;
+				planesJ[i].material = gridMaterial4;
+				planesK[i].material = gridMaterial4;
+				planesL[i].material = gridMaterial4;
+				planesM[i].material = gridMaterial4;
+				planesN[i].material = gridMaterial4;
+				//planesO[i].material = gridMaterial3;
+				//planesP[i].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			for (i = 0; i < 1; i++){
+				//planesA[planeNum - 3].material = gridMaterial2;
+				//planesB[planeNum - 4].material = gridMaterial3;
+				planesC[planeNum - 5].material = gridMaterial4;
+				planesD[planeNum - 5].material = gridMaterial4;
+				planesE[planeNum - 5].material = gridMaterial4;
+				planesF[planeNum - 5].material = gridMaterial4;
+				planesG[planeNum - 5].material = gridMaterial4;
+				planesH[planeNum - 5].material = gridMaterial4;
+				planesI[planeNum - 5].material = gridMaterial4;
+				planesJ[planeNum - 5].material = gridMaterial4;
+				planesK[planeNum - 5].material = gridMaterial4;
+				planesL[planeNum - 5].material = gridMaterial4;
+				planesM[planeNum - 5].material = gridMaterial4;
+				planesN[planeNum - 5].material = gridMaterial4;
+				//planesO[planeNum - 4].material = gridMaterial3;
+				//planesP[planeNum - 3].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			for (i = 2; i < planeNum - 4 ; i++){
+				planesC[i].material = gridMaterial4;
+				planesN[i].material = gridMaterial4;
+			}//for
+		}, 14000);
+		
+		//wait...
+		setTimeout(function() {
+			//decrease opacity of gridMaterial4
+			for (var i = 0; i < 10; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  gridMaterial4.alpha = gridMaterial4.alpha - 0.1;
+				}, 35*i);
+			  })(i);
+			};
+		}, 16000);
+		//---------------------------------------------------------
+		//change to a different material
+		var gridMaterial5 = new BABYLON.StandardMaterial("gridMaterial5", scene);
+		gridMaterial5.diffuseTexture = new BABYLON.Texture(customTile1, scene);
+		gridMaterial5.alpha = 1;
+		
+		//change elements...
+		setTimeout(function() {
+			for (i = 3; i < 4; i++){
+				//planesA[i].material = gridMaterial2;
+				//planesB[i].material = gridMaterial3;
+				//planesC[i].material = gridMaterial4;
+				planesD[i].material = gridMaterial5;
+				planesE[i].material = gridMaterial5;
+				planesF[i].material = gridMaterial5;
+				planesG[i].material = gridMaterial5;
+				planesH[i].material = gridMaterial5;
+				planesI[i].material = gridMaterial5;
+				planesJ[i].material = gridMaterial5;
+				planesK[i].material = gridMaterial5;
+				planesL[i].material = gridMaterial5;
+				planesM[i].material = gridMaterial5;
+				//planesN[i].material = gridMaterial4;
+				//planesO[i].material = gridMaterial3;
+				//planesP[i].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			for (i = 0; i < 1; i++){
+				//planesA[planeNum - 3].material = gridMaterial2;
+				//planesB[planeNum - 4].material = gridMaterial3;
+				//planesC[planeNum - 5].material = gridMaterial4;
+				planesD[planeNum - 6].material = gridMaterial5;
+				planesE[planeNum - 6].material = gridMaterial5;
+				planesF[planeNum - 6].material = gridMaterial5;
+				planesG[planeNum - 6].material = gridMaterial5;
+				planesH[planeNum - 6].material = gridMaterial5;
+				planesI[planeNum - 6].material = gridMaterial5;
+				planesJ[planeNum - 6].material = gridMaterial5;
+				planesK[planeNum - 6].material = gridMaterial5;
+				planesL[planeNum - 6].material = gridMaterial5;
+				planesM[planeNum - 6].material = gridMaterial5;
+				//planesN[planeNum - 5].material = gridMaterial4;
+				//planesO[planeNum - 4].material = gridMaterial3;
+				//planesP[planeNum - 3].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			for (i = 3; i < planeNum - 5 ; i++){
+				planesD[i].material = gridMaterial5;
+				planesM[i].material = gridMaterial5;
+			}//for
+		}, 18000);
+		
+		//wait...
+		setTimeout(function() {
+			//decrease opacity of gridMaterial5
+			for (var i = 0; i < 10; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  gridMaterial5.alpha = gridMaterial5.alpha - 0.1;
+				}, 35*i);
+			  })(i);
+			};
+		}, 20000);
+		//---------------------------------------------------------
+		//change to a different material
+		var gridMaterial6 = new BABYLON.StandardMaterial("gridMaterial6", scene);
+		gridMaterial6.diffuseTexture = new BABYLON.Texture(customTile1, scene);
+		gridMaterial6.alpha = 1;
+		
+		//change elements...
+		setTimeout(function() {
+			for (i = 4; i < 5; i++){
+				//planesA[i].material = gridMaterial2;
+				//planesB[i].material = gridMaterial3;
+				//planesC[i].material = gridMaterial4;
+				//planesD[i].material = gridMaterial5;
+				planesE[i].material = gridMaterial6;
+				planesF[i].material = gridMaterial6;
+				planesG[i].material = gridMaterial6;
+				planesH[i].material = gridMaterial6;
+				planesI[i].material = gridMaterial6;
+				planesJ[i].material = gridMaterial6;
+				planesK[i].material = gridMaterial6;
+				planesL[i].material = gridMaterial6;
+				//planesM[i].material = gridMaterial5;
+				//planesN[i].material = gridMaterial4;
+				//planesO[i].material = gridMaterial3;
+				//planesP[i].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			for (i = 0; i < 1; i++){
+				//planesA[planeNum - 3].material = gridMaterial2;
+				//planesB[planeNum - 4].material = gridMaterial3;
+				//planesC[planeNum - 5].material = gridMaterial4;
+				//planesD[planeNum - 6].material = gridMaterial5;
+				planesE[planeNum - 7].material = gridMaterial6;
+				planesF[planeNum - 7].material = gridMaterial6;
+				planesG[planeNum - 7].material = gridMaterial6;
+				planesH[planeNum - 7].material = gridMaterial6;
+				planesI[planeNum - 7].material = gridMaterial6;
+				planesJ[planeNum - 7].material = gridMaterial6;
+				planesK[planeNum - 7].material = gridMaterial6;
+				planesL[planeNum - 7].material = gridMaterial6;
+				//planesM[planeNum - 6].material = gridMaterial5;
+				//planesN[planeNum - 5].material = gridMaterial4;
+				//planesO[planeNum - 4].material = gridMaterial3;
+				//planesP[planeNum - 3].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			for (i = 4; i < planeNum - 6; i++){
+				planesE[i].material = gridMaterial6;
+				planesL[i].material = gridMaterial6;
+			}//for
+		}, 22000);
+		
+		//wait...
+		setTimeout(function() {
+			//decrease opacity of gridMaterial6
+			for (var i = 0; i < 10; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  gridMaterial6.alpha = gridMaterial6.alpha - 0.1;
+				}, 35*i);
+			  })(i);
+			};
+		}, 24000);
+		//---------------------------------------------------------
+		//change to a different material
+		var gridMaterial7 = new BABYLON.StandardMaterial("gridMaterial7", scene);
+		gridMaterial7.diffuseTexture = new BABYLON.Texture(customTile1, scene);
+		gridMaterial7.alpha = 1;
+		
+		//change elements...
+		setTimeout(function() {
+			for (i = 5; i < 6; i++){
+				//planesA[i].material = gridMaterial2;
+				//planesB[i].material = gridMaterial3;
+				//planesC[i].material = gridMaterial4;
+				//planesD[i].material = gridMaterial5;
+				//planesE[i].material = gridMaterial6;
+				planesF[i].material = gridMaterial7;
+				planesG[i].material = gridMaterial7;
+				planesH[i].material = gridMaterial7;
+				planesI[i].material = gridMaterial7;
+				planesJ[i].material = gridMaterial7;
+				planesK[i].material = gridMaterial7;
+				//planesL[i].material = gridMaterial6;
+				//planesM[i].material = gridMaterial5;
+				//planesN[i].material = gridMaterial4;
+				//planesO[i].material = gridMaterial3;
+				//planesP[i].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			for (i = 0; i < 1; i++){
+				//planesA[planeNum - 3].material = gridMaterial2;
+				//planesB[planeNum - 4].material = gridMaterial3;
+				//planesC[planeNum - 5].material = gridMaterial4;
+				//planesD[planeNum - 6].material = gridMaterial5;
+				//planesE[planeNum - 7].material = gridMaterial7;
+				planesF[planeNum - 8].material = gridMaterial7;
+				planesG[planeNum - 8].material = gridMaterial7;
+				planesH[planeNum - 8].material = gridMaterial7;
+				planesI[planeNum - 8].material = gridMaterial7;
+				planesJ[planeNum - 8].material = gridMaterial7;
+				planesK[planeNum - 8].material = gridMaterial7;
+				//planesL[planeNum - 7].material = gridMaterial7;
+				//planesM[planeNum - 6].material = gridMaterial5;
+				//planesN[planeNum - 5].material = gridMaterial4;
+				//planesO[planeNum - 4].material = gridMaterial3;
+				//planesP[planeNum - 3].material = gridMaterial2;
+			}//for
+			
+			//change elements...
+			for (i = 5; i < planeNum - 7; i++){
+				planesF[i].material = gridMaterial7;
+				planesK[i].material = gridMaterial7;
+			}//for
+		}, 26000);
+		
+		//wait...
+		setTimeout(function() {
+			//decrease opacity of gridMaterial7
+			for (var i = 0; i < 10; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  gridMaterial7.alpha = gridMaterial7.alpha - 0.1;
+				}, 35*i);
+			  })(i);
+			};
+		}, 28000);
+		//leave the rest of the planes untouched as the final stand area
+		//setTimeouts will be adjusted later and other terrain will be most likely added here.
 	}//fadeOutAnimation
 }//playerGrid

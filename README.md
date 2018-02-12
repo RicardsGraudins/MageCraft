@@ -48,7 +48,11 @@ Heroku is a cloud platform as a service (PaaS) supporting several programming la
 ## Bcrypt:  
 Bcrypt is a password hashing function designed by Niels Provos and David Mazières, based on the Blowfish cipher, and presented at USENIX in 1999. Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power.
 
-There is a Flask extension for bcrypt([Flask-Bcrypt](https://flask-bcrypt.readthedocs.io/en/latest/)) however for this project we are simply using the library provided by Python.
+There is a Flask extension for bcrypt([Flask-Bcrypt](https://flask-bcrypt.readthedocs.io/en/latest/)) however for this project we are simply using the library provided by Python.  
+
+## Bugs - Firefox Version 58:
+The purpose of the bugs folder is to demonstrate the current bugs with BabylonJS when using Firefox version 58 that I have encountered. To view the bugs open a html file in Firefox 58 and a different browser for comparison. In the interest of providing the same game experience I have went out of my way to make the game run in a similar manner on Firefox 58 however there are still a few differences which all arise from the manner in which Firefox handles materials i.e the first change(e.g. color/alpha) applied to one material is applied to any and every other material in the game.
+- Do **not** use Firefox version 58 for this game.
 
 ## How to run locally: <a name="Installation"></a>
 1. Have the following **prerequisites** installed:  
@@ -86,6 +90,7 @@ Simple commit summary for project supervisor to keep track of progress.
 14. BabylonJS Setup & Background Texture: Setting up BabylonJS and adding lava texture background.
 15. Debug Layer: Added debug layer and FPS tracker to spot bugs/issues easier.
 16. Player Grid: Added player grid with a couple of testing functions, textures and animations.
+17. Bugs: Added bugs folder demonstrating material bugs with Firefox version 58.
 
 ## References:
 * [Flask](http://flask.pocoo.org/docs/0.12/)  

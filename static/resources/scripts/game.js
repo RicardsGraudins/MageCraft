@@ -11,10 +11,16 @@ grid.drawParameter();
 grid.drawGrid();
 //grid.testingMaterial();
 grid.setTextures();
-grid.fadeOutAnimation();
+//grid.fadeOutAnimation();
+
+//player object
+var playerObject = new Player(0,80,0,5);
+//create ground, player collision with ground - stay on top of it
+playerObject.createGround();
 
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){
 	background.render();
+	playerObject.move();
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });

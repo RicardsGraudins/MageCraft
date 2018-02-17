@@ -4,6 +4,11 @@ var canvas = document.getElementById("myCanvas");
 var engine = new BABYLON.Engine(canvas,true);
 //creates a basic babylon scene object (non-mesh)
 var scene = new BABYLON.Scene(engine);
+//enable physics - cannon_min.js
+scene.enablePhysics();
+//changing gravity from default - otherwise objects go up instead of down -9.82 m/s^2
+var gravity = new BABYLON.Vector3(0, -9.82, 0);
+scene.getPhysicsEngine().setGravity(gravity);
 
 //hide the default menu that appears when you right click in a browser
 //disabling this allows me to use right click as a keybind for player movement

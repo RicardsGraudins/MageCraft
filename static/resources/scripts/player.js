@@ -45,11 +45,12 @@ document.onkeyup = function(e) {
 //track cords - player.getPositionExpressedInLocalSpace();
 var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX: 20}, scene);
 
-Player = function(x,y,z,speed){
+Player = function(x, y, z, speed, onGrid){
 	this.x = x;
 	this.y = y;
 	this.z = z;
 	this.speed = speed;
+	this.onGrid = onGrid;
 	
 	//var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX: 20}, scene);
 	
@@ -68,33 +69,65 @@ Player = function(x,y,z,speed){
 			if (KEY_STATUS.left) {
 				console.log("left");
 				player.position.x -= speed;
+				if (player.position.x < boundaryLeft){
+					console.log("over left!")
+					if (playerObject.onGrid == true){
+						playerObject.onGrid = false;
+						console.log("no longer on grid!")
+					}//inner inner if
+				}//inner if
 			}//if
 			
 			//move right
 			if (KEY_STATUS.right) {
 				console.log("right");
 				player.position.x += speed;
+				if (player.position.x > boundaryRight){
+					console.log("over right!")
+					if (playerObject.onGrid == true){
+						playerObject.onGrid = false;
+						console.log("no longer on grid!")
+					}//inner inner if
+				}//inner if
 			}//if	
 			
 			//move up
 			if (KEY_STATUS.up) {
 				console.log("up");
 				player.position.z += speed;
+				if (player.position.z > boundaryTop){
+					console.log("over top!")
+					if (playerObject.onGrid == true){
+						playerObject.onGrid = false;
+						console.log("no longer on grid!")
+					}//inner inner if
+				}//inner if
 			}//if
 			
 			//move down
 			if (KEY_STATUS.down) {
 				console.log("down");
 				player.position.z -= speed;
+				if (player.position.z < boundaryBottom){
+					console.log("over bottom!")
+					if (playerObject.onGrid == true){
+						playerObject.onGrid = false;
+						console.log("no longer on grid!")
+					}//inner inner if
+				}//inner if
 			}//if
 		}//if
 	}//move
 	
-	//create a new ground mesh since lava background moves(unstable) and player grid is composed of many smaller planes that fade out...
-	//this mesh will be set to transparent later for either the area covering the player grid or the entire "ground" i.e move across the lava
-	this.createGround = function(){
-		var ground = BABYLON.MeshBuilder.CreateGround("myGround", {width: 100, height: 100}, scene);
-		ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0 }, scene);
-		ground.setPositionWithLocalVector(new BABYLON.Vector3(0, 25, 0));
-	}//createGround
+	//when the player goes off the grid we set onGrid to false in the above move function,
+	//here we check if onGrid is == false, if it false - keep checking if the player is within all the set boundaries,
+	//once the player is within all boundaries set onGrid to true
+	this.playerOnGrid = function(){
+		if(playerObject.onGrid == false){
+			if(player.position.x > boundaryLeft && player.position.x < boundaryRight && player.position.z < boundaryTop && player.position.z > boundaryBottom){
+				playerObject.onGrid = true;
+			}//if
+		}//if
+	}//playerOnGrid
+	//create ground functions moved to their proper scripts - background & player_grid
 }//Player

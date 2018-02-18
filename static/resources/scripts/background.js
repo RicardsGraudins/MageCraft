@@ -38,7 +38,7 @@ var lavaBackground = function() {
 
 	//camera for testing only -- actual camera should follow the player
 	//attaches the camera to the canvas
-	//camera.attachControl(canvas, true);
+	camera.attachControl(canvas, true);
 
 	//creates a light, aiming 0,1,0 - to the sky (non-mesh)
 	var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
@@ -61,13 +61,21 @@ var lavaBackground = function() {
 	return scene;
 }//lavaBackground
 
+//creating transparent ground layer since lava layer moves(unstable)
+//2000x2000 same as lavaBackground - covers the entire game, player can move on this layer but takes damage
+var createLavaGround = function() {
+		var ground = BABYLON.MeshBuilder.CreateGround("myGround", {width: 2000, height: 2000}, scene);
+		ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0 }, scene);
+		ground.position.y = 11; //elevate ground to player grid level - stay above the lava texture, prevents textures intesecting
+		
+		//apply transparent material to ground
+		var mat = new BABYLON.StandardMaterial("mat", scene);
+		mat.alpha = 0.2;
+		mat.diffuseColor = new BABYLON.Color3(198,226,255); //slate
+		ground.material = mat;
+}//createLavaGround
+
 var background = lavaBackground();
+var backGroundGround = createLavaGround();
 var fpsLabel = document.getElementById("fpsLabel");
-
-//render loop 60 fps, just render the scene
-//engine.runRenderLoop(function(){
-//	background.render();
-//	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
-//});
-
 //use sceneOptimiser later if frame issues for low end devices..

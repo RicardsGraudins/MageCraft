@@ -35,6 +35,19 @@ var planeP = "static/resources/images/testing_images/p.png";
 var customTile0 = "static/resources/images/textures/customTile0.png";
 var customTile1 = "static/resources/images/textures/customTile1.png";
 
+//boundaries @ Player move() - if the player goes beyond the boundaries onGrid = false
+//then take damage from lava, boundaries are increased the longer the game goes on @ playerGrid fadeOutAnimation()
+var boundaryLeft = -212.5; //if x < player.position.x....
+var boundaryRight = 187; //if x > player.position.x....
+var boundaryTop = 262.5; //if z > player.position.z....
+var boundaryBottom = -187.5; //if z < player.position.z....
+//everytime a layer fades out:
+//								boundaryLeft + width
+//								boundaryRight - width
+//								boundaryTop - height
+//								boundaryBottom + height
+//currently hardcoded values for boundaries - if size of grid changes must adjust these values
+
 //player grid object
 var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 	this.x = x;
@@ -489,6 +502,11 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				}, 35*i);
 			  })(i);
 			};
+			//increase boundaries
+			boundaryLeft = boundaryLeft + planeWidth;
+			boundaryRight = boundaryRight - planeWidth;
+			boundaryTop = boundaryTop - planeHeight;
+			boundaryBottom = boundaryBottom + planeHeight;
 		}, 5000);		
 		
 		//---------------------------------------------------------
@@ -557,6 +575,11 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				}, 35*i);
 			  })(i);
 			};
+			//increase boundaries
+			boundaryLeft = boundaryLeft + planeWidth;
+			boundaryRight = boundaryRight - planeWidth;
+			boundaryTop = boundaryTop - planeHeight;
+			boundaryBottom = boundaryBottom + planeHeight;
 		}, 8000);
 		//---------------------------------------------------------
 		//change to a different material
@@ -624,6 +647,11 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				}, 35*i);
 			  })(i);
 			};
+			//increase boundaries
+			boundaryLeft = boundaryLeft + planeWidth;
+			boundaryRight = boundaryRight - planeWidth;
+			boundaryTop = boundaryTop - planeHeight;
+			boundaryBottom = boundaryBottom + planeHeight;
 		}, 12000);
 		//---------------------------------------------------------
 		//change to a different material
@@ -689,6 +717,11 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				}, 35*i);
 			  })(i);
 			};
+			//increase boundaries
+			boundaryLeft = boundaryLeft + planeWidth;
+			boundaryRight = boundaryRight - planeWidth;
+			boundaryTop = boundaryTop - planeHeight;
+			boundaryBottom = boundaryBottom + planeHeight;
 		}, 16000);
 		//---------------------------------------------------------
 		//change to a different material
@@ -754,6 +787,11 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				}, 35*i);
 			  })(i);
 			};
+			//increase boundaries
+			boundaryLeft = boundaryLeft + planeWidth;
+			boundaryRight = boundaryRight - planeWidth;
+			boundaryTop = boundaryTop - planeHeight;
+			boundaryBottom = boundaryBottom + planeHeight;
 		}, 20000);
 		//---------------------------------------------------------
 		//change to a different material
@@ -819,6 +857,11 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				}, 35*i);
 			  })(i);
 			};
+			//increase boundaries
+			boundaryLeft = boundaryLeft + planeWidth;
+			boundaryRight = boundaryRight - planeWidth;
+			boundaryTop = boundaryTop - planeHeight;
+			boundaryBottom = boundaryBottom + planeHeight;
 		}, 24000);
 		//---------------------------------------------------------
 		//change to a different material
@@ -884,8 +927,60 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				}, 35*i);
 			  })(i);
 			};
+			//increase boundaries
+			boundaryLeft = boundaryLeft + planeWidth;
+			boundaryRight = boundaryRight - planeWidth;
+			boundaryTop = boundaryTop - planeHeight;
+			boundaryBottom = boundaryBottom + planeHeight;
 		}, 28000);
 		//leave the rest of the planes untouched as the final stand area
 		//setTimeouts will be adjusted later and other terrain will be most likely added here.
 	}//fadeOutAnimation
+	
+	//quick test to see where the boundaries are by drawing a few lines
+	//hardcoded values adjust if grid size changes...
+	this.boundaryTest = function(){
+		var myPoints = [
+			new BABYLON.Vector3(-212.5, 10, 262.5),
+			new BABYLON.Vector3(187, 10, 262.5),
+			new BABYLON.Vector3(187, 10, -187.5),
+			new BABYLON.Vector3(-212.5, 10, -187.5),
+			new BABYLON.Vector3(-212.5, 10, 262.5)
+		];
+		
+		var myPoints1= [
+			new BABYLON.Vector3(-187.5, 10, 237.5),
+			new BABYLON.Vector3(162, 10, 237.5),
+			new BABYLON.Vector3(162, 10, -162.5),
+			new BABYLON.Vector3(-187.5, 10, -162.5),
+			new BABYLON.Vector3(-187.5, 10, 237.5)
+		];
+		
+		var myPoints2= [
+			new BABYLON.Vector3(-162.5, 10, 212.5),
+			new BABYLON.Vector3(137, 10, 212.5),
+			new BABYLON.Vector3(137, 10, -137.5),
+			new BABYLON.Vector3(-162.5, 10, -137.5),
+			new BABYLON.Vector3(-162.5, 10, 212.5)
+		];
+		
+		var lines = BABYLON.MeshBuilder.CreateLines("lines", {points: myPoints}, scene); 
+		var lines1 = BABYLON.MeshBuilder.CreateLines("lines1", {points: myPoints1}, scene);
+		var lines2 = BABYLON.MeshBuilder.CreateLines("lines2", {points: myPoints2}, scene); 		
+	}//boundaryTest
+	
+	//creating transparent ground layer since lava layer moves(unstable) and the
+	//player grid is composed of many smaller planes that fade out, the player moves on this layer
+	//hardcoded values to be adjusted if grid size changes
+	this.createGround = function(){
+		var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 400, height: 450}, scene);
+		ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0 }, scene);
+		ground.setPositionWithLocalVector(new BABYLON.Vector3(-12, 11, 37)); //-200,10,250
+		
+		//apply transparent material to ground
+		var mat = new BABYLON.StandardMaterial("mat", scene);
+		mat.diffuseColor = new BABYLON.Color3(0,0,1); //blue
+		mat.alpha = 0.2;
+		ground.material = mat;
+	}//createGround
 }//playerGrid

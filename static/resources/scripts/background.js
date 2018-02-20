@@ -30,15 +30,15 @@ var lavaBackground = function() {
 
 	//creates and positions a free camera (non-mesh)
 	//var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 300, -250), scene);
-	var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 350, -300), scene);
+	//var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 350, -300), scene);
 	//var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 4, BABYLON.Vector3.Zero(), scene);
 	
 	//targets the camera to scene origin
-	camera.setTarget(BABYLON.Vector3.Zero());
+	//camera.setTarget(BABYLON.Vector3.Zero());
 
 	//camera for testing only -- actual camera should follow the player
 	//attaches the camera to the canvas
-	camera.attachControl(canvas, true);
+	//camera.attachControl(canvas, true);
 
 	//creates a light, aiming 0,1,0 - to the sky (non-mesh)
 	var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);

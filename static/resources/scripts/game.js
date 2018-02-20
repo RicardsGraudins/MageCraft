@@ -16,12 +16,35 @@ grid.fadeOutAnimation();
 grid.createGround();
 
 //player object
-var playerObject = new Player(0, 80, 0, 5, true);
+var playerObject = new Player(0, 80, 0, 1, true);
+
+//sprite
+var spriteObject = new sprite(); //dont forget to adjust hitbox size
+//playerSprite.dead();
+
+//parameters: name, position, scene  
+var camera = new BABYLON.FollowCamera("followPlayerCam", new BABYLON.Vector3(0, 350, -300), scene);
+//lockedTarget must be a mesh and its .lockedTarget for version 2.5 onwards not .target
+camera.lockedTarget = player;
+//the goal distance of camera from target
+camera.radius = 350;
+//the goal height of camera above local origin (centre) of target
+camera.heightOffset = 350;
+//acceleration of camera in moving from current to goal position
+camera.cameraAcceleration = 0;
+
+//the speed at which acceleration is halted 
+camera.maxCameraSpeed = 0;
+//the goal rotation of camera around local origin (centre) of target in x y plane
+camera.rotationOffset = 0;
+//dont allow the player to move the camera
+//camera.attachControl(canvas,true);
 
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){
 	background.render();
 	playerObject.move();
 	playerObject.playerOnGrid();
+	spriteObject.move();
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });

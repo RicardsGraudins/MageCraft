@@ -11,13 +11,11 @@ var playerSprite = new BABYLON.Sprite("player", spriteManagerPlayerRed);
 //increase the size of the sprite
 playerSprite.size = 20;
 
-var tempX;
+//boolean to control moving animation
+var moving = false;
 
 sprite = function(){
-	//
-	//
-	//
-	
+	//play this animation when the player is dead
 	this.dead = function(){
 		playerSprite.stopAnimation();
 		playerSprite.playAnimation(51, 53, true, 150);
@@ -25,60 +23,47 @@ sprite = function(){
 	
 	//play this animation when the character is moving
 	this.run = function(){
-			//playerSprite.stopAnimation();
-			//playerSprite.invertU = 0;
 			playerSprite.playAnimation(0, 5, true, 80);
+			moving = true;
+			setTimeout(function() {
+				playerSprite.stopAnimation();
+				this.stopAnimation();
+				moving = false;
+			}, 500); //bit of a moonwalk if switching from left to right mid animation and vice versa
 	}//run
 	
-	this.runRight = function(){
-			//playerSprite.stopAnimation();
-			playerSprite.invertU = -1;
-			playerSprite.playAnimation(0, 5, true, 80);
-	}//runRight
-	
+	//play this animation when taking damage
 	this.damage = function(){
 		playerSprite.stopAnimation();
 		playerSprite.playAnimation(35, 38, true, 150);
-	}
+	}//damage
 	
+	//play this animation during spawn
 	this.landing = function(){
-		playerSprite.stopAnimation();
 		playerSprite.playAnimation(24, 26, true, 150);
-	}
+	}//landing
 	
+	//play this animation when casting a spell
 	this.spell1 = function(){
 		playerSprite.stopAnimation();
 		playerSprite.playAnimation(15, 17, true, 150);
-	}
+	}//spell1
 	
+	//play this animation when casting a different spell
 	this.spell2 = function(){
 		playerSprite.stopAnimation();
 		playerSprite.playAnimation(47, 50, true, 150);
-	}
+	}//spell2
 	
-	this.idleLeft = function(){
-		playerSprite.stopAnimation();
-		playerSprite.cellIndex = 0;
-		playerSprite.invertU = 0;
-	}
-	
-	this.idleRight = function(){
-		playerSprite.stopAnimation();
-		playerSprite.cellIndex = 0;
-		playerSprite.invertU = -1;
-	}
-	
-	this.stopAnimation = function(){
-		playerSprite.stopAnimation();
-	}
-	
+	//make the sprite face left
 	this.faceLeft = function(){
 		playerSprite.invertU = 0;
-	}
+	}//faceLeft
 	
+	//make the sprite face right
 	this.faceRight = function(){
-		playerSprite.invertU = -1;
-	}
+		playerSprite.invertU = 1;
+	}//faceRight
 	
 	//have the sprite move with the player hitbox at all times
 	this.move = function(){
@@ -89,7 +74,7 @@ sprite = function(){
 		//have the camera move with the player hitbox at all times
 		//this elimates the awkward rotations & acceleration using the follow camera
 		camera.position.x = player.position.x;
-		camera.position.y = player.position.y;
+		//camera.position.y = player.position.y;
 	}//move
 }//redMage
 
@@ -175,6 +160,10 @@ Player = function(x, y, z, speed, onGrid){
 			if (KEY_STATUS.left) {
 				console.log("left");
 				player.position.x -= speed;
+				if(moving == false){ //make the sprite face left and play the run animation
+					spriteObject.faceLeft();
+					spriteObject.run();
+				}//if
 				if (player.position.x < boundaryLeft){
 					console.log("over left!")
 					if (playerObject.onGrid == true){
@@ -188,6 +177,10 @@ Player = function(x, y, z, speed, onGrid){
 			if (KEY_STATUS.right) {
 				console.log("right");
 				player.position.x += speed;
+				if(moving == false){ //make the sprite face right and play the run animation
+					spriteObject.faceRight();
+					spriteObject.run();
+				}//if
 				if (player.position.x > boundaryRight){
 					console.log("over right!")
 					if (playerObject.onGrid == true){
@@ -201,6 +194,10 @@ Player = function(x, y, z, speed, onGrid){
 			if (KEY_STATUS.up) {
 				console.log("up");
 				player.position.z += speed;
+				if(moving == false){ //play the run animation
+					//spriteObject.faceLeft();
+					spriteObject.run();
+				}//if
 				if (player.position.z > boundaryTop){
 					console.log("over top!")
 					if (playerObject.onGrid == true){
@@ -214,6 +211,10 @@ Player = function(x, y, z, speed, onGrid){
 			if (KEY_STATUS.down) {
 				console.log("down");
 				player.position.z -= speed;
+				if(moving == false){ //play the run animation
+					//spriteObject.faceLeft();
+					spriteObject.run();
+				}//if
 				if (player.position.z < boundaryBottom){
 					console.log("over bottom!")
 					if (playerObject.onGrid == true){

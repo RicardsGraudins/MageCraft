@@ -980,7 +980,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 		//apply transparent material to ground
 		var mat = new BABYLON.StandardMaterial("mat", scene);
 		mat.diffuseColor = new BABYLON.Color3(0,0,1); //blue
-		mat.alpha = 0.2;
+		mat.alpha = 0;
 		ground.material = mat;
 	}//createGround
 }//playerGrid

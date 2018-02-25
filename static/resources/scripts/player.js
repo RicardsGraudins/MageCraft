@@ -1,6 +1,5 @@
 console.log("Player Ready!");
 
-
 //sprite 1 - red mage
 //load sprites
 redMage = "static/resources/images/sprites/mage.png";
@@ -27,7 +26,6 @@ sprite = function(){
 			moving = true;
 			setTimeout(function() {
 				playerSprite.stopAnimation();
-				this.stopAnimation();
 				moving = false;
 			}, 500); //bit of a moonwalk if switching from left to right mid animation and vice versa
 	}//run
@@ -80,7 +78,6 @@ sprite = function(){
 
 //the keycodes that will be mapped when a user presses a button
 KEY_CODES = {
-  32: 'space',
   65: 'left',
   87: 'up',
   68: 'right',
@@ -120,8 +117,62 @@ document.onkeyup = function(e) {
   }//if
 }//onkeyup
 
+//the idea was to cast spells @ players mouse location however with the way the game view is set up
+//the mouse trackers are way off the mark and are in fact more suited to 2D games, to get around the issue
+//but still have the spells be aimed using mouse location we set up the ground (transparent plane 2000x2000 - sits on top of lava)
+//to be clickable - once clicked we get (x,y,z) cords of the mouse and fire the spell towards that location
+
+//left the mouse tracking code - may still be used later
+
+//0 and 0 since width and height are both 100%
+//var topPos = canvas.offsetTop;
+//var leftPos = canvas.offsetLeft;
+
+//track the player's mouse location using jQuery
+/*
+$( 'canvas' ).mousemove(function( event ) {
+  clientCoords = "( " + event.clientX + ", " + event.clientY + " )";
+  mouseX = event.clientX;
+  mouseY = event.clientY;
+  $( "#playerCords" ).text(clientCoords);
+});
+*/
+
+//track the player's mouse location using DOM with babylonjs scene pointers
+/*
+window.addEventListener("mousemove", function (event) {
+	clientCoords = "( " + scene.pointerX + ", " + scene.pointerY + " )";
+	mouseX = scene.pointerX;
+	mouseY = scene.pointerY;	
+	$( "#playerCords" ).text(clientCoords);
+});
+*/
+
+//DOM listen to event click on canvas
+/*
+document.getElementById("myCanvas").addEventListener("click", function (event) {
+	console.log("click on canvas at position " + (event.clientX) + ", " + (event.clientY));
+}, false);
+*/
+
+//set up an action manager
+scene.actionManager = new BABYLON.ActionManager(scene);
+//register a few actions (keybinds) and execute functions using a trigger - acts as a spell cycle i.e. select the spell to cast and then click where to fire
+scene.actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+        {
+            trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+            parameter: '1'
+        },
+        function () {
+			console.log("spell 1 is selected!");
+		}//function
+    )//ExecuteCodeAction
+);
+
 //track cords - player.getPositionExpressedInLocalSpace();
 var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX: 20}, scene);
+var fireball = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
 
 //assign transparent material to the player sphere - acts as hitbox
 //playerSprite moves with the hitbox - same (x,y,z) at all times
@@ -142,6 +193,7 @@ Player = function(x, y, z, speed, onGrid){
 	
 	//spawning position
 	player.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
+	fireball.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
 	
 	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites
 	playerSprite.position.x = x;
@@ -158,68 +210,68 @@ Player = function(x, y, z, speed, onGrid){
 			
 			//move left
 			if (KEY_STATUS.left) {
-				console.log("left");
+				//console.log("left");
 				player.position.x -= speed;
 				if(moving == false){ //make the sprite face left and play the run animation
 					spriteObject.faceLeft();
 					spriteObject.run();
 				}//if
 				if (player.position.x < boundaryLeft){
-					console.log("over left!")
+					//console.log("over left!")
 					if (playerObject.onGrid == true){
 						playerObject.onGrid = false;
-						console.log("no longer on grid!")
+						//console.log("no longer on grid!")
 					}//inner inner if
 				}//inner if
 			}//if
 			
 			//move right
 			if (KEY_STATUS.right) {
-				console.log("right");
+				//console.log("right");
 				player.position.x += speed;
 				if(moving == false){ //make the sprite face right and play the run animation
 					spriteObject.faceRight();
 					spriteObject.run();
 				}//if
 				if (player.position.x > boundaryRight){
-					console.log("over right!")
+					//console.log("over right!")
 					if (playerObject.onGrid == true){
 						playerObject.onGrid = false;
-						console.log("no longer on grid!")
+						//console.log("no longer on grid!")
 					}//inner inner if
 				}//inner if
 			}//if	
 			
 			//move up
 			if (KEY_STATUS.up) {
-				console.log("up");
+				//console.log("up");
 				player.position.z += speed;
 				if(moving == false){ //play the run animation
 					//spriteObject.faceLeft();
 					spriteObject.run();
 				}//if
 				if (player.position.z > boundaryTop){
-					console.log("over top!")
+					//console.log("over top!")
 					if (playerObject.onGrid == true){
 						playerObject.onGrid = false;
-						console.log("no longer on grid!")
+						//console.log("no longer on grid!")
 					}//inner inner if
 				}//inner if
 			}//if
 			
 			//move down
 			if (KEY_STATUS.down) {
-				console.log("down");
+				//console.log("down");
 				player.position.z -= speed;
 				if(moving == false){ //play the run animation
 					//spriteObject.faceLeft();
 					spriteObject.run();
 				}//if
 				if (player.position.z < boundaryBottom){
-					console.log("over bottom!")
+					//console.log("over bottom!")
 					if (playerObject.onGrid == true){
 						playerObject.onGrid = false;
-						console.log("no longer on grid!")
+						//console.log("no longer on grid!")
 					}//inner inner if
 				}//inner if
 			}//if
@@ -237,4 +289,56 @@ Player = function(x, y, z, speed, onGrid){
 		}//if
 	}//playerOnGrid
 	//create ground functions moved to their proper scripts - background & player_grid
+		
+	this.castFireball = function(){
+		
+		//once we click on the ground - cast the spell
+		scene.onPointerDown = function (evt, ground) {
+			// if the click hits the ground plane
+			if (ground.hit) {
+				//fireball.position.x = ground.pickedPoint.x;
+				//fireball.position.z = ground.pickedPoint.z;
+				
+				//set spell location to player location - player casting the spell
+				fireball.position.x = player.position.x;
+				fireball.position.z = player.position.z;
+				fireball.position.y = player.position.y;
+				
+				//x and z cords of mouse click @ ground plane
+				gx = ground.pickedPoint.x;
+				gz = ground.pickedPoint.z;
+				
+				//x and z cords of fireball position
+				spellX = fireball.position.x;
+				spellZ = fireball.position.z;
+				
+				//animate the fireball movement
+				playerObject.moveFireball(gx,gz,spellX,spellZ);
+				
+			} else {
+				console.log("Clicked outside the map!");
+			}
+		};
+	}//castFireball
+	
+	//animate the fireball movement
+	this.moveFireball = function(gx,gz,spellX,spellZ){
+		this.gx = gx;
+		this.gz = gz;
+		this.spellX = spellX;
+		this.spellZ = spellZ;
+		
+		//console.log("Player cast fireball!");
+		var spellSpeed = 5;
+		
+		//movement animation
+		scene.registerBeforeRender(function () {
+			fireball.position.x += spellSpeed;
+			
+			//if the spell goes off the map stop moving it by setting spellSpeed to 0
+			if(fireball.position.x <= -1000 || fireball.position.x >= 1000){
+				spellSpeed = 0;
+			}//if
+		});
+	}//moveFireball
 }//Player

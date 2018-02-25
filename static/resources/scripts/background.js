@@ -18,7 +18,7 @@ canvas.oncontextmenu = function (e) {
 
 //wait until document is ready
 //$(document).ready(function() {
-	//resize the canvas
+//resize the canvas
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log("Background Ready!")
@@ -63,14 +63,15 @@ var lavaBackground = function() {
 
 //creating transparent ground layer since lava layer moves(unstable)
 //2000x2000 same as lavaBackground - covers the entire game, player can move on this layer but takes damage
+var ground = BABYLON.MeshBuilder.CreateGround("myGround", {width: 2000, height: 2000}, scene); //clickable @ player.js
 var createLavaGround = function() {
-		var ground = BABYLON.MeshBuilder.CreateGround("myGround", {width: 2000, height: 2000}, scene);
+		//var ground = BABYLON.MeshBuilder.CreateGround("myGround", {width: 2000, height: 2000}, scene);
 		ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0 }, scene);
 		ground.position.y = 11; //elevate ground to player grid level - stay above the lava texture, prevents textures intesecting
 		
 		//apply transparent material to ground
 		var mat = new BABYLON.StandardMaterial("mat", scene);
-		mat.alpha = 0.2;
+		mat.alpha = 0;
 		mat.diffuseColor = new BABYLON.Color3(198,226,255); //slate
 		ground.material = mat;
 }//createLavaGround

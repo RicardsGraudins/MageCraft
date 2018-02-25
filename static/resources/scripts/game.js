@@ -45,6 +45,7 @@ engine.runRenderLoop(function(){
 	background.render();
 	playerObject.move();
 	playerObject.playerOnGrid();
+	playerObject.castFireball();
 	spriteObject.move();
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });

@@ -18,6 +18,9 @@ grid.createGround();
 //player object
 var playerObject = new Player(0, 80, 0, 1, true);
 
+//handles spell cooldowns for player
+var spellManagerPlayer = new spellManager();
+
 //sprite
 var spriteObject = new sprite(); //dont forget to adjust hitbox size
 //playerSprite.dead();

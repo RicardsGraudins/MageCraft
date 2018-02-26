@@ -12,6 +12,8 @@ playerSprite.size = 20;
 
 //boolean to control moving animation
 var moving = false;
+//boolean to control fireball cooldown - can only cast once every 5 seconds
+var fireballCooldown = false;
 
 sprite = function(){
 	//play this animation when the player is dead
@@ -172,7 +174,7 @@ scene.actionManager.registerAction(
 
 //track cords - player.getPositionExpressedInLocalSpace();
 var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX: 20}, scene);
-var fireball = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
+var fireball = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 
 //assign transparent material to the player sphere - acts as hitbox
 //playerSprite moves with the hitbox - same (x,y,z) at all times
@@ -181,6 +183,15 @@ var playerMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
 playerMaterial.wireframe = true;
 playerMaterial.alpha = 0.01;
 player.material = playerMaterial;
+
+//asign material to fireball with fire texture - fire_procedural_texture.js
+var fireballMaterial = new BABYLON.StandardMaterial("fireballMaterial", scene);
+var fireTexture = new BABYLON.FireProceduralTexture("fireTexture", 256, scene);
+fireballMaterial.diffuseTexture = fireTexture;
+fireballMaterial.opacityTexture = fireTexture;
+fireballMaterial.hasAlpha = true;
+fireballMaterial.alpha = 1;
+fireball.material = fireballMaterial;
 
 Player = function(x, y, z, speed, onGrid){
 	this.x = x;
@@ -291,54 +302,70 @@ Player = function(x, y, z, speed, onGrid){
 	//create ground functions moved to their proper scripts - background & player_grid
 		
 	this.castFireball = function(){
-		
 		//once we click on the ground - cast the spell
 		scene.onPointerDown = function (evt, ground) {
-			// if the click hits the ground plane
-			if (ground.hit) {
-				//fireball.position.x = ground.pickedPoint.x;
-				//fireball.position.z = ground.pickedPoint.z;
-				
-				//set spell location to player location - player casting the spell
-				fireball.position.x = player.position.x;
-				fireball.position.z = player.position.z;
-				fireball.position.y = player.position.y;
-				
-				//x and z cords of mouse click @ ground plane
-				gx = ground.pickedPoint.x;
-				gz = ground.pickedPoint.z;
-				
-				//x and z cords of fireball position
-				spellX = fireball.position.x;
-				spellZ = fireball.position.z;
-				
-				//animate the fireball movement
-				playerObject.moveFireball(gx,gz,spellX,spellZ);
-				
-			} else {
-				console.log("Clicked outside the map!");
-			}
-		};
+			//if fireballCooldown == false, player can cast fireball
+			if (fireballCooldown == false){
+				//set fireballCooldown to true
+				fireballCooldown = true;
+				//start fireballTimer, after 5 seconds set fireballCooldown to false
+				spellManagerPlayer.fireballTimer();
+				// if the click hits the ground plane
+				if (ground.hit) {
+					//set spell location to player location - player casting the spell
+					fireball.position.x = player.position.x;
+					fireball.position.z = player.position.z;
+					fireball.position.y = player.position.y;
+					
+					//x and z cords of mouse click @ ground plane
+					gx = ground.pickedPoint.x;
+					gz = ground.pickedPoint.z;
+					
+					var direction = new BABYLON.Vector3(gx,21,gz);
+					direction.normalize(); //direction now a unit vector
+					distance = 2;
+					
+					var i = 0;
+					
+					//set fireballMaterial back to visible
+					fireballMaterial.alpha = 1;
+					
+					//once i reaches 150, tranlation stops
+					scene.registerBeforeRender(function () {
+						if(i++ < 150){
+							//mesh.translate(vector, distance, space)
+							//vector = direction the mesh should travel towards
+							//distance = speed of the mesh moving
+							//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
+							fireball.translate(direction, distance, BABYLON.Space.WORLD);
+							
+							//once i reaches 149 make the fireball transparent
+							//and move it off the map so it doesn't collide with anyone
+							if(i == 149){
+								fireball.position.x = 1000;
+								fireballMaterial.alpha = 0;
+							}//if
+						}//if
+					});
+					
+				}//if
+				else {
+					console.log("Clicked outside the map!");
+				}//else
+			}//if - fireballCooldown
+			else {
+				console.log("Fireball is on cooldown!");
+			}//else
+		};//onPointerDown
 	}//castFireball
-	
-	//animate the fireball movement
-	this.moveFireball = function(gx,gz,spellX,spellZ){
-		this.gx = gx;
-		this.gz = gz;
-		this.spellX = spellX;
-		this.spellZ = spellZ;
-		
-		//console.log("Player cast fireball!");
-		var spellSpeed = 5;
-		
-		//movement animation
-		scene.registerBeforeRender(function () {
-			fireball.position.x += spellSpeed;
-			
-			//if the spell goes off the map stop moving it by setting spellSpeed to 0
-			if(fireball.position.x <= -1000 || fireball.position.x >= 1000){
-				spellSpeed = 0;
-			}//if
-		});
-	}//moveFireball
 }//Player
+
+//handles cooldowns for spells
+spellManager = function(){
+	this.fireballTimer = function(){
+		setTimeout(function() {
+			fireballCooldown = false;
+			console.log(fireballCooldown);
+		}, 5000); //cooldown 5 seconds	
+	}//fireballTimer
+}//spellManager

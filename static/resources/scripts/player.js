@@ -3,6 +3,7 @@ console.log("Player Ready!");
 //sprite 1 - red mage
 //load sprites
 redMage = "static/resources/images/sprites/mage.png";
+fireParticle = "static/resources/images/textures/fireParticle.png";
 //create sprite manager
 var spriteManagerPlayerRed = new BABYLON.SpriteManager("playerManager", redMage, 1, 114, scene);
 //create the sprite
@@ -193,6 +194,115 @@ fireballMaterial.hasAlpha = true;
 fireballMaterial.alpha = 1;
 fireball.material = fireballMaterial;
 
+//particles for fireball using 2 ParticleSystems
+//---------------------------------------------------------------------------------------------
+//smoke particles
+
+//particle system for smoke particles
+var smokeSystem = new BABYLON.ParticleSystem("fireParticles", 1000, scene);
+
+//assign texture to each particle
+smokeSystem.particleTexture = new BABYLON.Texture(fireParticle, scene);
+
+//the object from which particles spawn from
+smokeSystem.emitter = fireball;
+
+//all particles starting from vector...to vector
+smokeSystem.minEmitBox = new BABYLON.Vector3(-0.5, 1, -0.5);
+smokeSystem.maxEmitBox = new BABYLON.Vector3(0.5, 1, 0.5);
+
+//colors of all particles (split into 2 specific colors before dispose)
+smokeSystem.color1 = new BABYLON.Color4(0.1, 0.1, 0.1, 1.0);
+smokeSystem.color2 = new BABYLON.Color4(0.1, 0.1, 0.1, 1.0);
+smokeSystem.colorDead = new BABYLON.Color4(0, 0, 0, 0.0);
+
+//size of each particles - random
+smokeSystem.minSize = 5;
+smokeSystem.maxSize = 8;
+
+//life time of each particle - random
+smokeSystem.minLifeTime = 0.3;
+smokeSystem.maxLifeTime = 1.5;
+
+//emite rate
+smokeSystem.emitRate = 350;			
+
+//blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD - to do with source color and alpha
+smokeSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+//gravity of all particles
+smokeSystem.gravity = new BABYLON.Vector3(0, 0, 0);
+
+//direction of each particle after emitted - random
+smokeSystem.direction1 = new BABYLON.Vector3(-1.5, 8, -1.5);
+smokeSystem.direction2 = new BABYLON.Vector3(1.5, 8, 1.5);
+
+//angular speed, can define z-axis rotation for each particle in radians
+smokeSystem.minAngularSpeed = 0;
+smokeSystem.maxAngularSpeed = Math.PI;
+
+//speed and strength of emitting particles and the overall motion speed
+smokeSystem.minEmitPower = 0.5;
+smokeSystem.maxEmitPower = 1.5;
+smokeSystem.updateSpeed = 0.005;
+
+//start emitting the particles
+//smokeSystem.start();
+//---------------------------------------------------------------------------------------------
+//fire particles
+
+//particle system for fire particles
+var fireSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
+
+//assign texture to each particle
+fireSystem.particleTexture = new BABYLON.Texture(fireParticle, scene);
+
+//the object from which particles spawn from
+fireSystem.emitter = fireball;
+
+//all particles starting from vector...to vector
+fireSystem.minEmitBox = new BABYLON.Vector3(-0.5, 1, -0.5);
+fireSystem.maxEmitBox = new BABYLON.Vector3(0.5, 1, 0.5);
+
+//colors of all particles (split into 2 specific colors before dispose)
+fireSystem.color1 = new BABYLON.Color4(50, 0.5, 0, 1.0);
+fireSystem.color2 = new BABYLON.Color4(50, 0.5, 0, 1.0);
+fireSystem.colorDead = new BABYLON.Color4(0, 0, 0, 0.0);
+
+//size of each particles - random
+fireSystem.minSize = 5;
+fireSystem.maxSize = 8;
+
+//life time of each particle - random
+fireSystem.minLifeTime = 0.2;
+fireSystem.maxLifeTime = 0.4;
+
+//emite rate
+fireSystem.emitRate = 600;
+
+//blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD - to do with source color and alpha
+fireSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+//gravity of all particles
+fireSystem.gravity = new BABYLON.Vector3(0, 0, 0);
+
+//direction of each particle after emitted - random
+fireSystem.direction1 = new BABYLON.Vector3(0, 4, 0);
+fireSystem.direction2 = new BABYLON.Vector3(0, 4, 0);
+
+//angular speed, can define z-axis rotation for each particle in radians
+fireSystem.minAngularSpeed = 0;
+fireSystem.maxAngularSpeed = Math.PI;
+
+//speed and strength of emitting particles and the overall motion speed
+fireSystem.minEmitPower = 1;
+fireSystem.maxEmitPower = 3;
+fireSystem.updateSpeed = 0.007;
+
+//start emitting the particles
+//fireSystem.start();
+//---------------------------------------------------------------------------------------------
+
 Player = function(x, y, z, speed, onGrid){
 	this.x = x;
 	this.y = y;
@@ -310,6 +420,9 @@ Player = function(x, y, z, speed, onGrid){
 				fireballCooldown = true;
 				//start fireballTimer, after 5 seconds set fireballCooldown to false
 				spellManagerPlayer.fireballTimer();
+				//start particle systems
+				smokeSystem.start();
+				fireSystem.start();
 				// if the click hits the ground plane
 				if (ground.hit) {
 					//set spell location to player location - player casting the spell
@@ -339,11 +452,13 @@ Player = function(x, y, z, speed, onGrid){
 							//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
 							fireball.translate(direction, distance, BABYLON.Space.WORLD);
 							
-							//once i reaches 149 make the fireball transparent
-							//and move it off the map so it doesn't collide with anyone
+							//once i reaches 149 make the fireball transparent,
+							//move it off the map so it doesn't collide with anyone and switch off particle systems
 							if(i == 149){
 								fireball.position.x = 1000;
 								fireballMaterial.alpha = 0;
+								smokeSystem.stop();
+								fireSystem.stop();
 							}//if
 						}//if
 					});

@@ -15,6 +15,16 @@ playerSprite.size = 20;
 var moving = false;
 //boolean to control fireball cooldown - can only cast once every 5 seconds
 var fireballCooldown = false;
+//boolean to control frostbolt cooldown - can only cast once every 30 seconds
+var frostboltCooldown = false;
+//boolean to control splitter cooldown - can only cast once every 25 seconds
+var splitterCooldown = false;
+
+//booleans to track if a certain spell is selected
+//false until a spell is selected by keybind - once selected can cast by clicking
+var fireballSelected = false;
+var frostboltSelected = false;
+var splitterSelected = false;
 
 sprite = function(){
 	//play this animation when the player is dead
@@ -161,6 +171,7 @@ document.getElementById("myCanvas").addEventListener("click", function (event) {
 //set up an action manager
 scene.actionManager = new BABYLON.ActionManager(scene);
 //register a few actions (keybinds) and execute functions using a trigger - acts as a spell cycle i.e. select the spell to cast and then click where to fire
+//register action to select fireball
 scene.actionManager.registerAction(
     new BABYLON.ExecuteCodeAction(
         {
@@ -168,14 +179,51 @@ scene.actionManager.registerAction(
             parameter: '1'
         },
         function () {
-			console.log("spell 1 is selected!");
+			console.log("Fireball is selected!");
+			frostboltSelected = false;
+			splitterSelected = false;
+			fireballSelected = true;
 		}//function
-    )//ExecuteCodeAction
-);
+    )//ExecuteCodeAction - 1
+);//registerAction
+
+//register action to select frostbolt
+scene.actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+        {
+            trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+            parameter: '2'
+        },
+        function () {
+			console.log("Frostbolt is selected!");
+			fireballSelected = false;
+			splitterSelected = false;
+			frostboltSelected = true;
+		}//function
+    )//ExecuteCodeAction - 2
+);//registerAction
+
+//register action to select splitter
+scene.actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+        {
+            trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+            parameter: '3'
+        },
+        function () {
+			console.log("Splitter is selected!");
+			fireballSelected = false;
+			frostboltSelected = false;
+			splitterSelected = true;
+		}//function
+    )//ExecuteCodeAction - 3
+);//registerAction
 
 //track cords - player.getPositionExpressedInLocalSpace();
 var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX: 20}, scene);
 var fireball = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
+var frostbolt = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
+var splitter = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 
 //assign transparent material to the player sphere - acts as hitbox
 //playerSprite moves with the hitbox - same (x,y,z) at all times
@@ -191,8 +239,20 @@ var fireTexture = new BABYLON.FireProceduralTexture("fireTexture", 256, scene);
 fireballMaterial.diffuseTexture = fireTexture;
 fireballMaterial.opacityTexture = fireTexture;
 fireballMaterial.hasAlpha = true;
-fireballMaterial.alpha = 1;
+fireballMaterial.alpha = 0;
 fireball.material = fireballMaterial;
+
+//asign material to frostbolt
+var frostboltMaterial = new BABYLON.StandardMaterial("frostboltMaterial", scene);
+frostboltMaterial.hasAlpha = true;
+frostboltMaterial.alpha = 0;
+frostbolt.material = frostboltMaterial;
+
+//asign material to splitter
+var splitterMaterial = new BABYLON.StandardMaterial("splitterMaterial", scene);
+splitterMaterial.hasAlpha = true;
+splitterMaterial.alpha = 0;
+splitter.material = splitterMaterial;
 
 //particles for fireball using 2 ParticleSystems
 //---------------------------------------------------------------------------------------------
@@ -315,6 +375,8 @@ Player = function(x, y, z, speed, onGrid){
 	//spawning position
 	player.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
 	fireball.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
+	frostbolt.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
+	splitter.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
 	
 	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites
 	playerSprite.position.x = x;
@@ -410,77 +472,232 @@ Player = function(x, y, z, speed, onGrid){
 		}//if
 	}//playerOnGrid
 	//create ground functions moved to their proper scripts - background & player_grid
-		
+	
+	//handles animations for casting fireball
 	this.castFireball = function(){
-		//once we click on the ground - cast the spell
-		scene.onPointerDown = function (evt, ground) {
-			//if fireballCooldown == false, player can cast fireball
-			if (fireballCooldown == false){
-				//set fireballCooldown to true
-				fireballCooldown = true;
-				//start fireballTimer, after 5 seconds set fireballCooldown to false
-				spellManagerPlayer.fireballTimer();
-				//start particle systems
-				smokeSystem.start();
-				fireSystem.start();
-				// if the click hits the ground plane
-				if (ground.hit) {
-					//set spell location to player location - player casting the spell
-					fireball.position.x = player.position.x;
-					fireball.position.z = player.position.z;
-					fireball.position.y = player.position.y;
-					
-					//x and z cords of mouse click @ ground plane
-					gx = ground.pickedPoint.x;
-					gz = ground.pickedPoint.z;
-					
-					var direction = new BABYLON.Vector3(gx,21,gz);
-					direction.normalize(); //direction now a unit vector
-					distance = 2;
-					
-					var i = 0;
-					
-					//set fireballMaterial back to visible
-					fireballMaterial.alpha = 1;
-					
-					//once i reaches 150, tranlation stops
-					scene.registerBeforeRender(function () {
-						if(i++ < 150){
-							//mesh.translate(vector, distance, space)
-							//vector = direction the mesh should travel towards
-							//distance = speed of the mesh moving
-							//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
-							fireball.translate(direction, distance, BABYLON.Space.WORLD);
-							
-							//once i reaches 149 make the fireball transparent,
-							//move it off the map so it doesn't collide with anyone and switch off particle systems
-							if(i == 149){
-								fireball.position.x = 1000;
-								fireballMaterial.alpha = 0;
-								smokeSystem.stop();
-								fireSystem.stop();
+		//if fireball is selected:
+		if (fireballSelected == true){
+			//once player clicks on the ground - cast the spell
+			scene.onPointerDown = function (evt, ground) {
+				//if fireballCooldown == false, player can cast fireball
+				if (fireballCooldown == false){
+					//set fireballCooldown to true
+					fireballCooldown = true;
+					//start fireballTimer, after 5 seconds set fireballCooldown to false
+					spellManagerPlayer.fireballTimer();
+					//start particle systems
+					smokeSystem.start();
+					fireSystem.start();
+					// if the click hits the ground plane
+					if (ground.hit) {
+						//set spell location to player location - player casting the spell
+						fireball.position.x = player.position.x;
+						fireball.position.z = player.position.z;
+						fireball.position.y = player.position.y;
+						
+						//x and z cords of mouse click @ ground plane
+						gx = ground.pickedPoint.x;
+						gz = ground.pickedPoint.z;
+						
+						var direction = new BABYLON.Vector3(gx,21,gz);
+						direction.normalize(); //direction now a unit vector
+						distance = 2;
+						
+						var i = 0;
+						
+						//set fireballMaterial back to visible
+						fireballMaterial.alpha = 1;
+						
+						//once i reaches 150, tranlation stops
+						scene.registerBeforeRender(function () {
+							if(i++ < 150){
+								//mesh.translate(vector, distance, space)
+								//vector = direction the mesh should travel towards
+								//distance = speed of the mesh moving
+								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
+								fireball.translate(direction, distance, BABYLON.Space.WORLD);
+								
+								//once i reaches 149 make the fireball transparent,
+								//move it off the map so it doesn't collide with anyone and switch off particle systems
+								if(i == 149){
+									fireball.position.x = 1000;
+									fireballMaterial.alpha = 0;
+									smokeSystem.stop();
+									fireSystem.stop();
+								}//if
 							}//if
-						}//if
-					});
-					
-				}//if
+						});
+						
+					}//if
+					else {
+						console.log("Clicked outside the map!");
+					}//else
+				}//if - fireballCooldown
 				else {
-					console.log("Clicked outside the map!");
+					console.log("Fireball is on cooldown || is not selected!");
 				}//else
-			}//if - fireballCooldown
-			else {
-				console.log("Fireball is on cooldown!");
-			}//else
-		};//onPointerDown
+			};//onPointerDown
+		}//if fireball is selected
 	}//castFireball
+	
+	//handles animations for casting frostbolt
+	this.castFrostbolt = function(){
+		//if frostbolt is selected:
+			if (frostboltSelected == true){
+			//once player clicks on the ground - cast the spell
+			scene.onPointerDown = function (evt, ground) {
+				//if frostboltCooldown == false, player can cast frostbolt
+				if (frostboltCooldown == false){
+					//set frostboltCooldown to true
+					frostboltCooldown = true;
+					//start frostboltTimer, after 30 seconds set frostboltCooldown to false
+					spellManagerPlayer.frostboltTimer();
+					//start particle systems here
+					//
+					//
+					// if the click hits the ground plane
+					if (ground.hit) {
+						//set spell location to player location - player casting the spell
+						frostbolt.position.x = player.position.x;
+						frostbolt.position.z = player.position.z;
+						frostbolt.position.y = player.position.y;
+						
+						//x and z cords of mouse click @ ground plane
+						gx = ground.pickedPoint.x;
+						gz = ground.pickedPoint.z;
+						
+						var direction = new BABYLON.Vector3(gx,21,gz);
+						direction.normalize(); //direction now a unit vector
+						distance = 2;
+						
+						var i = 0;
+						
+						//set frostboltMaterial back to visible
+						frostboltMaterial.alpha = 1;
+						
+						//once i reaches 150, tranlation stops
+						scene.registerBeforeRender(function () {
+							if(i++ < 150){
+								//mesh.translate(vector, distance, space)
+								//vector = direction the mesh should travel towards
+								//distance = speed of the mesh moving
+								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
+								frostbolt.translate(direction, distance, BABYLON.Space.WORLD);
+								
+								//once i reaches 149 make the splitter transparent,
+								//move it off the map so it doesn't collide with anyone and switch off particle systems
+								if(i == 149){
+									frostbolt.position.x = 1000;
+									frostboltMaterial.alpha = 0;
+									//smokeSystem.stop();
+									//fireSystem.stop();
+								}//if
+							}//if
+						});
+						
+					}//if
+					else {
+						console.log("Clicked outside the map!");
+					}//else
+				}//if - frostboltCooldown
+				else {
+					console.log("Frostbolt is on cooldown || is not selected!");
+				}//else
+			};//onPointerDown
+		}//if frostbolt is selected
+	}//castFrostbolt
+	
+	//handles animations for casting splitter
+	this.castSplitter = function(){
+		//if splitter is selected:
+			if (splitterSelected == true){
+			//once player clicks on the ground - cast the spell
+			scene.onPointerDown = function (evt, ground) {
+				//if splitterCooldown == false, player can cast splitter
+				if (splitterCooldown == false){
+					//set splitterCooldown to true
+					splitterCooldown = true;
+					//start splitterTimer, after 25 seconds set splitterCooldown to false
+					spellManagerPlayer.splitterTimer();
+					//start particle systems here
+					//
+					//
+					// if the click hits the ground plane
+					if (ground.hit) {
+						//set spell location to player location - player casting the spell
+						splitter.position.x = player.position.x;
+						splitter.position.z = player.position.z;
+						splitter.position.y = player.position.y;
+						
+						//x and z cords of mouse click @ ground plane
+						gx = ground.pickedPoint.x;
+						gz = ground.pickedPoint.z;
+						
+						var direction = new BABYLON.Vector3(gx,21,gz);
+						direction.normalize(); //direction now a unit vector
+						distance = 2;
+						
+						var i = 0;
+						
+						//set splitterMaterial back to visible
+						splitterMaterial.alpha = 1;
+						
+						//once i reaches 80, tranlation stops
+						scene.registerBeforeRender(function () {
+							if(i++ < 80){
+								//mesh.translate(vector, distance, space)
+								//vector = direction the mesh should travel towards
+								//distance = speed of the mesh moving
+								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
+								splitter.translate(direction, distance, BABYLON.Space.WORLD);
+								
+								//once i reaches 79 make the splitter transparent,
+								//move it off the map so it doesn't collide with anyone and switch off particle systems
+								if(i == 79){
+									splitter.position.x = 1000;
+									splitterMaterial.alpha = 0;
+									//smokeSystem.stop();
+									//fireSystem.stop();
+								}//if
+							}//if
+						});
+						
+					}//if
+					else {
+						console.log("Clicked outside the map!");
+					}//else
+				}//if - splitterCooldown
+				else {
+					console.log("Splitter is on cooldown || is not selected!");
+				}//else
+			};//onPointerDown
+		}//if splitter is selected
+	}//castSplitter
 }//Player
 
 //handles cooldowns for spells
 spellManager = function(){
+	//handles cooldown for fireball
 	this.fireballTimer = function(){
 		setTimeout(function() {
 			fireballCooldown = false;
 			console.log(fireballCooldown);
 		}, 5000); //cooldown 5 seconds	
 	}//fireballTimer
+	
+	//handles cooldown for frostbolt
+	this.frostboltTimer = function(){
+		setTimeout(function() {
+			frostboltCooldown = false;
+			console.log(frostboltCooldown);
+		}, 30000); //cooldown 30 seconds	
+	}//frostboltTimer
+	
+	//handles cooldown for splitter
+	this.splitterTimer = function(){
+		setTimeout(function() {
+			splitterCooldown = false;
+			console.log(splitterCooldown);
+		}, 25000); //cooldown 25 seconds	
+	}//splitterTimer
 }//spellManager

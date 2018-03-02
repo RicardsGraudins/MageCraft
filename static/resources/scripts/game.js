@@ -49,6 +49,8 @@ engine.runRenderLoop(function(){
 	playerObject.move();
 	playerObject.playerOnGrid();
 	playerObject.castFireball();
+	playerObject.castFrostbolt();
+	playerObject.castSplitter();
 	spriteObject.move();
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });

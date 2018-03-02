@@ -96,6 +96,9 @@ Simple commit summary for project supervisor to keep track of progress.
 17. Bugs: Added bugs folder demonstrating material bugs with Firefox version 58.
 18. Player Movement & Ground Collision: Added proper player movement and Cannon.js physics engine for ground collision.
 19. Camera & Player Sprites: Changed camera to follow player and added player sprite animations.
+20. Fireball: Added Fireball spell, replaced mouse tracking and implemented a basic spell cycle.
+21. Fireball Particles: Added particles to Fireball.
+22. Updated Spell Cycle: Improved spell cycle(action manager, cooldowns, spell selection) and added setup for Frostbolt and Splitter.
 
 ## References:
 * [Flask](http://flask.pocoo.org/docs/0.12/)  

@@ -21,9 +21,11 @@ var playerObject = new Player(0, 80, 0, 1, true);
 //handles spell cooldowns for player
 var spellManagerPlayer = new spellManager();
 
-//sprite
-var spriteObject = new sprite(); //dont forget to adjust hitbox size
-//playerSprite.dead();
+//sprites
+var playerSpriteObject = new playerSpriteHandler(); //dont forget to adjust hitbox size
+var fireSpriteObject = new fireSpriteHandler();
+
+fireSpriteObject.onLava(); //start the animation and just have it going endlessly
 
 //parameters: name, position, scene  
 var camera = new BABYLON.FollowCamera("followPlayerCam", new BABYLON.Vector3(0, 350, -300), scene);
@@ -51,6 +53,8 @@ engine.runRenderLoop(function(){
 	playerObject.castFireball();
 	playerObject.castFrostbolt();
 	playerObject.castSplitter();
-	spriteObject.move();
+	playerSpriteObject.move();
+	fireSpriteObject.move();
+	
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });

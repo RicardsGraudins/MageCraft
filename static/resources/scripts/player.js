@@ -1,15 +1,27 @@
 console.log("Player Ready!");
 
-//sprite 1 - red mage
-//load sprites
+//sprites
+//load sprites & textures
 redMage = "static/resources/images/sprites/mage.png";
 fireParticle = "static/resources/images/textures/fireParticle.png";
-//create sprite manager
-var spriteManagerPlayerRed = new BABYLON.SpriteManager("playerManager", redMage, 1, 114, scene);
-//create the sprite
+fireEffect = "static/resources/images/sprites/fire.png";
+
+//create sprite managers - new BABYLON.SpriteManager(name, imageURL, capacity, cellSize, scene)
+//name - name for manager
+//imageURL - path to png/jpg
+//capacity - maximum number of instances in this manager e.g. could create 100 instances of player
+//cellSize - corresponds to size of images, typically square size with same width and height, can also be different {width:x, height:y} but generally ends in awkward transitions
+//scene - which scene, in this case we're only using 1 scene for the entire game
+var spriteManagerPlayerRed = new BABYLON.SpriteManager("playerManager", redMage, 1, 114, scene); //player
+var spriteManagerFire = new BABYLON.SpriteManager("fireManager", fireEffect, 1, 190, scene); //fire
+
+//create the sprites - new BABYLON.Sprite(name, spriteManager)
 var playerSprite = new BABYLON.Sprite("player", spriteManagerPlayerRed);
-//increase the size of the sprite
+var fireSprite = new BABYLON.Sprite("fire", spriteManagerFire);
+
+//increase the size of the sprites
 playerSprite.size = 20;
+fireSprite.size = 28;
 
 //boolean to control moving animation
 var moving = false;
@@ -26,7 +38,8 @@ var fireballSelected = false;
 var frostboltSelected = false;
 var splitterSelected = false;
 
-sprite = function(){
+//handles sprite animations for the player
+playerSpriteHandler = function(){
 	//play this animation when the player is dead
 	this.dead = function(){
 		playerSprite.stopAnimation();
@@ -76,7 +89,7 @@ sprite = function(){
 		playerSprite.invertU = 1;
 	}//faceRight
 	
-	//have the sprite move with the player hitbox at all times
+	//have the sprite move with the player at all times
 	this.move = function(){
 		playerSprite.position.x = player.position.x;
 		playerSprite.position.y = player.position.y;
@@ -87,7 +100,35 @@ sprite = function(){
 		camera.position.x = player.position.x;
 		//camera.position.y = player.position.y;
 	}//move
-}//redMage
+}//playerSpriteHandler
+
+//handles fire animations for player
+fireSpriteHandler = function(){
+	//player steps on lava animation
+	this.onLava = function(){
+		fireSprite.playAnimation(3, 4, true, 140);
+	}//onLava
+	
+	//have the sprite move with the player
+	this.move = function(){
+		//only move the fireSprite with the player if the player is off the grid
+		if (playerObject.onGrid == false){
+			//if the size of the fire sprite is 0 change it to its original size
+			if(fireSprite.size == 0){
+				fireSprite.size = 28;
+			}//if
+			fireSprite.position.x = player.position.x - 1; // - 1 to have it more centered
+			fireSprite.position.y = player.position.y - 1; // - 1 to have it a bit behind the player sprite
+			fireSprite.position.z = player.position.z;
+		}//if
+		
+		//if the player is on the grid and the size of the fire sprite isn't 0, change it to 0
+		//since we can't change alpha of a sprite, the size becomes 0 in order to hide it
+		else if(playerObject.onGrid == true && fireSprite.size != 0){
+			fireSprite.size = 0;
+		}//else if
+	}//move
+}//fireSpriteHandler
 
 //the keycodes that will be mapped when a user presses a button
 KEY_CODES = {
@@ -396,8 +437,8 @@ Player = function(x, y, z, speed, onGrid){
 				//console.log("left");
 				player.position.x -= speed;
 				if(moving == false){ //make the sprite face left and play the run animation
-					spriteObject.faceLeft();
-					spriteObject.run();
+					playerSpriteObject.faceLeft();
+					playerSpriteObject.run();
 				}//if
 				if (player.position.x < boundaryLeft){
 					//console.log("over left!")
@@ -413,8 +454,8 @@ Player = function(x, y, z, speed, onGrid){
 				//console.log("right");
 				player.position.x += speed;
 				if(moving == false){ //make the sprite face right and play the run animation
-					spriteObject.faceRight();
-					spriteObject.run();
+					playerSpriteObject.faceRight();
+					playerSpriteObject.run();
 				}//if
 				if (player.position.x > boundaryRight){
 					//console.log("over right!")
@@ -430,8 +471,8 @@ Player = function(x, y, z, speed, onGrid){
 				//console.log("up");
 				player.position.z += speed;
 				if(moving == false){ //play the run animation
-					//spriteObject.faceLeft();
-					spriteObject.run();
+					//playerSpriteObject.faceLeft();
+					playerSpriteObject.run();
 				}//if
 				if (player.position.z > boundaryTop){
 					//console.log("over top!")
@@ -447,8 +488,8 @@ Player = function(x, y, z, speed, onGrid){
 				//console.log("down");
 				player.position.z -= speed;
 				if(moving == false){ //play the run animation
-					//spriteObject.faceLeft();
-					spriteObject.run();
+					//playerSpriteObject.faceLeft();
+					playerSpriteObject.run();
 				}//if
 				if (player.position.z < boundaryBottom){
 					//console.log("over bottom!")

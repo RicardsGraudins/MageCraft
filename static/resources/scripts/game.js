@@ -45,6 +45,15 @@ camera.rotationOffset = 0;
 //dont allow the player to move the camera
 //camera.attachControl(canvas,true);
 
+//test
+//camera.noRotationConstraint=true;
+//camera.upVector = new BABYLON.Vector3(0, 3, 3);
+
+var UI = new playerUI();
+UI.startingPosition();
+UI.testingMaterial();
+//UI.setTextures();
+
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){
 	background.render();
@@ -55,6 +64,7 @@ engine.runRenderLoop(function(){
 	playerObject.castSplitter();
 	playerSpriteObject.move();
 	fireSpriteObject.move();
+	UI.move();
 	
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });

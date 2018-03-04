@@ -98,7 +98,12 @@ playerSpriteHandler = function(){
 		//have the camera move with the player hitbox at all times
 		//this elimates the awkward rotations & acceleration using the follow camera
 		camera.position.x = player.position.x;
-		//camera.position.y = player.position.y;
+		camera.position.z = player.position.z - 350;
+		//note: to have an actual follow camera on a moving mesh the camera position must be the same as
+		//the mesh it is following e.g. camera.position.x = player.position.x would place the camera directly
+		//above the player and follow the player, in this case we take away a value from camera.position.z
+		//to have the camera follow the player at an angle, if the camera position is only set to a vector
+		//the camera will sit at that location and rotate its view towards its locked target(mesh)
 	}//move
 }//playerSpriteHandler
 

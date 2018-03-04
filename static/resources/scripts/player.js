@@ -125,6 +125,7 @@ fireSpriteHandler = function(){
 			fireSprite.position.x = player.position.x - 1; // - 1 to have it more centered
 			fireSprite.position.y = player.position.y - 1; // - 1 to have it a bit behind the player sprite
 			fireSprite.position.z = player.position.z;
+			playerObject.health--;
 		}//if
 		
 		//if the player is on the grid and the size of the fire sprite isn't 0, change it to 0
@@ -409,12 +410,13 @@ fireSystem.updateSpeed = 0.007;
 //fireSystem.start();
 //---------------------------------------------------------------------------------------------
 
-Player = function(x, y, z, speed, onGrid){
+Player = function(x, y, z, speed, onGrid, health){
 	this.x = x;
 	this.y = y;
 	this.z = z;
 	this.speed = speed;
 	this.onGrid = onGrid;
+	this.health = health;
 	
 	//var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX: 20}, scene);
 	
@@ -725,25 +727,31 @@ Player = function(x, y, z, speed, onGrid){
 spellManager = function(){
 	//handles cooldown for fireball
 	this.fireballTimer = function(){
+		UI.cooldownOn("fireball"); //change spell border to red
 		setTimeout(function() {
 			fireballCooldown = false;
 			console.log(fireballCooldown);
+			UI.cooldownOff("fireball"); //change spell border to green
 		}, 5000); //cooldown 5 seconds	
 	}//fireballTimer
 	
 	//handles cooldown for frostbolt
 	this.frostboltTimer = function(){
+		UI.cooldownOn("frostbolt"); //change spell border to red
 		setTimeout(function() {
 			frostboltCooldown = false;
 			console.log(frostboltCooldown);
+			UI.cooldownOff("frostbolt"); //change spell border to green
 		}, 30000); //cooldown 30 seconds	
 	}//frostboltTimer
 	
 	//handles cooldown for splitter
 	this.splitterTimer = function(){
+		UI.cooldownOn("splitter"); //change spell border to red
 		setTimeout(function() {
 			splitterCooldown = false;
 			console.log(splitterCooldown);
+			UI.cooldownOff("splitter"); //change spell border to green
 		}, 25000); //cooldown 25 seconds	
 	}//splitterTimer
 }//spellManager

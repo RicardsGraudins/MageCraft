@@ -16,7 +16,7 @@ grid.fadeOutAnimation();
 grid.createGround();
 
 //player object
-var playerObject = new Player(0, 80, 0, 1, true);
+var playerObject = new Player(0, 80, 0, 1, true, 150);
 
 //handles spell cooldowns for player
 var spellManagerPlayer = new spellManager();
@@ -52,7 +52,9 @@ camera.rotationOffset = 0;
 var UI = new playerUI();
 UI.startingPosition();
 UI.testingMaterial();
-//UI.setTextures();
+UI.setTextures();
+UI.setHeartTextures();
+UI.setBorders();
 
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){
@@ -65,6 +67,7 @@ engine.runRenderLoop(function(){
 	playerSpriteObject.move();
 	fireSpriteObject.move();
 	UI.move();
+	UI.updateHealth(playerObject.health);
 	
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });

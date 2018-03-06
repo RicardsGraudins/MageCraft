@@ -3,6 +3,7 @@ overlayTexture = "static/resources/images/textures/overlay.png";
 fireballIcon = "static/resources/images/textures/fireball_icon.png"
 frostboltIcon = "static/resources/images/textures/frostbolt_icon.png"
 heartIcon = "static/resources/images/textures/heart_icon.png"
+goldIcon = "static/resources/images/textures/gold_coin_icon.png"
 
 //6 basic spells & 2 defensives
 playerUI = function(){
@@ -32,6 +33,36 @@ playerUI = function(){
 	var heart1 = BABYLON.MeshBuilder.CreatePlane("UI-Border", {width: 10, height: 10}, scene);
 	var heart2 = BABYLON.MeshBuilder.CreatePlane("UI-Border", {width: 10, height: 10}, scene);
 	var heart3 = BABYLON.MeshBuilder.CreatePlane("UI-Border", {width: 10, height: 10}, scene);
+	
+	//gold text using AdvancedDynamicTexture - babylon_gui_min.js
+	var goldPlane = BABYLON.MeshBuilder.CreatePlane("UI-Gold-Plane", {width: 20, height: 20}, scene);
+	//BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(mesh, width, height, pointerEvents);
+	//setting the width and height higher than the goldPlane to achieve a crispier text otherwise if
+	//the width and height are the same as the goldPlane the text is blurry, setting pointerEvents to false
+	//since tracking that is costly and unnecessary in this case
+	var goldTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(goldPlane, 120, 120, false);
+	//adding a control(text) to the AdvancedDynamicTexture with various settings,
+	//can also add buttons, sliders, checkboxes, virtualKeyboard etc - will add some of these to a different menu
+	var goldText = new BABYLON.GUI.TextBlock();
+	goldText.fontFamily = "Comic Sans MS";
+	goldText.text = "0";
+	goldText.color = "yellow";
+	goldText.fontSize = 40;
+	goldTexture.addControl(goldText);
+	
+	//gold coin
+	var goldCoin = BABYLON.MeshBuilder.CreatePlane("UI-Gold-Coin", {width: 11, height: 11}, scene);
+	
+	//player status - collsion/on fire/frozen etc.
+	var status = BABYLON.MeshBuilder.CreatePlane("UI-Gold-Coin", {width: 60, height: 20}, scene);
+	//same approach as gold text - bigger text @ center of UI
+	var statusTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(status, 160, 120, false);
+	var statusText = new BABYLON.GUI.TextBlock();
+	statusText.fontFamily = "Comic Sans MS";
+	statusText.text = "Status";
+	statusText.color = "white";
+	statusText.fontSize = 50;
+	statusTexture.addControl(statusText);
 	
 	//control variables for UI movement
 	//these 2 store the x and z position of the previous frame @ this.move
@@ -71,6 +102,15 @@ playerUI = function(){
 		heart2.setPositionWithLocalVector(new BABYLON.Vector3(-83, 28, -140));	
 		heart3.setPositionWithLocalVector(new BABYLON.Vector3(-70, 28, -140));
 		
+		//setting the starting position of gold text
+		goldPlane.setPositionWithLocalVector(new BABYLON.Vector3(82, 28, -140));
+		
+		//setting the starting position of the gold coin
+		goldCoin.setPositionWithLocalVector(new BABYLON.Vector3(96, 28, -141));
+		
+		//setting the starting position of status text
+		status.setPositionWithLocalVector(new BABYLON.Vector3(0, 28, -140));
+		
 		//rotate the UI towards the camera,
 		//otherwise all the planes are on their side and cannot be seen
 		overlay.rotation.x = -200;
@@ -97,6 +137,13 @@ playerUI = function(){
 		heart1.rotation.x = -200;
 		heart2.rotation.x = -200;
 		heart3.rotation.x = -200;
+		
+		//rotate gold
+		goldPlane.rotation.x = -200;
+		goldCoin.rotation.x = -200;
+		
+		//rotate status
+		status.rotation.x = - 200;
 	}//startingPosition
 	
 	//apply testing material to spell1-8
@@ -129,7 +176,7 @@ playerUI = function(){
 		spell5.material = materialE;
 		spell6.material = materialF;
 		spell7.material = materialG;
-		spell8.material = materialH;		
+		spell8.material = materialH;
 	}//testingMaterial
 	
 	//set the actual textures for the spell icons
@@ -138,6 +185,15 @@ playerUI = function(){
 		var overlayMaterial = new BABYLON.StandardMaterial("overlayMaterial", scene);
 		overlayMaterial.diffuseTexture = new BABYLON.Texture(overlayTexture, scene);
 		overlay.material = overlayMaterial;
+		
+		//assign material to gold coin
+		var goldCoinMaterial = new BABYLON.StandardMaterial("goldCoinMaterial", scene);
+		goldCoinMaterial.diffuseTexture = new BABYLON.Texture(goldIcon, scene);
+		goldCoinMaterial.opacityTexture = new BABYLON.Texture(goldIcon, scene);
+		goldCoin.material = goldCoinMaterial;
+		
+		//hide the plane and only display the texture
+		goldCoinMaterial.diffuseTexture.hasAlpha = true;
 		
 		//assign material to spells
 		//fireball
@@ -148,7 +204,7 @@ playerUI = function(){
 		//frostbolt
 		var frostboltMaterial = new BABYLON.StandardMaterial("frostboltMaterial", scene); 
 		frostboltMaterial.diffuseTexture = new BABYLON.Texture(frostboltIcon, scene);
-		spell2.material = frostboltMaterial;	
+		spell2.material = frostboltMaterial;
 	}//setTextures
 	
 	//each spell border has their own material in order to change color red/green
@@ -310,6 +366,19 @@ playerUI = function(){
 		}//else if 
 	}//updateHealth
 	
+	//update the amount of gold displayed
+	this.updateGold = function(gold){
+		//GUI textblock only accepts string
+		var goldString = gold.toString();
+		goldText.text = goldString;
+	}//updateGold
+	
+	//update the status text displayed
+	this.updateStatus = function(status, color){
+		statusText.text = status;
+		statusText.color = color;
+	}//updateGold
+	
 	//move the entire UI with the player
 	//the following code keeps track of which way the player moves
 	//and then moves the UI in the appropriate direction
@@ -340,6 +409,12 @@ playerUI = function(){
 			heart1.position.x = heart1.position.x - 1;
 			heart2.position.x = heart2.position.x - 1;
 			heart3.position.x = heart3.position.x - 1;
+			//gold text position
+			goldPlane.position.x = goldPlane.position.x - 1; 
+			//gold coin position
+			goldCoin.position.x = goldCoin.position.x - 1;
+			//status text position
+			status.position.x = status.position.x - 1;
 		}//if
 		
 		//move the UI right
@@ -367,6 +442,12 @@ playerUI = function(){
 			heart1.position.x = heart1.position.x + 1;
 			heart2.position.x = heart2.position.x + 1;
 			heart3.position.x = heart3.position.x + 1;
+			//gold text position
+			goldPlane.position.x = goldPlane.position.x + 1;
+			//gold coin position
+			goldCoin.position.x = goldCoin.position.x + 1;
+			//status text position
+			status.position.x = status.position.x + 1;
 		}//if
 		
 		//move the UI downwards
@@ -394,6 +475,12 @@ playerUI = function(){
 			heart1.position.z = heart1.position.z - 1;
 			heart2.position.z = heart2.position.z - 1;
 			heart3.position.z = heart3.position.z - 1;
+			//gold text position
+			goldPlane.position.z = goldPlane.position.z - 1;
+			//gold coin position
+			goldCoin.position.z = goldCoin.position.z - 1;
+			//status text position
+			status.position.z = status.position.z - 1;
 		}//if
 		
 		//move the UI upwards
@@ -421,6 +508,12 @@ playerUI = function(){
 			heart1.position.z = heart1.position.z + 1;
 			heart2.position.z = heart2.position.z + 1;
 			heart3.position.z = heart3.position.z + 1;
+			//gold text position
+			goldPlane.position.z = goldPlane.position.z + 1;
+			//gold coin position
+			goldCoin.position.z = goldCoin.position.z + 1;
+			//status text position
+			status.position.z = status.position.z + 1;
 		}//if
 		
 		//update xMove and zMove every frame

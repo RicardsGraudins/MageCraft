@@ -56,18 +56,38 @@ UI.setTextures();
 UI.setHeartTextures();
 UI.setBorders();
 
+var gold = 0;
+
+//engine.resize();
+//UI.updateStatus("Frozen!", "blue");
+
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){
 	background.render();
-	playerObject.move();
-	playerObject.playerOnGrid();
-	playerObject.castFireball();
-	playerObject.castFrostbolt();
-	playerObject.castSplitter();
-	playerSpriteObject.move();
-	fireSpriteObject.move();
-	UI.move();
-	UI.updateHealth(playerObject.health);
+	
+	if (playerObject.health != 0){
+		playerObject.move();
+		playerObject.playerOnGrid();
+		playerObject.castFireball();
+		playerObject.castFrostbolt();
+		playerObject.castSplitter();
+		playerSpriteObject.move();
+		fireSpriteObject.move();
+		UI.move();
+		UI.updateHealth(playerObject.health);	
+	}//if
+	else {
+		playerSpriteObject.dead();
+	}//else
 	
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });
+
+//run this function every 3 seconds
+setInterval(function(){ 
+	//if the player is alive increment gold
+	if (playerObject.health != 0){
+		gold++;
+		UI.updateGold(gold);
+	} //if
+}, 3000);

@@ -99,6 +99,10 @@ Simple commit summary for project supervisor to keep track of progress.
 20. Fireball: Added Fireball spell, replaced mouse tracking and implemented a basic spell cycle.
 21. Fireball Particles: Added particles to Fireball.
 22. Updated Spell Cycle: Improved spell cycle(action manager, cooldowns, spell selection) and added setup for Frostbolt and Splitter.
+23. Fire Sprite @ Lava: Added sprite animation for when the player goes on the lava.
+24. User Interface: Added user interface that tracks spell cooldowns and health with animations.
+25. Babylon GUI - Gold + Status Trackers: Added gold and status trackers to UI.
+26. Frostbolt + Splitter: Added both spells with sprite animations and updated UI.
 
 ## References:
 * [Flask](http://flask.pocoo.org/docs/0.12/)  

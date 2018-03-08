@@ -1,9 +1,10 @@
 //load textures for UI
 overlayTexture = "static/resources/images/textures/overlay.png";
-fireballIcon = "static/resources/images/textures/fireball_icon.png"
-frostboltIcon = "static/resources/images/textures/frostbolt_icon.png"
-heartIcon = "static/resources/images/textures/heart_icon.png"
-goldIcon = "static/resources/images/textures/gold_coin_icon.png"
+fireballIcon = "static/resources/images/textures/fireball_icon.png";
+frostboltIcon = "static/resources/images/textures/frostbolt_icon.png";
+splitterIcon = "static/resources/images/textures/splitter.png";
+heartIcon = "static/resources/images/textures/heart_icon.png";
+goldIcon = "static/resources/images/textures/gold_coin_icon.png";
 
 //6 basic spells & 2 defensives
 playerUI = function(){
@@ -205,6 +206,11 @@ playerUI = function(){
 		var frostboltMaterial = new BABYLON.StandardMaterial("frostboltMaterial", scene); 
 		frostboltMaterial.diffuseTexture = new BABYLON.Texture(frostboltIcon, scene);
 		spell2.material = frostboltMaterial;
+		
+		//splitter
+		var splitterMaterial = new BABYLON.StandardMaterial("splitterMaterial", scene);
+		splitterMaterial.diffuseTexture = new BABYLON.Texture(splitterIcon, scene);
+		spell3.material = splitterMaterial;
 	}//setTextures
 	
 	//each spell border has their own material in order to change color red/green

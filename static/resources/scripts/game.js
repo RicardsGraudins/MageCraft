@@ -66,6 +66,8 @@ frostSpriteObject = new frostSpriteHandler();
 //start the animation
 frostSpriteObject.rotate();
 
+splitterSpriteObject = new splitterSpriteHandler();
+
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){
 	background.render();
@@ -79,6 +81,7 @@ engine.runRenderLoop(function(){
 		playerSpriteObject.move();
 		fireSpriteObject.move();
 		frostSpriteObject.move();
+		splitterSpriteObject.move();
 		UI.move();
 		UI.updateHealth(playerObject.health);	
 	}//if

@@ -7,6 +7,7 @@ fireParticle = "static/resources/images/textures/fireParticle.png";
 fireEffect = "static/resources/images/sprites/fire.png";
 frostEffect = "static/resources/images/sprites/frost.png";
 splitterEffect = "static/resources/images/textures/splitter.png";
+splitterProjectileEffect = "static/resources/images/sprites/frost2.png";
 
 //create sprite managers - new BABYLON.SpriteManager(name, imageURL, capacity, cellSize, scene)
 //name - name for manager
@@ -17,16 +18,33 @@ splitterEffect = "static/resources/images/textures/splitter.png";
 var spriteManagerPlayerRed = new BABYLON.SpriteManager("playerManager", redMage, 1, 114, scene); //player
 var spriteManagerFire = new BABYLON.SpriteManager("fireManager", fireEffect, 1, 190, scene); //fire
 var spriteManagerFrost = new BABYLON.SpriteManager("frostManager", frostEffect, 1, 192, scene); //frost
+var spriteManagerSplitter = new BABYLON.SpriteManager("splitterManager", splitterProjectileEffect, 8, 192, scene); //splitter projectiles
 
 //create the sprites - new BABYLON.Sprite(name, spriteManager)
 var playerSprite = new BABYLON.Sprite("player", spriteManagerPlayerRed);
 var fireSprite = new BABYLON.Sprite("fire", spriteManagerFire);
 var frostSprite = new BABYLON.Sprite("frost", spriteManagerFrost);
+var splitterSprite0 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
+var splitterSprite1 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
+var splitterSprite2 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
+var splitterSprite3 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
+var splitterSprite4 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
+var splitterSprite5 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
+var splitterSprite6 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
+var splitterSprite7 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
 
 //increase the size of the sprites
 playerSprite.size = 20;
 fireSprite.size = 28;
 frostSprite.size = 28;
+splitterSprite0.size = 24;
+splitterSprite1.size = 24;
+splitterSprite2.size = 24;
+splitterSprite3.size = 24;
+splitterSprite4.size = 24;
+splitterSprite5.size = 24;
+splitterSprite6.size = 24;
+splitterSprite7.size = 24;
 
 //boolean to control moving animation
 var moving = false;
@@ -160,6 +178,61 @@ frostSpriteHandler = function(){
 		frostSprite.position.z = frostbolt.position.z;
 	}//move
 }//frostSpriteHandler
+
+//handles splitter animations
+splitterSpriteHandler = function(){
+	//set the correct sprite cell
+	splitterSprite0.cellIndex = 14;
+	splitterSprite1.cellIndex = 14;
+	splitterSprite2.cellIndex = 14;
+	splitterSprite3.cellIndex = 14;
+	splitterSprite4.cellIndex = 14;
+	splitterSprite5.cellIndex = 14;
+	splitterSprite6.cellIndex = 14;
+	splitterSprite7.cellIndex = 14;
+	
+	//rotate the sprite towards the direction it is flying
+	this.rotateSprite = function(angle){
+		splitterSprite0.angle = angle;
+		splitterSprite1.angle = angle;
+		splitterSprite2.angle = angle;
+		splitterSprite3.angle = angle;
+		splitterSprite4.angle = angle;
+		splitterSprite5.angle = angle;
+		splitterSprite6.angle = angle;
+		splitterSprite7.angle = angle;
+	}//rotateSprite
+	
+	//move the sprites with their respective splitter projectile hitbox
+	this.move = function(){
+		splitterSprite0.position.x = splitterProjectile0.position.x;
+		splitterSprite1.position.x = splitterProjectile1.position.x;
+		splitterSprite2.position.x = splitterProjectile2.position.x;
+		splitterSprite3.position.x = splitterProjectile3.position.x;
+		splitterSprite4.position.x = splitterProjectile4.position.x;
+		splitterSprite5.position.x = splitterProjectile5.position.x;
+		splitterSprite6.position.x = splitterProjectile6.position.x;
+		splitterSprite7.position.x = splitterProjectile7.position.x;
+		
+		splitterSprite0.position.y = splitterProjectile0.position.y;
+		splitterSprite1.position.y = splitterProjectile1.position.y;
+		splitterSprite2.position.y = splitterProjectile2.position.y;
+		splitterSprite3.position.y = splitterProjectile3.position.y;
+		splitterSprite4.position.y = splitterProjectile4.position.y;
+		splitterSprite5.position.y = splitterProjectile5.position.y;
+		splitterSprite6.position.y = splitterProjectile6.position.y;
+		splitterSprite7.position.y = splitterProjectile7.position.y;
+		
+		splitterSprite0.position.z = splitterProjectile0.position.z;
+		splitterSprite1.position.z = splitterProjectile1.position.z;
+		splitterSprite2.position.z = splitterProjectile2.position.z;
+		splitterSprite3.position.z = splitterProjectile3.position.z;
+		splitterSprite4.position.z = splitterProjectile4.position.z;
+		splitterSprite5.position.z = splitterProjectile5.position.z;
+		splitterSprite6.position.z = splitterProjectile6.position.z;
+		splitterSprite7.position.z = splitterProjectile7.position.z;
+	}//move
+}//splitterSpriteHandler
 
 //the keycodes that will be mapped when a user presses a button
 KEY_CODES = {
@@ -344,6 +417,7 @@ splitterProjectileMaterial.hasAlpha = true;
 splitterProjectileMaterial.alpha = 0;
 
 //asign material to splitter projectiles, could reuse splitterMaterial however need to access alpha
+//of projectiles seperately from splitter
 splitterProjectile0.material = splitterProjectileMaterial;
 splitterProjectile1.material = splitterProjectileMaterial;
 splitterProjectile2.material = splitterProjectileMaterial;
@@ -800,6 +874,16 @@ Player = function(x, y, z, speed, onGrid, health){
 						splitterMaterial.alpha = 1;
 						splitterProjectileMaterial.alpha = 0;
 						
+						//reset projectile sprites size to 0 - increases to proper size in splitterProjectileAnimation
+						splitterSprite0.size = 0;
+						splitterSprite1.size = 0;
+						splitterSprite2.size = 0;
+						splitterSprite3.size = 0;
+						splitterSprite4.size = 0;
+						splitterSprite5.size = 0;
+						splitterSprite6.size = 0;
+						splitterSprite7.size = 0;
+						
 						//once i reaches 50, splitter translation stops and projectile translation begins in the direction of the inital splitter click
 						scene.registerBeforeRender(function () {
 							if(i++ < 50){
@@ -844,6 +928,9 @@ Player = function(x, y, z, speed, onGrid, health){
 										splitterProjectile5.position.z = splitter.position.z - 16;
 										splitterProjectile6.position.z = splitter.position.z - 24;
 										splitterProjectile7.position.z = splitter.position.z - 32;
+										
+										//rotate all the sprites
+										splitterSpriteObject.rotateSprite(4.75);
 									}//if
 									//left
 									else {
@@ -873,6 +960,9 @@ Player = function(x, y, z, speed, onGrid, health){
 										splitterProjectile5.position.z = splitter.position.z - 16;
 										splitterProjectile6.position.z = splitter.position.z - 24;
 										splitterProjectile7.position.z = splitter.position.z - 32;
+										
+										//rotate all the sprites
+										splitterSpriteObject.rotateSprite(1.55);
 									}//else
 									//start projectile animation
 									playerObject.splitterProjectilesAnimation(direction,distance);
@@ -903,9 +993,20 @@ Player = function(x, y, z, speed, onGrid, health){
 			if (z++ < 100){
 				splitter.rotation.y += 0.5;
 				
-				//every tenth increase the alpha by 0.1
+				//every tenth of z
 				if (z % 10 == 0){
-					splitterProjectileMaterial.alpha = splitterProjectileMaterial.alpha + 0.1;
+					//increase alpha by 0.1
+					//splitterProjectileMaterial.alpha = splitterProjectileMaterial.alpha + 0.1;
+					
+					//increase sprite size - ends up as 24
+					splitterSprite0.size += 2.4;
+					splitterSprite1.size += 2.4;
+					splitterSprite2.size += 2.4;
+					splitterSprite3.size += 2.4;
+					splitterSprite4.size += 2.4;
+					splitterSprite5.size += 2.4;
+					splitterSprite6.size += 2.4;
+					splitterSprite7.size += 2.4;
 				}//if
 			}//if
 		});
@@ -929,7 +1030,7 @@ Player = function(x, y, z, speed, onGrid, health){
 				//when x is 49 remove the highlight, hide the splitter and move it off the map along with the projectiles
 				if (x == 49){
 					splitterHighLight.removeMesh(splitter);
-					splitter.alpha = 0;
+					splitterMaterial.alpha = 0;
 					splitter.position.x = 1000;
 					splitterProjectile0.position.x = 1000;
 					splitterProjectile1.position.x = 1000;
@@ -939,6 +1040,15 @@ Player = function(x, y, z, speed, onGrid, health){
 					splitterProjectile5.position.x = 1000;
 					splitterProjectile6.position.x = 1000;
 					splitterProjectile7.position.x = 1000;
+					//reset splitter projectile sprites
+					splitterSprite0.size = 0;
+					splitterSprite1.size = 0;
+					splitterSprite2.size = 0;
+					splitterSprite3.size = 0;
+					splitterSprite4.size = 0;
+					splitterSprite5.size = 0;
+					splitterSprite6.size = 0;
+					splitterSprite7.size = 0;
 				}//if
 			});//registerBeforeRender
 		}, 2000);

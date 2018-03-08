@@ -1,7 +1,9 @@
 //gets a handle to the element with id myCanvas
 var canvas = document.getElementById("myCanvas");
 //gets a handle on BABYLON JS
-var engine = new BABYLON.Engine(canvas,true);
+//var engine = new BABYLON.Engine(canvas,true);
+//enable highlights
+var engine = new BABYLON.Engine(canvas, true, { stencil: true })
 //creates a basic babylon scene object (non-mesh)
 var scene = new BABYLON.Scene(engine);
 //enable physics - cannon_min.js

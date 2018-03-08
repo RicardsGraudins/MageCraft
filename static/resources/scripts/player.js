@@ -5,6 +5,8 @@ console.log("Player Ready!");
 redMage = "static/resources/images/sprites/mage.png";
 fireParticle = "static/resources/images/textures/fireParticle.png";
 fireEffect = "static/resources/images/sprites/fire.png";
+frostEffect = "static/resources/images/sprites/frost.png";
+splitterEffect = "static/resources/images/textures/splitter.png";
 
 //create sprite managers - new BABYLON.SpriteManager(name, imageURL, capacity, cellSize, scene)
 //name - name for manager
@@ -14,14 +16,17 @@ fireEffect = "static/resources/images/sprites/fire.png";
 //scene - which scene, in this case we're only using 1 scene for the entire game
 var spriteManagerPlayerRed = new BABYLON.SpriteManager("playerManager", redMage, 1, 114, scene); //player
 var spriteManagerFire = new BABYLON.SpriteManager("fireManager", fireEffect, 1, 190, scene); //fire
+var spriteManagerFrost = new BABYLON.SpriteManager("frostManager", frostEffect, 1, 192, scene); //frost
 
 //create the sprites - new BABYLON.Sprite(name, spriteManager)
 var playerSprite = new BABYLON.Sprite("player", spriteManagerPlayerRed);
 var fireSprite = new BABYLON.Sprite("fire", spriteManagerFire);
+var frostSprite = new BABYLON.Sprite("frost", spriteManagerFrost);
 
 //increase the size of the sprites
 playerSprite.size = 20;
 fireSprite.size = 28;
+frostSprite.size = 28;
 
 //boolean to control moving animation
 var moving = false;
@@ -135,6 +140,26 @@ fireSpriteHandler = function(){
 		}//else if
 	}//move
 }//fireSpriteHandler
+
+//handles frostbolt animations + frozen status for player
+frostSpriteHandler = function(){
+	//frostbolt rotating animation
+	this.rotate = function(){
+		frostSprite.playAnimation(11, 18, true, 50);
+	}//rotate
+	
+	//rotate the sprite towards the direction it is flying
+	this.rotateSprite = function(angle){
+		frostSprite.angle = angle;
+	}//rotateSprite
+	
+	//move the sprite with the frostbolt hitbox
+	this.move = function(){
+		frostSprite.position.x = frostbolt.position.x;
+		frostSprite.position.y = frostbolt.position.y;
+		frostSprite.position.z = frostbolt.position.z;
+	}//move
+}//frostSpriteHandler
 
 //the keycodes that will be mapped when a user presses a button
 KEY_CODES = {
@@ -269,8 +294,18 @@ scene.actionManager.registerAction(
 //track cords - player.getPositionExpressedInLocalSpace();
 var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX: 20}, scene);
 var fireball = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
-var frostbolt = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
+var frostbolt = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
 var splitter = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
+
+//splitter projectiles
+var splitterProjectile0 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
+var splitterProjectile1 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
+var splitterProjectile2 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
+var splitterProjectile3 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
+var splitterProjectile4 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
+var splitterProjectile5 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
+var splitterProjectile6 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
+var splitterProjectile7 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
 
 //assign transparent material to the player sphere - acts as hitbox
 //playerSprite moves with the hitbox - same (x,y,z) at all times
@@ -297,9 +332,41 @@ frostbolt.material = frostboltMaterial;
 
 //asign material to splitter
 var splitterMaterial = new BABYLON.StandardMaterial("splitterMaterial", scene);
+splitterMaterial.emissiveTexture = new BABYLON.Texture(splitterEffect, scene);
 splitterMaterial.hasAlpha = true;
 splitterMaterial.alpha = 0;
 splitter.material = splitterMaterial;
+
+//splitterProjectile material
+var splitterProjectileMaterial = new BABYLON.StandardMaterial("splitterProjectileMaterial", scene);
+splitterProjectileMaterial.emissiveTexture = new BABYLON.Texture(splitterEffect, scene);
+splitterProjectileMaterial.hasAlpha = true;
+splitterProjectileMaterial.alpha = 0;
+
+//asign material to splitter projectiles, could reuse splitterMaterial however need to access alpha
+splitterProjectile0.material = splitterProjectileMaterial;
+splitterProjectile1.material = splitterProjectileMaterial;
+splitterProjectile2.material = splitterProjectileMaterial;
+splitterProjectile3.material = splitterProjectileMaterial;
+splitterProjectile4.material = splitterProjectileMaterial;
+splitterProjectile5.material = splitterProjectileMaterial;
+splitterProjectile6.material = splitterProjectileMaterial;
+splitterProjectile7.material = splitterProjectileMaterial;
+
+//splitter highlight
+var splitterHighLight = new BABYLON.HighlightLayer("Red-Highlight", scene);
+
+//asign highlight to splitter projectiles
+/*
+splitterHighLight.addMesh(splitterProjectile0, BABYLON.Color3.White());
+splitterHighLight.addMesh(splitterProjectile1, BABYLON.Color3.White());
+splitterHighLight.addMesh(splitterProjectile2, BABYLON.Color3.White());
+splitterHighLight.addMesh(splitterProjectile3, BABYLON.Color3.White());
+splitterHighLight.addMesh(splitterProjectile4, BABYLON.Color3.White());
+splitterHighLight.addMesh(splitterProjectile5, BABYLON.Color3.White());
+splitterHighLight.addMesh(splitterProjectile6, BABYLON.Color3.White());
+splitterHighLight.addMesh(splitterProjectile7, BABYLON.Color3.White());
+*/
 
 //particles for fireball using 2 ParticleSystems
 //---------------------------------------------------------------------------------------------
@@ -422,9 +489,23 @@ Player = function(x, y, z, speed, onGrid, health){
 	
 	//spawning position
 	player.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
-	fireball.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
-	frostbolt.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
-	splitter.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
+	//fireball.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
+	//frostbolt.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
+	//splitter.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
+	
+	//set them off the map instead
+	fireball.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	frostbolt.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	splitter.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	
+	splitterProjectile0.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	splitterProjectile1.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	splitterProjectile2.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	splitterProjectile3.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	splitterProjectile4.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	splitterProjectile5.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	splitterProjectile6.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	splitterProjectile7.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	
 	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites
 	playerSprite.position.x = x;
@@ -556,7 +637,7 @@ Player = function(x, y, z, speed, onGrid, health){
 						//set fireballMaterial back to visible
 						fireballMaterial.alpha = 1;
 						
-						//once i reaches 150, tranlation stops
+						//once i reaches 150, translation stops
 						scene.registerBeforeRender(function () {
 							if(i++ < 150){
 								//mesh.translate(vector, distance, space)
@@ -600,9 +681,6 @@ Player = function(x, y, z, speed, onGrid, health){
 					frostboltCooldown = true;
 					//start frostboltTimer, after 30 seconds set frostboltCooldown to false
 					spellManagerPlayer.frostboltTimer();
-					//start particle systems here
-					//
-					//
 					// if the click hits the ground plane
 					if (ground.hit) {
 						//set spell location to player location - player casting the spell
@@ -614,6 +692,30 @@ Player = function(x, y, z, speed, onGrid, health){
 						gx = ground.pickedPoint.x;
 						gz = ground.pickedPoint.z;
 						
+						//change the angle of the frostSprite depending on which
+						//quadrant is clicked
+						
+						//Upper right quadrant
+						if (gz > 0 && gx > 0){
+							//console.log("Upper right quadrant")]
+							frostSprite.angle = 5.6;
+						}//if
+						//Upper left quadrant
+						else if (gz > 0 && gx < 0){
+							//console.log("Upper left quadrant");
+							frostSprite.angle = 1.1;
+						}//else if
+						//Lower right quadrant
+						else if (gz < 0 && gx > 0){
+							//console.log("Lower right quadrant");
+							frostSprite.angle = 3.8;
+						}//else
+						//Lower left quadrant
+						else if (gz < 0 && gx < 0){
+							//console.log("Lower left quadrant");
+							frostSprite.angle = 2.1;
+						}//else if
+						
 						var direction = new BABYLON.Vector3(gx,21,gz);
 						direction.normalize(); //direction now a unit vector
 						distance = 2;
@@ -621,9 +723,9 @@ Player = function(x, y, z, speed, onGrid, health){
 						var i = 0;
 						
 						//set frostboltMaterial back to visible
-						frostboltMaterial.alpha = 1;
+						frostSprite.size = 28;
 						
-						//once i reaches 150, tranlation stops
+						//once i reaches 150, translation stops
 						scene.registerBeforeRender(function () {
 							if(i++ < 150){
 								//mesh.translate(vector, distance, space)
@@ -633,12 +735,11 @@ Player = function(x, y, z, speed, onGrid, health){
 								frostbolt.translate(direction, distance, BABYLON.Space.WORLD);
 								
 								//once i reaches 149 make the splitter transparent,
-								//move it off the map so it doesn't collide with anyone and switch off particle systems
+								//move it off the map so it doesn't collide with anyone
 								if(i == 149){
+									//once the frostbolt changes to this position the frostSprite becomes invisible
 									frostbolt.position.x = 1000;
-									frostboltMaterial.alpha = 0;
-									//smokeSystem.stop();
-									//fireSystem.stop();
+									frostSprite.size = 0;
 								}//if
 							}//if
 						});
@@ -667,9 +768,9 @@ Player = function(x, y, z, speed, onGrid, health){
 					splitterCooldown = true;
 					//start splitterTimer, after 25 seconds set splitterCooldown to false
 					spellManagerPlayer.splitterTimer();
-					//start particle systems here
-					//
-					//
+					//set these variables back to false
+					movingRight = false;
+					movingLeft = false;
 					// if the click hits the ground plane
 					if (ground.hit) {
 						//set spell location to player location - player casting the spell
@@ -687,25 +788,94 @@ Player = function(x, y, z, speed, onGrid, health){
 						
 						var i = 0;
 						
-						//set splitterMaterial back to visible
-						splitterMaterial.alpha = 1;
+						//switch to true depending on where clicked
+						if (splitter.position.x > gx){
+							movingLeft = true;
+						}//if
+						else {
+							movingRight = true;
+						}//else
 						
-						//once i reaches 80, tranlation stops
+						//set splitterMaterial to visible and splitterProjectileMaterial to invisable
+						splitterMaterial.alpha = 1;
+						splitterProjectileMaterial.alpha = 0;
+						
+						//once i reaches 50, splitter translation stops and projectile translation begins in the direction of the inital splitter click
 						scene.registerBeforeRender(function () {
-							if(i++ < 80){
+							if(i++ < 50){
 								//mesh.translate(vector, distance, space)
 								//vector = direction the mesh should travel towards
 								//distance = speed of the mesh moving
 								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
 								splitter.translate(direction, distance, BABYLON.Space.WORLD);
+								splitter.rotation.y += 0.1;
 								
-								//once i reaches 79 make the splitter transparent,
-								//move it off the map so it doesn't collide with anyone and switch off particle systems
-								if(i == 79){
-									splitter.position.x = 1000;
-									splitterMaterial.alpha = 0;
-									//smokeSystem.stop();
-									//fireSystem.stop();
+								//once i reaches 49 splitter stops moving and
+								//splitter projectiles begin to spawn
+								if(i == 49){
+									splitterHighLight.addMesh(splitter, BABYLON.Color3.White());
+									
+									//spawn the projectiles in a particular direction
+									//right
+									if (movingRight == true){
+										splitterProjectile0.position.x = splitter.position.x + 10;
+										splitterProjectile1.position.x = splitter.position.x + 10;
+										splitterProjectile2.position.x = splitter.position.x + 10;
+										splitterProjectile3.position.x = splitter.position.x + 10;
+										splitterProjectile4.position.x = splitter.position.x + 10;
+										splitterProjectile5.position.x = splitter.position.x + 10;
+										splitterProjectile6.position.x = splitter.position.x + 10;
+										splitterProjectile7.position.x = splitter.position.x + 10;
+										
+										splitterProjectile0.position.y = splitter.position.y;
+										splitterProjectile1.position.y = splitter.position.y;
+										splitterProjectile2.position.y = splitter.position.y;
+										splitterProjectile3.position.y = splitter.position.y;
+										splitterProjectile4.position.y = splitter.position.y;
+										splitterProjectile5.position.y = splitter.position.y;
+										splitterProjectile6.position.y = splitter.position.y;
+										splitterProjectile7.position.y = splitter.position.y;
+										
+										splitterProjectile0.position.z = splitter.position.z + 8;
+										splitterProjectile1.position.z = splitter.position.z + 16;
+										splitterProjectile2.position.z = splitter.position.z + 24;
+										splitterProjectile3.position.z = splitter.position.z + 32;
+										splitterProjectile4.position.z = splitter.position.z - 8;
+										splitterProjectile5.position.z = splitter.position.z - 16;
+										splitterProjectile6.position.z = splitter.position.z - 24;
+										splitterProjectile7.position.z = splitter.position.z - 32;
+									}//if
+									//left
+									else {
+										splitterProjectile0.position.x = splitter.position.x - 8;
+										splitterProjectile1.position.x = splitter.position.x - 8;
+										splitterProjectile2.position.x = splitter.position.x - 8;
+										splitterProjectile3.position.x = splitter.position.x - 8;
+										splitterProjectile4.position.x = splitter.position.x - 8;
+										splitterProjectile5.position.x = splitter.position.x - 8;
+										splitterProjectile6.position.x = splitter.position.x - 8;
+										splitterProjectile7.position.x = splitter.position.x - 8;
+										
+										splitterProjectile0.position.y = splitter.position.y;
+										splitterProjectile1.position.y = splitter.position.y;
+										splitterProjectile2.position.y = splitter.position.y;
+										splitterProjectile3.position.y = splitter.position.y;
+										splitterProjectile4.position.y = splitter.position.y;
+										splitterProjectile5.position.y = splitter.position.y;
+										splitterProjectile6.position.y = splitter.position.y;
+										splitterProjectile7.position.y = splitter.position.y;
+										
+										splitterProjectile0.position.z = splitter.position.z + 8;
+										splitterProjectile1.position.z = splitter.position.z + 16;
+										splitterProjectile2.position.z = splitter.position.z + 24;
+										splitterProjectile3.position.z = splitter.position.z + 32;
+										splitterProjectile4.position.z = splitter.position.z - 8;
+										splitterProjectile5.position.z = splitter.position.z - 16;
+										splitterProjectile6.position.z = splitter.position.z - 24;
+										splitterProjectile7.position.z = splitter.position.z - 32;
+									}//else
+									//start projectile animation
+									playerObject.splitterProjectilesAnimation(direction,distance);
 								}//if
 							}//if
 						});
@@ -721,6 +891,58 @@ Player = function(x, y, z, speed, onGrid, health){
 			};//onPointerDown
 		}//if splitter is selected
 	}//castSplitter
+	
+	//handles animation for splitter projectiles
+	this.splitterProjectilesAnimation = function(direction, distance){
+		//animation control
+		var x = 0;
+		var z = 0;
+		
+		//once z reaches 100 splitter projectiles should be fully visible
+		scene.registerBeforeRender(function () {
+			if (z++ < 100){
+				splitter.rotation.y += 0.5;
+				
+				//every tenth increase the alpha by 0.1
+				if (z % 10 == 0){
+					splitterProjectileMaterial.alpha = splitterProjectileMaterial.alpha + 0.1;
+				}//if
+			}//if
+		});
+		
+		//wait 2 seconds
+		setTimeout(function() {
+			//keep the translation going until x is 49
+			scene.registerBeforeRender(function () {
+				if (x++ < 50){
+					splitterProjectile0.translate(direction, distance, BABYLON.Space.WORLD);
+					splitterProjectile1.translate(direction, distance, BABYLON.Space.WORLD);
+					splitterProjectile2.translate(direction, distance, BABYLON.Space.WORLD);
+					splitterProjectile3.translate(direction, distance, BABYLON.Space.WORLD);
+					splitterProjectile4.translate(direction, distance, BABYLON.Space.WORLD);
+					splitterProjectile5.translate(direction, distance, BABYLON.Space.WORLD);
+					splitterProjectile6.translate(direction, distance, BABYLON.Space.WORLD);
+					splitterProjectile7.translate(direction, distance, BABYLON.Space.WORLD);
+					splitter.rotation.y += 0.1;
+				}//if
+				
+				//when x is 49 remove the highlight, hide the splitter and move it off the map along with the projectiles
+				if (x == 49){
+					splitterHighLight.removeMesh(splitter);
+					splitter.alpha = 0;
+					splitter.position.x = 1000;
+					splitterProjectile0.position.x = 1000;
+					splitterProjectile1.position.x = 1000;
+					splitterProjectile2.position.x = 1000;
+					splitterProjectile3.position.x = 1000;
+					splitterProjectile4.position.x = 1000;
+					splitterProjectile5.position.x = 1000;
+					splitterProjectile6.position.x = 1000;
+					splitterProjectile7.position.x = 1000;
+				}//if
+			});//registerBeforeRender
+		}, 2000);
+	}//splitterProjectilesAnimation
 }//Player
 
 //handles cooldowns for spells

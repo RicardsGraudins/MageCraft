@@ -61,6 +61,11 @@ var gold = 0;
 //engine.resize();
 //UI.updateStatus("Frozen!", "blue");
 
+frostSpriteObject = new frostSpriteHandler();
+
+//start the animation
+frostSpriteObject.rotate();
+
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){
 	background.render();
@@ -73,6 +78,7 @@ engine.runRenderLoop(function(){
 		playerObject.castSplitter();
 		playerSpriteObject.move();
 		fireSpriteObject.move();
+		frostSpriteObject.move();
 		UI.move();
 		UI.updateHealth(playerObject.health);	
 	}//if

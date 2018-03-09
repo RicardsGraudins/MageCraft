@@ -78,6 +78,7 @@ engine.runRenderLoop(function(){
 		playerObject.castFireball();
 		playerObject.castFrostbolt();
 		playerObject.castSplitter();
+		playerObject.castRecharger();
 		playerSpriteObject.move();
 		fireSpriteObject.move();
 		frostSpriteObject.move();

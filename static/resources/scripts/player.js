@@ -54,12 +54,15 @@ var fireballCooldown = false;
 var frostboltCooldown = false;
 //boolean to control splitter cooldown - can only cast once every 25 seconds
 var splitterCooldown = false;
+//boolean to control recharger cooldown - cast every 15 seconds and cooldown resets on hit
+var rechargerCooldown = false;
 
 //booleans to track if a certain spell is selected
 //false until a spell is selected by keybind - once selected can cast by clicking
 var fireballSelected = false;
 var frostboltSelected = false;
 var splitterSelected = false;
+var rechargerSelected = false;
 
 //handles sprite animations for the player
 playerSpriteHandler = function(){
@@ -327,6 +330,7 @@ scene.actionManager.registerAction(
 			console.log("Fireball is selected!");
 			frostboltSelected = false;
 			splitterSelected = false;
+			rechargerSelected = false;
 			fireballSelected = true;
 		}//function
     )//ExecuteCodeAction - 1
@@ -343,6 +347,7 @@ scene.actionManager.registerAction(
 			console.log("Frostbolt is selected!");
 			fireballSelected = false;
 			splitterSelected = false;
+			rechargerSelected = false;
 			frostboltSelected = true;
 		}//function
     )//ExecuteCodeAction - 2
@@ -359,9 +364,27 @@ scene.actionManager.registerAction(
 			console.log("Splitter is selected!");
 			fireballSelected = false;
 			frostboltSelected = false;
+			rechargerSelected = false;
 			splitterSelected = true;
 		}//function
     )//ExecuteCodeAction - 3
+);//registerAction
+
+//register action to select recharger
+scene.actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+        {
+            trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+            parameter: '4'
+        },
+        function () {
+			console.log("Recharger is selected!");
+			fireballSelected = false;
+			frostboltSelected = false;
+			splitterSelected = false;
+			rechargerSelected = true;
+		}//function
+    )//ExecuteCodeAction - 4
 );//registerAction
 
 //track cords - player.getPositionExpressedInLocalSpace();
@@ -369,6 +392,7 @@ var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX
 var fireball = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 var frostbolt = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
 var splitter = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
+var recharger = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 
 //splitter projectiles
 var splitterProjectile0 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
@@ -441,6 +465,16 @@ splitterHighLight.addMesh(splitterProjectile5, BABYLON.Color3.White());
 splitterHighLight.addMesh(splitterProjectile6, BABYLON.Color3.White());
 splitterHighLight.addMesh(splitterProjectile7, BABYLON.Color3.White());
 */
+
+//assign material to recharger
+var rechargerMaterial = new BABYLON.StandardMaterial("rechargerMaterial", scene);
+rechargerMaterial.emissiveTexture = new BABYLON.Texture(splitterEffect, scene); //reusing splitter texture
+rechargerMaterial.diffuseColor = new BABYLON.Color3(139,0,139); //changing texture color to bubblegum
+rechargerMaterial.hasAlpha = true;
+rechargerMaterial.alpha = 0;
+recharger.material = rechargerMaterial;
+splitterHighLight.addMesh(recharger, BABYLON.Color3.Purple()); //adding a purple highlight
+//using both color and highlight the texture transforms from looking like an ice sphere to a more arcane spell 
 
 //particles for fireball using 2 ParticleSystems
 //---------------------------------------------------------------------------------------------
@@ -580,6 +614,8 @@ Player = function(x, y, z, speed, onGrid, health){
 	splitterProjectile5.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	splitterProjectile6.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	splitterProjectile7.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	
+	recharger.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	
 	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites
 	playerSprite.position.x = x;
@@ -1053,6 +1089,77 @@ Player = function(x, y, z, speed, onGrid, health){
 			});//registerBeforeRender
 		}, 2000);
 	}//splitterProjectilesAnimation
+	
+	//handles animations for casting recharger
+	this.castRecharger = function(){
+		//if recharger is selected:
+		if (rechargerSelected == true){
+			//once player clicks on the ground - cast the spell
+			scene.onPointerDown = function (evt, ground) {
+				//if rechargerCooldown == false, player can cast recharger
+				if (rechargerCooldown == false){
+					//set recharger to true
+					rechargerCooldown = true;
+					//start rechargerTimer, after 15 seconds set rechargerCooldown to false
+					spellManagerPlayer.rechargerTimer();
+					// if the click hits the ground plane
+					if (ground.hit) {
+						//set spell location to player location - player casting the spell
+						recharger.position.x = player.position.x;
+						recharger.position.z = player.position.z;
+						recharger.position.y = player.position.y;
+						
+						//x and z cords of mouse click @ ground plane
+						gx = ground.pickedPoint.x;
+						gz = ground.pickedPoint.z;
+						
+						var direction = new BABYLON.Vector3(gx,21,gz);
+						direction.normalize(); //direction now a unit vector
+						distance = 2;
+						
+						var i = 0;
+						
+						//set rechargerMaterial back to visible
+						rechargerMaterial.alpha = 1;
+						
+						//once i reaches 100, translation stops
+						scene.registerBeforeRender(function () {
+							if(i++ < 100){
+								//mesh.translate(vector, distance, space)
+								//vector = direction the mesh should travel towards
+								//distance = speed of the mesh moving
+								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
+								recharger.translate(direction, distance, BABYLON.Space.WORLD);
+								recharger.rotation.y += 0.3;
+								
+								//recharger cooldown logic should go here, keep checking for collision every iteration
+								//if collision occurs set rechargerCooldown back to false
+								//otherwise set it on cooldown  spellManagerPlayer.rechargerTimer();
+								
+								//also border here - casts -> red
+								//hits -> green
+								//otherwise 15 second red
+								
+								//once i reaches 199 make the recharger transparent,
+								//move it off the map so it doesn't collide with anyone
+								if(i == 99){
+									recharger.position.x = 1000;
+									rechargerMaterial.alpha = 0;
+								}//if
+							}//if
+						});
+						
+					}//if
+					else {
+						console.log("Clicked outside the map!");
+					}//else
+				}//if - rechargerCooldown
+				else {
+					console.log("Recharger is on cooldown || is not selected!");
+				}//else
+			};//onPointerDown
+		}//if recharger is selected
+	}//castRecharger
 }//Player
 
 //handles cooldowns for spells
@@ -1086,4 +1193,14 @@ spellManager = function(){
 			UI.cooldownOff("splitter"); //change spell border to green
 		}, 25000); //cooldown 25 seconds	
 	}//splitterTimer
+	
+	//handles cooldown for recharger
+	this.rechargerTimer = function(){
+		UI.cooldownOn("recharger"); //change spell border to red
+		setTimeout(function() {
+			rechargerCooldown = false;
+			console.log(rechargerCooldown);
+			UI.cooldownOff("recharger"); //change spell border to green
+		}, 15000); //cooldown 15 seconds	
+	}//rechargeTimer
 }//spellManager

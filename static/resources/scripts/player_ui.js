@@ -3,6 +3,7 @@ overlayTexture = "static/resources/images/textures/overlay.png";
 fireballIcon = "static/resources/images/textures/fireball_icon.png";
 frostboltIcon = "static/resources/images/textures/frostbolt_icon.png";
 splitterIcon = "static/resources/images/textures/splitter.png";
+rechargerIcon = "static/resources/images/textures/recharger.png";
 heartIcon = "static/resources/images/textures/heart_icon.png";
 goldIcon = "static/resources/images/textures/gold_coin_icon.png";
 
@@ -211,6 +212,11 @@ playerUI = function(){
 		var splitterMaterial = new BABYLON.StandardMaterial("splitterMaterial", scene);
 		splitterMaterial.diffuseTexture = new BABYLON.Texture(splitterIcon, scene);
 		spell3.material = splitterMaterial;
+		
+		//recharger
+		var rechargerMaterial = new BABYLON.StandardMaterial("rechagerMaterial", scene);
+		rechargerMaterial.diffuseTexture = new BABYLON.Texture(rechargerIcon, scene);
+		spell4.material = rechargerMaterial;
 	}//setTextures
 	
 	//each spell border has their own material in order to change color red/green
@@ -259,6 +265,9 @@ playerUI = function(){
 		else if (spellId == "splitter"){
 			borderMaterial3.diffuseColor = new BABYLON.Color3(0, 255, 0);
 		}//else if
+		else if (spellId == "recharger"){
+			borderMaterial4.diffuseColor = new BABYLON.Color3(0, 255, 0);
+		}//else if
 		else {
 			console.log("Player cast an unidentified spell!")
 		}//else
@@ -275,6 +284,9 @@ playerUI = function(){
 		}//else if
 		else if (spellId == "splitter"){
 			borderMaterial3.diffuseColor = new BABYLON.Color3(255, 0, 0);
+		}//else if
+		else if (spellId == "recharger"){
+			borderMaterial4.diffuseColor = new BABYLON.Color3(255, 0, 0);
 		}//else if
 		else {
 			console.log("Player cast an unidentified spell!")

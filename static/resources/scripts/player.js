@@ -8,6 +8,7 @@ fireEffect = "static/resources/images/sprites/fire.png";
 frostEffect = "static/resources/images/sprites/frost.png";
 splitterEffect = "static/resources/images/textures/splitter.png";
 splitterProjectileEffect = "static/resources/images/sprites/frost2.png";
+fireballEffect = "static/resources/images/sprites/fireball_edited.png";
 
 //create sprite managers - new BABYLON.SpriteManager(name, imageURL, capacity, cellSize, scene)
 //name - name for manager
@@ -16,9 +17,10 @@ splitterProjectileEffect = "static/resources/images/sprites/frost2.png";
 //cellSize - corresponds to size of images, typically square size with same width and height, can also be different {width:x, height:y} but generally ends in awkward transitions
 //scene - which scene, in this case we're only using 1 scene for the entire game
 var spriteManagerPlayerRed = new BABYLON.SpriteManager("playerManager", redMage, 1, 114, scene); //player
-var spriteManagerFire = new BABYLON.SpriteManager("fireManager", fireEffect, 1, 190, scene); //fire
+var spriteManagerFire = new BABYLON.SpriteManager("fireManager", fireEffect, 1, 190, scene); //fire - player going on fire not fireball
 var spriteManagerFrost = new BABYLON.SpriteManager("frostManager", frostEffect, 1, 192, scene); //frost
 var spriteManagerSplitter = new BABYLON.SpriteManager("splitterManager", splitterProjectileEffect, 8, 192, scene); //splitter projectiles
+var spriteManagerFireball = new BABYLON.SpriteManager("fireballManager", fireballEffect, 1, {width:877, height:802}, scene); //fireball
 
 //create the sprites - new BABYLON.Sprite(name, spriteManager)
 var playerSprite = new BABYLON.Sprite("player", spriteManagerPlayerRed);
@@ -32,6 +34,7 @@ var splitterSprite4 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
 var splitterSprite5 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
 var splitterSprite6 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
 var splitterSprite7 = new BABYLON.Sprite("splitter", spriteManagerSplitter);
+var fireballSprite = new BABYLON.Sprite("fireball", spriteManagerFireball);
 
 //increase the size of the sprites
 playerSprite.size = 20;
@@ -45,6 +48,7 @@ splitterSprite4.size = 24;
 splitterSprite5.size = 24;
 splitterSprite6.size = 24;
 splitterSprite7.size = 24;
+fireballSprite.size = 12;
 
 //boolean to control moving animation
 var moving = false;
@@ -56,6 +60,8 @@ var frostboltCooldown = false;
 var splitterCooldown = false;
 //boolean to control recharger cooldown - cast every 15 seconds and cooldown resets on hit
 var rechargerCooldown = false;
+//boolean to control moltonBoulder cooldown - cast only once every 20 seconds
+var moltonBoulderCooldown = false;
 
 //booleans to track if a certain spell is selected
 //false until a spell is selected by keybind - once selected can cast by clicking
@@ -63,6 +69,7 @@ var fireballSelected = false;
 var frostboltSelected = false;
 var splitterSelected = false;
 var rechargerSelected = false;
+var moltonBoulderSelected = false;
 
 //handles sprite animations for the player
 playerSpriteHandler = function(){
@@ -237,6 +244,17 @@ splitterSpriteHandler = function(){
 	}//move
 }//splitterSpriteHandler
 
+//handles fireball animations, don't necessarily need to use a sprite manager for fireball
+//since theres no actual sprite frame animations occuring i.e. no fireball.playAnimation(startingFrame, endingFrame, loop, delay) just a single image
+//therefore could use basic WEBGL for displaying the image however it is quicker and easier(take advantage of sprite manager functions) to still use a sprite manager 
+fireballSpriteHandler = function(){
+	this.move = function(){
+		fireballSprite.position.x = fireball.position.x;
+		fireballSprite.position.y = fireball.position.y;
+		fireballSprite.position.z = fireball.position.z;
+	}//move
+}//fireballSpriteHandler
+
 //the keycodes that will be mapped when a user presses a button
 KEY_CODES = {
   65: 'left',
@@ -331,6 +349,7 @@ scene.actionManager.registerAction(
 			frostboltSelected = false;
 			splitterSelected = false;
 			rechargerSelected = false;
+			moltonBoulderSelected = false;
 			fireballSelected = true;
 		}//function
     )//ExecuteCodeAction - 1
@@ -348,6 +367,7 @@ scene.actionManager.registerAction(
 			fireballSelected = false;
 			splitterSelected = false;
 			rechargerSelected = false;
+			moltonBoulderSelected = false;
 			frostboltSelected = true;
 		}//function
     )//ExecuteCodeAction - 2
@@ -365,6 +385,7 @@ scene.actionManager.registerAction(
 			fireballSelected = false;
 			frostboltSelected = false;
 			rechargerSelected = false;
+			moltonBoulderSelected = false;
 			splitterSelected = true;
 		}//function
     )//ExecuteCodeAction - 3
@@ -382,9 +403,28 @@ scene.actionManager.registerAction(
 			fireballSelected = false;
 			frostboltSelected = false;
 			splitterSelected = false;
+			moltonBoulderSelected = false;
 			rechargerSelected = true;
 		}//function
     )//ExecuteCodeAction - 4
+);//registerAction
+
+//register action to select molton boulder
+scene.actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+        {
+            trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+            parameter: '5'
+        },
+        function () {
+			console.log("Molton Boulder is selected!");
+			fireballSelected = false;
+			frostboltSelected = false;
+			splitterSelected = false;
+			rechargerSelected = false;
+			moltonBoulderSelected = true;
+		}//function
+    )//ExecuteCodeAction - 5
 );//registerAction
 
 //track cords - player.getPositionExpressedInLocalSpace();
@@ -393,6 +433,7 @@ var fireball = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameter
 var frostbolt = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
 var splitter = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 var recharger = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
+var moltonBoulder = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
 
 //splitter projectiles
 var splitterProjectile0 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
@@ -414,9 +455,9 @@ player.material = playerMaterial;
 
 //asign material to fireball with fire texture - fire_procedural_texture.js
 var fireballMaterial = new BABYLON.StandardMaterial("fireballMaterial", scene);
-var fireTexture = new BABYLON.FireProceduralTexture("fireTexture", 256, scene);
-fireballMaterial.diffuseTexture = fireTexture;
-fireballMaterial.opacityTexture = fireTexture;
+//var fireTexture = new BABYLON.FireProceduralTexture("fireTexture", 256, scene);
+//fireballMaterial.diffuseTexture = fireTexture;
+//fireballMaterial.opacityTexture = fireTexture;
 fireballMaterial.hasAlpha = true;
 fireballMaterial.alpha = 0;
 fireball.material = fireballMaterial;
@@ -475,6 +516,17 @@ rechargerMaterial.alpha = 0;
 recharger.material = rechargerMaterial;
 splitterHighLight.addMesh(recharger, BABYLON.Color3.Purple()); //adding a purple highlight
 //using both color and highlight the texture transforms from looking like an ice sphere to a more arcane spell 
+
+//assign material to molton boulder
+var moltonBoulderMaterial = new BABYLON.StandardMaterial("moltonBoulderMaterial", scene);
+//texture etc
+var fireTexture = new BABYLON.FireProceduralTexture("fireTexture", 256, scene);
+fireTexture.speed = new BABYLON.Vector2(1,1,1);
+fireTexture.shift = new BABYLON.Vector2(0,1,0);
+moltonBoulderMaterial.diffuseTexture = fireTexture;
+moltonBoulder.hasAlpha = true;
+moltonBoulder.alpha = 0;
+moltonBoulder.material = moltonBoulderMaterial;
 
 //particles for fireball using 2 ParticleSystems
 //---------------------------------------------------------------------------------------------
@@ -616,6 +668,7 @@ Player = function(x, y, z, speed, onGrid, health){
 	splitterProjectile7.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	
 	recharger.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	moltonBoulder.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	
 	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites
 	playerSprite.position.x = x;
@@ -745,7 +798,10 @@ Player = function(x, y, z, speed, onGrid, health){
 						var i = 0;
 						
 						//set fireballMaterial back to visible
-						fireballMaterial.alpha = 1;
+						//fireballMaterial.alpha = 1;
+						
+						//reset fireballSprite angle to 0
+						fireballSprite.angle = 0;
 						
 						//once i reaches 150, translation stops
 						scene.registerBeforeRender(function () {
@@ -755,6 +811,7 @@ Player = function(x, y, z, speed, onGrid, health){
 								//distance = speed of the mesh moving
 								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
 								fireball.translate(direction, distance, BABYLON.Space.WORLD);
+								fireballSprite.angle += 0.03;
 								
 								//once i reaches 149 make the fireball transparent,
 								//move it off the map so it doesn't collide with anyone and switch off particle systems
@@ -1102,6 +1159,9 @@ Player = function(x, y, z, speed, onGrid, health){
 					rechargerCooldown = true;
 					//start rechargerTimer, after 15 seconds set rechargerCooldown to false
 					spellManagerPlayer.rechargerTimer();
+					//set these variables back to false
+					movingRight = false;
+					movingLeft = false;
 					// if the click hits the ground plane
 					if (ground.hit) {
 						//set spell location to player location - player casting the spell
@@ -1160,6 +1220,90 @@ Player = function(x, y, z, speed, onGrid, health){
 			};//onPointerDown
 		}//if recharger is selected
 	}//castRecharger
+	
+	//handles animations for casting molton boulder
+	this.castMoltonBoulder = function(){
+		//if moltonBoulder is selected:
+		if (moltonBoulderSelected == true){
+			//once player clicks on the ground - cast the spell
+			scene.onPointerDown = function (evt, ground) {
+				//if moltonBoulderCooldown == false, player can cast molton boulder
+				if (moltonBoulderCooldown == false){
+					//set moltonBoulderCooldown to true
+					moltonBoulderCooldown = true;
+					//start moltonBoulderTimer, after 20 seconds set moltonBoulderCooldown to false
+					spellManagerPlayer.moltonBoulderTimer();
+					//set these variables back to false
+					movingRight = false;
+					movingLeft = false;
+					// if the click hits the ground plane
+					if (ground.hit) {
+						//set spell location to player location - player casting the spell
+						moltonBoulder.position.x = player.position.x;
+						moltonBoulder.position.z = player.position.z;
+						moltonBoulder.position.y = player.position.y;
+						
+						//x and z cords of mouse click @ ground plane
+						gx = ground.pickedPoint.x;
+						gz = ground.pickedPoint.z;
+						
+						var direction = new BABYLON.Vector3(gx,21,gz);
+						direction.normalize(); //direction now a unit vector
+						distance = 2;
+						
+						var i = 0;
+						
+						//set moltonBoulderMaterial back to visible
+						moltonBoulderMaterial.alpha = 1;
+						
+						//switch to true depending on where clicked
+						if (moltonBoulder.position.x > gx){
+							movingLeft = true;
+						}//if
+						else {
+							movingRight = true;
+						}//else
+						
+						//once i reaches 150, translation stops
+						scene.registerBeforeRender(function () {
+							if(i++ < 150){
+								//mesh.translate(vector, distance, space)
+								//vector = direction the mesh should travel towards
+								//distance = speed of the mesh moving
+								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
+								moltonBoulder.translate(direction, distance, BABYLON.Space.WORLD);
+								
+								//add a rotation
+								if (movingRight == true){
+									moltonBoulder.rotation.z -= 0.3;
+								}//if
+								else {
+									moltonBoulder.rotation.z += 0.3;		
+								}//else
+								
+								//collision logic here
+								//if collides push the enemy back and keep rolling
+								
+								//once i reaches 149 make the moltonBoulder transparent,
+								//move it off the map so it doesn't collide with anyone
+								if(i == 149){
+									moltonBoulder.position.x = 1000;
+									moltonBoulderMaterial.alpha = 0;
+								}//if
+							}//if
+						});
+						
+					}//if
+					else {
+						console.log("Clicked outside the map!");
+					}//else
+				}//if - moltonBoulderCooldown
+				else {
+					console.log("Molton Boulder is on cooldown || is not selected!");
+				}//else
+			};//onPointerDown
+		}//if molton boulder is selected
+	}//castMoltonBoulder
 }//Player
 
 //handles cooldowns for spells
@@ -1201,6 +1345,16 @@ spellManager = function(){
 			rechargerCooldown = false;
 			console.log(rechargerCooldown);
 			UI.cooldownOff("recharger"); //change spell border to green
-		}, 15000); //cooldown 15 seconds	
+		}, 15000); //cooldown 15 seconds
 	}//rechargeTimer
+	
+	//handles cooldown for molton boulder
+	this.moltonBoulderTimer = function(){
+		UI.cooldownOn("moltonBoulder"); //change spell border to red
+		setTimeout(function() {
+			moltonBoulderCooldown = false;
+			console.log(moltonBoulderCooldown);
+			UI.cooldownOff("moltonBoulder"); //change spell border to green
+		}, 20000); //cooldown 20 seconds	
+	}//moltonBoulderTimer
 }//spellManager

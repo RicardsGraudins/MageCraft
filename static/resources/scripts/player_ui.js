@@ -6,6 +6,7 @@ splitterIcon = "static/resources/images/textures/splitter.png";
 rechargerIcon = "static/resources/images/textures/recharger.png";
 heartIcon = "static/resources/images/textures/heart_icon.png";
 goldIcon = "static/resources/images/textures/gold_coin_icon.png";
+moltonBoulderIcon = "static/resources/images/textures/moltonBoulder_icon.png";
 
 //6 basic spells & 2 defensives
 playerUI = function(){
@@ -214,9 +215,14 @@ playerUI = function(){
 		spell3.material = splitterMaterial;
 		
 		//recharger
-		var rechargerMaterial = new BABYLON.StandardMaterial("rechagerMaterial", scene);
+		var rechargerMaterial = new BABYLON.StandardMaterial("rechargerMaterial", scene);
 		rechargerMaterial.diffuseTexture = new BABYLON.Texture(rechargerIcon, scene);
 		spell4.material = rechargerMaterial;
+		
+		//molton boulder
+		var moltonBoulderMaterial = new BABYLON.StandardMaterial("moltonBoulderMaterial", scene);
+		moltonBoulderMaterial.diffuseTexture = new BABYLON.Texture(moltonBoulderIcon, scene);
+		spell5.material = moltonBoulderMaterial;
 	}//setTextures
 	
 	//each spell border has their own material in order to change color red/green
@@ -268,6 +274,9 @@ playerUI = function(){
 		else if (spellId == "recharger"){
 			borderMaterial4.diffuseColor = new BABYLON.Color3(0, 255, 0);
 		}//else if
+		else if (spellId == "moltonBoulder"){
+			borderMaterial5.diffuseColor = new BABYLON.Color3(0, 255, 0);
+		}//else if
 		else {
 			console.log("Player cast an unidentified spell!")
 		}//else
@@ -287,6 +296,9 @@ playerUI = function(){
 		}//else if
 		else if (spellId == "recharger"){
 			borderMaterial4.diffuseColor = new BABYLON.Color3(255, 0, 0);
+		}//else if
+		else if (spellId == "moltonBoulder"){
+			borderMaterial5.diffuseColor = new BABYLON.Color3(255, 0, 0);
 		}//else if
 		else {
 			console.log("Player cast an unidentified spell!")

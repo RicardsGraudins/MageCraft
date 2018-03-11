@@ -81,6 +81,8 @@ var moltonBoulderCooldown = false;
 var warlockMarkCooldown = false;
 //boolean to control deflection shield cooldown - can only cast once every 40 seconds
 var deflectionShieldCooldown = false;
+//boolean to control cauterize cooldown - can only cast once every 40 seconds
+var cauterizeCooldown = false;
 
 //booleans to track if a certain spell is selected
 //false until a spell is selected by keybind - once selected can cast by clicking
@@ -91,6 +93,7 @@ var rechargerSelected = false;
 var moltonBoulderSelected = false;
 var warlockMarkSelected = false;
 var deflectionShieldSelected = false;
+var cauterizeSelected = false;
 
 //handles sprite animations for the player
 playerSpriteHandler = function(){
@@ -382,6 +385,7 @@ scene.actionManager.registerAction(
 			moltonBoulderSelected = false;
 			deflectionShieldSelected = false;
 			warlockMarkSelected = false;
+			cauterizeSelected = false;
 			fireballSelected = true;
 		}//function
     )//ExecuteCodeAction - 1
@@ -402,6 +406,7 @@ scene.actionManager.registerAction(
 			moltonBoulderSelected = false;
 			deflectionShieldSelected = false;
 			warlockMarkSelected = false;
+			cauterizeSelected = false;
 			frostboltSelected = true;
 		}//function
     )//ExecuteCodeAction - 2
@@ -422,6 +427,7 @@ scene.actionManager.registerAction(
 			moltonBoulderSelected = false;
 			deflectionShieldSelected = false;
 			warlockMarkSelected = false;
+			cauterizeSelected = false;
 			splitterSelected = true;
 		}//function
     )//ExecuteCodeAction - 3
@@ -442,6 +448,7 @@ scene.actionManager.registerAction(
 			moltonBoulderSelected = false;
 			deflectionShieldSelected = false;
 			warlockMarkSelected = false;
+			cauterizeSelected = false;
 			rechargerSelected = true;
 		}//function
     )//ExecuteCodeAction - 4
@@ -462,6 +469,7 @@ scene.actionManager.registerAction(
 			rechargerSelected = false;
 			deflectionShieldSelected = false;
 			warlockMarkSelected = false;
+			cauterizeSelected = false;
 			moltonBoulderSelected = true;
 		}//function
     )//ExecuteCodeAction - 5
@@ -482,6 +490,7 @@ scene.actionManager.registerAction(
 			rechargerSelected = false;
 			deflectionShieldSelected = false;
 			moltonBoulderSelected = false;
+			cauterizeSelected = false;
 			warlockMarkSelected = true;
 		}//function
     )//ExecuteCodeAction - 6
@@ -502,9 +511,31 @@ scene.actionManager.registerAction(
 			rechargerSelected = false;
 			moltonBoulderSelected = false;
 			warlockMarkSelected = false;
+			cauterizeSelected = false;
 			deflectionShieldSelected = true;
 		}//function
     )//ExecuteCodeAction - G
+);//registerAction
+
+//register action to select cauterize
+scene.actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+        {
+            trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+            parameter: 'H'
+        },
+        function () {
+			console.log("Cauterize is selected!");
+			fireballSelected = false;
+			frostboltSelected = false;
+			splitterSelected = false;
+			rechargerSelected = false;
+			moltonBoulderSelected = false;
+			warlockMarkSelected = false;
+			deflectionShieldSelected = false;
+			cauterizeSelected = true;
+		}//function
+    )//ExecuteCodeAction - H
 );//registerAction
 
 //track cords - player.getPositionExpressedInLocalSpace();
@@ -1444,7 +1475,7 @@ Player = function(x, y, z, speed, onGrid, health){
 		if (warlockMarkSelected == true){
 			//once player clicks on the ground - cast the spell
 			scene.onPointerDown = function (evt, ground) {
-				//if warlockMarkCooldown == false, player can cast meteor
+				//if warlockMarkCooldown == false, player can cast warlock's mark
 				if (warlockMarkCooldown == false){
 					//set warlockMarkCooldown to true
 					warlockMarkCooldown = true;
@@ -1504,7 +1535,7 @@ Player = function(x, y, z, speed, onGrid, health){
 		if (deflectionShieldSelected == true){
 			//once player clicks on the ground - cast the spell
 			scene.onPointerDown = function (evt, ground) {
-				//if deflectionShieldCooldown == false, player can deflection shield charge
+				//if deflectionShieldCooldown == false, player can cast deflection shield
 				if (deflectionShieldCooldown == false){
 					//set deflectionShieldCooldown to true
 					deflectionShieldCooldown = true;
@@ -1549,6 +1580,51 @@ Player = function(x, y, z, speed, onGrid, health){
 			};//onPointerDown
 		}//if deflectionShield is selected
 	}//castDeflectionShield
+	
+	//handles animations for casting cauterize
+	this.castCauterize = function(){
+		//if cauterize is selected:
+		if (cauterizeSelected == true){
+			//once player clicks on the ground - cast the spell
+			scene.onPointerDown = function (evt, ground) {
+				//if cauterizeCooldown == false, player can cast cauterize
+				if (cauterizeCooldown == false){
+					//set cauterizeCooldown to true
+					cauterizeCooldown = true;
+					//start cauterizeTimer, after 40 seconds set cauterizeCooldown to false
+					spellManagerPlayer.cauterizeTimer();
+					
+					//heal amount
+					var heal = getRandomInt(10,20);
+					var healRounded;
+					
+					//round heal to either 10 or 20
+					if (heal > 10){
+						healRounded = 20;
+					}//if
+					else {
+						healRounded = 10;
+					}//else
+					
+					//player heals for the healRounded value
+					playerObject.health += healRounded;
+					
+					//if current health + heal exceeds base health (150) set the health to 150
+					if (playerObject.health > 150){
+						playerObject.health = 150;
+					}//if
+					
+					//update health on UI
+					UI.updateHealth(playerObject.health);
+					UI.updateHealthRestored(healRounded);
+					
+				}//if - cauterizeCooldown
+				else {
+					console.log("Cauterize is on cooldown || is not selected!");
+				}//else
+			};//onPointerDown
+		}//if cauterize is selected
+	}//castCauterize
 }//Player
 
 //handles cooldowns for spells
@@ -1622,4 +1698,21 @@ spellManager = function(){
 			UI.cooldownOff("deflectionShield"); //change spell border to green
 		}, 40000); //cooldown 40 seconds	
 	}//deflectionShieldTimer
+	
+	//handles cooldown for cauterize
+	this.cauterizeTimer = function(){
+		UI.cooldownOn("cauterize"); //change spell border to red
+		setTimeout(function() {
+			cauterizeCooldown = false;
+			console.log(cauterizeCooldown);
+			UI.cooldownOff("cauterize"); //change spell border to green
+		}, 40000); //cooldown 40 seconds	
+	}//cauterizeTimer
 }//spellManager
+
+//returns a random integer between the specified values - used for cauterize
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}//getRandomInt

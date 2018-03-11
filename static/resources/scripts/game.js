@@ -86,12 +86,12 @@ engine.runRenderLoop(function(){
 		playerObject.castMoltonBoulder();
 		playerObject.castWarlockMark();
 		playerObject.castDeflectionShield();
+		playerObject.castCauterize();
 		playerSpriteObject.move();
 		fireSpriteObject.move();
 		frostSpriteObject.move();
 		splitterSpriteObject.move();
 		fireballSpriteObject.move();
-		//warlockMarkSpriteObject.move();
 		warlockMarkSpriteObject.movePlane();
 		UI.move();
 		UI.updateHealth(playerObject.health);	

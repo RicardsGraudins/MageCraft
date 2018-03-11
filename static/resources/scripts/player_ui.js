@@ -9,6 +9,7 @@ goldIcon = "static/resources/images/textures/gold_coin_icon.png";
 moltonBoulderIcon = "static/resources/images/textures/moltonBoulder_icon.png";
 warlockMarkIcon = "static/resources/images/textures/warlock_mark_icon.png";
 deflectionShieldIcon = "static/resources/images/textures/deflection_shield_icon.png";
+cauterizeIcon = "static/resources/images/textures/cauterize_icon.png";
 
 //6 basic spells & 2 defensives
 playerUI = function(){
@@ -69,6 +70,16 @@ playerUI = function(){
 	statusText.fontSize = 50;
 	statusTexture.addControl(statusText);
 	
+	//cauterize spell, displays amount healed for above the player
+	var healthRestored = BABYLON.MeshBuilder.CreatePlane("Health_Restored", {width: 20, height: 20}, scene);
+	var healthRestoredTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(healthRestored, 120, 120, false);
+	var healthText = new BABYLON.GUI.TextBlock();
+	healthText.fontFamily = "Comic Sans MS";
+	healthText.text = "";
+	healthText.color = "lime";
+	healthText.fontSize = 40;
+	healthRestoredTexture.addControl(healthText);
+	
 	//control variables for UI movement
 	//these 2 store the x and z position of the previous frame @ this.move
 	//starts off as (0,0) same as playerObject, if playerObject starting position changes these values should be adjusted also
@@ -116,6 +127,9 @@ playerUI = function(){
 		//setting the starting position of status text
 		status.setPositionWithLocalVector(new BABYLON.Vector3(0, 28, -140));
 		
+		//setting the starting position of health restored text
+		healthRestored.setPositionWithLocalVector(new BABYLON.Vector3(player.position.x, 35, player.position.z));
+		
 		//rotate the UI towards the camera,
 		//otherwise all the planes are on their side and cannot be seen
 		overlay.rotation.x = -200;
@@ -149,6 +163,9 @@ playerUI = function(){
 		
 		//rotate status
 		status.rotation.x = - 200;
+		
+		//rotate health restored
+		healthRestored.rotation.x = -200;
 	}//startingPosition
 	
 	//apply testing material to spell1-8
@@ -240,6 +257,11 @@ playerUI = function(){
 		var deflectionShieldMaterial = new BABYLON.StandardMaterial("deflectionShieldMaterial", scene);
 		deflectionShieldMaterial.diffuseTexture = new BABYLON.Texture(deflectionShieldIcon, scene);
 		spell7.material = deflectionShieldMaterial;
+		
+		//cauterize
+		var cauterizeMaterial = new BABYLON.StandardMaterial("cauterizeMaterial", scene);
+		cauterizeMaterial.diffuseTexture = new BABYLON.Texture(cauterizeIcon, scene);
+		spell8.material = cauterizeMaterial;
 	}//setTextures
 	
 	//each spell border has their own material in order to change color red/green
@@ -300,6 +322,9 @@ playerUI = function(){
 		else if (spellId == "deflectionShield"){
 			borderMaterial7.diffuseColor = new BABYLON.Color3(0, 255, 0);
 		}//else if
+		else if (spellId == "cauterize"){
+			borderMaterial8.diffuseColor = new BABYLON.Color3(0, 255, 0);
+		}//else if
 		else {
 			console.log("Player cast an unidentified spell!")
 		}//else
@@ -328,6 +353,9 @@ playerUI = function(){
 		}//else if
 		else if (spellId == "deflectionShield"){
 			borderMaterial7.diffuseColor = new BABYLON.Color3(255, 0, 0);
+		}//else if
+		else if (spellId == "cauterize"){
+			borderMaterial8.diffuseColor = new BABYLON.Color3(255, 0, 0);
 		}//else if
 		else {
 			console.log("Player cast an unidentified spell!")
@@ -438,6 +466,17 @@ playerUI = function(){
 		statusText.color = color;
 	}//updateGold
 	
+	//update the health restored text displayed
+	this.updateHealthRestored = function(healthRestored){
+		var healthString = healthRestored.toString();
+		healthText.text = "+" + healthString;
+		
+		//only display health restored for 4 seconds then hide it
+		setTimeout(function() {
+			healthText.text = "";
+		}, 4000);
+	}//updatedHealthRestored
+	
 	//move the entire UI with the player
 	//the following code keeps track of which way the player moves
 	//and then moves the UI in the appropriate direction
@@ -474,6 +513,8 @@ playerUI = function(){
 			goldCoin.position.x = goldCoin.position.x - 1;
 			//status text position
 			status.position.x = status.position.x - 1;
+			//health restored text position
+			healthRestored.position.x = healthRestored.position.x - 1;
 		}//if
 		
 		//move the UI right
@@ -507,6 +548,8 @@ playerUI = function(){
 			goldCoin.position.x = goldCoin.position.x + 1;
 			//status text position
 			status.position.x = status.position.x + 1;
+			//health restored text position
+			healthRestored.position.x = healthRestored.position.x + 1;
 		}//if
 		
 		//move the UI downwards
@@ -540,6 +583,8 @@ playerUI = function(){
 			goldCoin.position.z = goldCoin.position.z - 1;
 			//status text position
 			status.position.z = status.position.z - 1;
+			//health restored text position
+			healthRestored.position.z = healthRestored.position.z - 1;
 		}//if
 		
 		//move the UI upwards
@@ -573,6 +618,8 @@ playerUI = function(){
 			goldCoin.position.z = goldCoin.position.z + 1;
 			//status text position
 			status.position.z = status.position.z + 1;
+			//health restored text position
+			healthRestored.position.z = healthRestored.position.z + 1;
 		}//if
 		
 		//update xMove and zMove every frame

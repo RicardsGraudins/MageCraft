@@ -74,7 +74,7 @@ fireballSpriteObject = new fireballSpriteHandler();
 engine.runRenderLoop(function(){
 	background.render();
 	
-	if (playerObject.health != 200){
+	if (playerObject.health != 0){
 		playerObject.move();
 		playerObject.playerOnGrid();
 		playerObject.castFireball();
@@ -82,6 +82,7 @@ engine.runRenderLoop(function(){
 		playerObject.castSplitter();
 		playerObject.castRecharger();
 		playerObject.castMoltonBoulder();
+		playerObject.castDeflectionShield();
 		playerSpriteObject.move();
 		fireSpriteObject.move();
 		frostSpriteObject.move();

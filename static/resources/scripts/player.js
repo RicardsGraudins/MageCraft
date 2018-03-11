@@ -9,6 +9,7 @@ frostEffect = "static/resources/images/sprites/frost.png";
 splitterEffect = "static/resources/images/textures/splitter.png";
 splitterProjectileEffect = "static/resources/images/sprites/frost2.png";
 fireballEffect = "static/resources/images/sprites/fireball_edited.png";
+waterEffect = "static/resources/images/textures/water_bump.png";
 
 //create sprite managers - new BABYLON.SpriteManager(name, imageURL, capacity, cellSize, scene)
 //name - name for manager
@@ -62,6 +63,8 @@ var splitterCooldown = false;
 var rechargerCooldown = false;
 //boolean to control moltonBoulder cooldown - cast only once every 20 seconds
 var moltonBoulderCooldown = false;
+//boolean to control deflection shield cooldown - can only cast once every 40 seconds
+var deflectionShieldCooldown = false;
 
 //booleans to track if a certain spell is selected
 //false until a spell is selected by keybind - once selected can cast by clicking
@@ -70,6 +73,7 @@ var frostboltSelected = false;
 var splitterSelected = false;
 var rechargerSelected = false;
 var moltonBoulderSelected = false;
+var deflectionShieldSelected = false;
 
 //handles sprite animations for the player
 playerSpriteHandler = function(){
@@ -350,6 +354,7 @@ scene.actionManager.registerAction(
 			splitterSelected = false;
 			rechargerSelected = false;
 			moltonBoulderSelected = false;
+			deflectionShieldSelected = false;
 			fireballSelected = true;
 		}//function
     )//ExecuteCodeAction - 1
@@ -368,6 +373,7 @@ scene.actionManager.registerAction(
 			splitterSelected = false;
 			rechargerSelected = false;
 			moltonBoulderSelected = false;
+			deflectionShieldSelected = false;
 			frostboltSelected = true;
 		}//function
     )//ExecuteCodeAction - 2
@@ -386,6 +392,7 @@ scene.actionManager.registerAction(
 			frostboltSelected = false;
 			rechargerSelected = false;
 			moltonBoulderSelected = false;
+			deflectionShieldSelected = false;
 			splitterSelected = true;
 		}//function
     )//ExecuteCodeAction - 3
@@ -404,6 +411,7 @@ scene.actionManager.registerAction(
 			frostboltSelected = false;
 			splitterSelected = false;
 			moltonBoulderSelected = false;
+			deflectionShieldSelected = false;
 			rechargerSelected = true;
 		}//function
     )//ExecuteCodeAction - 4
@@ -422,9 +430,29 @@ scene.actionManager.registerAction(
 			frostboltSelected = false;
 			splitterSelected = false;
 			rechargerSelected = false;
+			deflectionShieldSelected = false;
 			moltonBoulderSelected = true;
 		}//function
     )//ExecuteCodeAction - 5
+);//registerAction
+
+//register action to select deflection shield
+scene.actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+        {
+            trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+            parameter: 'G'
+        },
+        function () {
+			console.log("Deflection shield is selected!");
+			fireballSelected = false;
+			frostboltSelected = false;
+			splitterSelected = false;
+			rechargerSelected = false;
+			moltonBoulderSelected = false;
+			deflectionShieldSelected = true;
+		}//function
+    )//ExecuteCodeAction - G
 );//registerAction
 
 //track cords - player.getPositionExpressedInLocalSpace();
@@ -434,6 +462,7 @@ var frostbolt = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diamete
 var splitter = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 var recharger = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 var moltonBoulder = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
+var deflectionShield = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
 
 //splitter projectiles
 var splitterProjectile0 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
@@ -527,6 +556,48 @@ moltonBoulderMaterial.diffuseTexture = fireTexture;
 moltonBoulder.hasAlpha = true;
 moltonBoulder.alpha = 0;
 moltonBoulder.material = moltonBoulderMaterial;
+
+//assign material to deflection shield
+var deflectionShieldMaterial = new BABYLON.StandardMaterial("deflectionShieldMaterial", scene);
+//texture etc
+deflectionShieldMaterial.hasAlpha = true;
+deflectionShieldMaterial.alpha = 0;
+deflectionShieldMaterial.wireframe = true;
+deflectionShieldMaterial.emissiveColor = new BABYLON.Color3(0, 128, 128);
+deflectionShield.material = deflectionShieldMaterial;
+
+/* 
+* initially intended to use water material to create a water barrier however it is not compatible with the newer
+* versions of babylonjs and switching to an older version would cause a tremendous
+* amount of errors, water material demo - http://www.babylonjs-playground.com/#1SLLOJ#231
+* currently using a simple material with reduced opacity, wireframe and teal color for the time being
+*/
+/*
+//water material
+var waterMaterial = new BABYLON.WaterMaterial("water_material", scene);
+waterMaterial.bumpTexture = new BABYLON.Texture(waterEffect, scene); //set the bump texture
+waterMaterial.bumpTexture.hasAlpha = true;
+
+//represents the wind force applied on the water surface
+waterMaterial.windForce = 45;
+//represents the height of the waves
+waterMaterial.waveHeight = 1.3;
+//bump map - represents reflection and refraction
+waterMaterial.bumpHeight = 0.3;
+//the wind direction on the water surface (on width and height)
+waterMaterial.windDirection = new BABYLON.Vector2(1.0, 1.0);
+//represents the water color mixed with the reflected and refracted world
+waterMaterial.waterColor = new BABYLON.Color3(0.1, 0.1, 0.6);
+//factor to determine how the water color is blended with the reflected and refracted world
+waterMaterial.colorBlendFactor = 2.0;
+//the lenght of waves. With smaller values, more waves are generated
+waterMaterial.waveLength = 0.1;
+
+//objects to reflect
+waterMaterial.addToRenderList(playerSprite);
+waterMaterial.addToRenderList(ground);
+deflectionShield.material = waterMaterial;
+*/
 
 //particles for fireball using 2 ParticleSystems
 //---------------------------------------------------------------------------------------------
@@ -669,6 +740,7 @@ Player = function(x, y, z, speed, onGrid, health){
 	
 	recharger.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	moltonBoulder.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	deflectionShield.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	
 	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites
 	playerSprite.position.x = x;
@@ -1304,6 +1376,58 @@ Player = function(x, y, z, speed, onGrid, health){
 			};//onPointerDown
 		}//if molton boulder is selected
 	}//castMoltonBoulder
+	
+	//handles animations for casting deflection shield
+	this.castDeflectionShield = function(){
+		//if deflectionShield is selected:
+		if (deflectionShieldSelected == true){
+			//once player clicks on the ground - cast the spell
+			scene.onPointerDown = function (evt, ground) {
+				//if deflectionShieldCooldown == false, player can deflection shield charge
+				if (deflectionShieldCooldown == false){
+					//set deflectionShieldCooldown to true
+					deflectionShieldCooldown = true;
+					//start deflectionShieldTimer, after 40 seconds set deflectionShieldCooldown to false
+					spellManagerPlayer.deflectionShieldTimer();
+					
+						//x and z cords of mouse click @ ground plane
+						gx = ground.pickedPoint.x;
+						gz = ground.pickedPoint.z;
+						
+						var i = 0;
+						
+						//
+						deflectionShieldMaterial.alpha = 0.03;
+						
+						scene.registerBeforeRender(function () {
+							if(i++ < 350){
+								//mesh.translate(vector, distance, space)
+								//vector = direction the mesh should travel towards
+								//distance = speed of the mesh moving
+								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
+								deflectionShield.position.x = player.position.x;
+								deflectionShield.position.y = player.position.y;
+								deflectionShield.position.z = player.position.z - 4;
+								
+								//collision logic here
+								//if something hits the shield while its up either cancel it out or deflect back
+								
+								//once i reaches 149 make the moltonBoulder transparent,
+								//move it off the map so it doesn't collide with anyone
+								if(i == 349){
+									deflectionShield.position.x = 1000;
+									deflectionShieldMaterial.alpha = 0;
+								}//if
+							}//if
+						});
+
+				}//if - deflectionShieldCooldown
+				else {
+					console.log("Deflection Shield is on cooldown || is not selected!");
+				}//else
+			};//onPointerDown
+		}//if deflectionShield is selected
+	}//castDeflectionShield
 }//Player
 
 //handles cooldowns for spells
@@ -1357,4 +1481,14 @@ spellManager = function(){
 			UI.cooldownOff("moltonBoulder"); //change spell border to green
 		}, 20000); //cooldown 20 seconds	
 	}//moltonBoulderTimer
+	
+	//handles cooldown for deflection shield
+	this.deflectionShieldTimer = function(){
+		UI.cooldownOn("deflectionShield"); //change spell border to red
+		setTimeout(function() {
+			deflectionShieldCooldown = false;
+			console.log(deflectionShieldCooldown);
+			UI.cooldownOff("deflectionShield"); //change spell border to green
+		}, 40000); //cooldown 40 seconds	
+	}//deflectionShieldTimer
 }//spellManager

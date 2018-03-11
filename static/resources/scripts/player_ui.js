@@ -7,6 +7,7 @@ rechargerIcon = "static/resources/images/textures/recharger.png";
 heartIcon = "static/resources/images/textures/heart_icon.png";
 goldIcon = "static/resources/images/textures/gold_coin_icon.png";
 moltonBoulderIcon = "static/resources/images/textures/moltonBoulder_icon.png";
+deflectionShieldIcon = "static/resources/images/textures/deflection_shield_icon.png";
 
 //6 basic spells & 2 defensives
 playerUI = function(){
@@ -223,6 +224,16 @@ playerUI = function(){
 		var moltonBoulderMaterial = new BABYLON.StandardMaterial("moltonBoulderMaterial", scene);
 		moltonBoulderMaterial.diffuseTexture = new BABYLON.Texture(moltonBoulderIcon, scene);
 		spell5.material = moltonBoulderMaterial;
+		
+		//molton boulder
+		var moltonBoulderMaterial = new BABYLON.StandardMaterial("moltonBoulderMaterial", scene);
+		moltonBoulderMaterial.diffuseTexture = new BABYLON.Texture(moltonBoulderIcon, scene);
+		spell5.material = moltonBoulderMaterial;
+		
+		//deflection shield
+		var deflectionShieldMaterial = new BABYLON.StandardMaterial("deflectionShieldMaterial", scene);
+		deflectionShieldMaterial.diffuseTexture = new BABYLON.Texture(deflectionShieldIcon, scene);
+		spell7.material = deflectionShieldMaterial;
 	}//setTextures
 	
 	//each spell border has their own material in order to change color red/green
@@ -277,6 +288,9 @@ playerUI = function(){
 		else if (spellId == "moltonBoulder"){
 			borderMaterial5.diffuseColor = new BABYLON.Color3(0, 255, 0);
 		}//else if
+		else if (spellId == "deflectionShield"){
+			borderMaterial7.diffuseColor = new BABYLON.Color3(0, 255, 0);
+		}//else if
 		else {
 			console.log("Player cast an unidentified spell!")
 		}//else
@@ -299,6 +313,9 @@ playerUI = function(){
 		}//else if
 		else if (spellId == "moltonBoulder"){
 			borderMaterial5.diffuseColor = new BABYLON.Color3(255, 0, 0);
+		}//else if
+		else if (spellId == "deflectionShield"){
+			borderMaterial7.diffuseColor = new BABYLON.Color3(255, 0, 0);
 		}//else if
 		else {
 			console.log("Player cast an unidentified spell!")

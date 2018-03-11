@@ -35,7 +35,20 @@ warlockMarkPlaneMaterial.diffuseTexture = new BABYLON.Texture(warlockMarkEffect,
 warlockMarkPlane.material = warlockMarkPlaneMaterial;
 warlockMarkPlaneMaterial.diffuseTexture.hasAlpha = true;
 warlockMarkPlane.rotation.x = -300;
-//add particles - rather than emitting from the mark have them going towards the mark
+
+//add particles - rather than emitting from the mark have them going towards it i.e
+//emitting from transparent mesh towards the mark, 2 box mesh on each side of the mark
+var warlockBox0 = BABYLON.MeshBuilder.CreateBox("warlockbox", {height: 10, width: 10, depth: 5}, scene);
+var warlockBox1 = BABYLON.MeshBuilder.CreateBox("warlockBox", {height: 10, width: 10, depth: 5}, scene);
+warlockBox0.rotation.x = -300;
+warlockBox1.rotation.x = -300;
+
+//make the boxes transparent
+var warlockBoxMaterial = new BABYLON.StandardMaterial("warlockBoxMaterial", scene);
+warlockBoxMaterial.hasAlpha = true;
+warlockBoxMaterial.alpha = 0;
+warlockBox0.material = warlockBoxMaterial;
+warlockBox1.material = warlockBoxMaterial;
 
 //create the sprites - new BABYLON.Sprite(name, spriteManager)
 var playerSprite = new BABYLON.Sprite("player", spriteManagerPlayerRed);
@@ -285,6 +298,15 @@ warlockMarkSpriteHandler = function(){
 		warlockMarkPlane.position.x = warlockMark.position.x;
 		warlockMarkPlane.position.y = warlockMark.position.y;
 		warlockMarkPlane.position.z = warlockMark.position.z;
+		
+		//move the transparent boxes along with the plane - emits particles
+		warlockBox0.position.x = warlockMark.position.x - 30;
+		warlockBox0.position.y = warlockMark.position.y;
+		warlockBox0.position.z = warlockMark.position.z;
+		
+		warlockBox1.position.x = warlockMark.position.x + 30;
+		warlockBox1.position.y = warlockMark.position.y;
+		warlockBox1.position.z = warlockMark.position.z;
 	}//movePlane
 }//warlockMarkSpriteHandler
 
@@ -797,6 +819,159 @@ fireSystem.updateSpeed = 0.007;
 
 //start emitting the particles
 //fireSystem.start();
+//---------------------------------------------------------------------------------------------
+//particle system for molton boulder particles
+var boulderSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
+
+//assign texture to each particle
+boulderSystem.particleTexture = new BABYLON.Texture(fireParticle, scene);
+
+//the object from which particles spawn from
+boulderSystem.emitter = moltonBoulder;
+
+//all particles starting from vector...to vector
+boulderSystem.minEmitBox = new BABYLON.Vector3(-0.5, 1, -3.5);
+boulderSystem.maxEmitBox = new BABYLON.Vector3(0.5, 1, 3.5);
+
+//colors of all particles (split into 2 specific colors before dispose)
+boulderSystem.color1 = new BABYLON.Color4(255, 0.5, 0, 1.0);
+boulderSystem.color2 = new BABYLON.Color4(255, 0.5, 0, 1.0);
+boulderSystem.colorDead = new BABYLON.Color4(0, 0, 0, 0.0);
+
+//size of each particles - random
+boulderSystem.minSize = 5;
+boulderSystem.maxSize = 8;
+
+//life time of each particle - random
+boulderSystem.minLifeTime = 0.2;
+boulderSystem.maxLifeTime = 0.4;
+
+//emite rate
+boulderSystem.emitRate = 600;
+
+//blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD - to do with source color and alpha
+boulderSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+//gravity of all particles
+boulderSystem.gravity = new BABYLON.Vector3(0, 0, 0);
+
+//direction of each particle after emitted - random
+boulderSystem.direction1 = new BABYLON.Vector3(0, 4, 0);
+boulderSystem.direction2 = new BABYLON.Vector3(0, 4, 0);
+
+//angular speed, can define z-axis rotation for each particle in radians
+boulderSystem.minAngularSpeed = 0;
+boulderSystem.maxAngularSpeed = Math.PI;
+
+//speed and strength of emitting particles and the overall motion speed
+boulderSystem.minEmitPower = 1;
+boulderSystem.maxEmitPower = 3;
+boulderSystem.updateSpeed = 0.007;
+
+//start emitting the particles
+//boulderSystem.start();
+//---------------------------------------------------------------------------------------------
+//particle system for warlock's mark particles - emitting from transparent box and particles moving towards the mark to give an absorption illusion
+var warlockSystem0 = new BABYLON.ParticleSystem("particles", 2000, scene);
+
+//assign texture to each particle
+warlockSystem0.particleTexture = new BABYLON.Texture(fireParticle, scene);
+
+//the object from which particles spawn from
+warlockSystem0.emitter = warlockBox0;
+
+//all particles starting from vector...to vector
+warlockSystem0.minEmitBox = new BABYLON.Vector3(-0.5, 1, -13.5);
+warlockSystem0.maxEmitBox = new BABYLON.Vector3(0.5, 1, 13.5);
+
+//colors of all particles (split into 2 specific colors before dispose)
+warlockSystem0.color1 = new BABYLON.Color4(128, 0, 128, 1.0);
+warlockSystem0.color2 = new BABYLON.Color4(128, 0, 128, 1.0);
+warlockSystem0.colorDead = new BABYLON.Color4(0, 0, 0, 0.0);
+
+//size of each particles - random
+warlockSystem0.minSize = 1;
+warlockSystem0.maxSize = 1.5;
+
+//life time of each particle - random
+warlockSystem0.minLifeTime = 0.2;
+warlockSystem0.maxLifeTime = 0.4;
+
+//emite rate
+warlockSystem0.emitRate = 20;
+
+//blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD - to do with source color and alpha
+warlockSystem0.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+//gravity of all particles
+warlockSystem0.gravity = new BABYLON.Vector3(0, 0, 0);
+
+//direction of each particle after emitted - random
+warlockSystem0.direction1 = new BABYLON.Vector3(25, 4, 10);
+warlockSystem0.direction2 = new BABYLON.Vector3(30, 4, -10);
+
+//angular speed, can define z-axis rotation for each particle in radians
+warlockSystem0.minAngularSpeed = 0;
+warlockSystem0.maxAngularSpeed = Math.PI;
+
+//speed and strength of emitting particles and the overall motion speed
+warlockSystem0.minEmitPower = 1;
+warlockSystem0.maxEmitPower = 3;
+warlockSystem0.updateSpeed = 0.007;
+
+//start emitting the particles
+//warlockSystem0System.start();
+//---------------------------------------------------------------------------------------------
+//particle system for warlock's mark particles - box on the other side of the mark
+var warlockSystem1 = new BABYLON.ParticleSystem("particles", 2000, scene);
+
+//assign texture to each particle
+warlockSystem1.particleTexture = new BABYLON.Texture(fireParticle, scene);
+
+//the object from which particles spawn from
+warlockSystem1.emitter = warlockBox1;
+
+//all particles starting from vector...to vector
+warlockSystem1.minEmitBox = new BABYLON.Vector3(-0.5, 1, -13.5);
+warlockSystem1.maxEmitBox = new BABYLON.Vector3(0.5, 1, 13.5);
+
+//colors of all particles (split into 2 specific colors before dispose)
+warlockSystem1.color1 = new BABYLON.Color4(128, 0, 128, 1.0);
+warlockSystem1.color2 = new BABYLON.Color4(128, 0, 128, 1.0);
+warlockSystem1.colorDead = new BABYLON.Color4(0, 0, 0, 0.0);
+
+//size of each particles - random
+warlockSystem1.minSize = 1;
+warlockSystem1.maxSize = 1.5;
+
+//life time of each particle - random
+warlockSystem1.minLifeTime = 0.2;
+warlockSystem1.maxLifeTime = 0.4;
+
+//emite rate
+warlockSystem1.emitRate = 20;
+
+//blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD - to do with source color and alpha
+warlockSystem1.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+//gravity of all particles
+warlockSystem1.gravity = new BABYLON.Vector3(0, 0, 0);
+
+//direction of each particle after emitted - random
+warlockSystem1.direction1 = new BABYLON.Vector3(-25, 4, 10);
+warlockSystem1.direction2 = new BABYLON.Vector3(-30, 4, -10);
+
+//angular speed, can define z-axis rotation for each particle in radians
+warlockSystem1.minAngularSpeed = 0;
+warlockSystem1.maxAngularSpeed = Math.PI;
+
+//speed and strength of emitting particles and the overall motion speed
+warlockSystem1.minEmitPower = 1;
+warlockSystem1.maxEmitPower = 3;
+warlockSystem1.updateSpeed = 0.007;
+
+//start emitting the particles
+//warlockSystem1System.start();
 //---------------------------------------------------------------------------------------------
 
 Player = function(x, y, z, speed, onGrid, health){
@@ -1437,6 +1612,9 @@ Player = function(x, y, z, speed, onGrid, health){
 								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
 								moltonBoulder.translate(direction, distance, BABYLON.Space.WORLD);
 								
+								//start the particle system
+								boulderSystem.start();
+								
 								//add a rotation
 								if (movingRight == true){
 									moltonBoulder.rotation.z -= 0.3;
@@ -1453,6 +1631,7 @@ Player = function(x, y, z, speed, onGrid, health){
 								if(i == 149){
 									moltonBoulder.position.x = 1000;
 									moltonBoulderMaterial.alpha = 0;
+									boulderSystem.stop();
 								}//if
 							}//if
 						});
@@ -1501,6 +1680,9 @@ Player = function(x, y, z, speed, onGrid, health){
 						warlockMark.position.z = gz;
 						warlockMark.position.y = player.position.y;
 						
+						warlockSystem0.start();
+						warlockSystem1.start();
+						
 						//once i reaches 150, translation stops
 						scene.registerBeforeRender(function () {
 							if(i++ < 150){
@@ -1513,6 +1695,9 @@ Player = function(x, y, z, speed, onGrid, health){
 								if(i == 149){
 									warlockMark.position.x = 1000;
 									warlockMarkMaterial.alpha = 0;
+									
+									warlockSystem0.stop();
+									warlockSystem1.stop();
 								}//if
 							}//if
 						});
@@ -1527,7 +1712,7 @@ Player = function(x, y, z, speed, onGrid, health){
 				}//else
 			};//onPointerDown
 		}//if warlockMark is selected
-	}//castMeteor
+	}//castWarlockMark
 	
 	//handles animations for casting deflection shield
 	this.castDeflectionShield = function(){
@@ -1686,7 +1871,7 @@ spellManager = function(){
 			warlockMarkCooldown = false;
 			console.log(warlockMarkCooldown);
 			UI.cooldownOff("warlockMark"); //change spell border to green
-		}, 5000); //cooldown 40 seconds	
+		}, 40000); //cooldown 40 seconds	
 	}//warlockMarkTimer
 	
 	//handles cooldown for deflection shield

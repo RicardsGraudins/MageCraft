@@ -10,6 +10,7 @@ splitterEffect = "static/resources/images/textures/splitter.png";
 splitterProjectileEffect = "static/resources/images/sprites/frost2.png";
 fireballEffect = "static/resources/images/sprites/fireball_edited.png";
 waterEffect = "static/resources/images/textures/water_bump.png";
+warlockMarkEffect = "static/resources/images/sprites/warlock_mark.png";
 
 //create sprite managers - new BABYLON.SpriteManager(name, imageURL, capacity, cellSize, scene)
 //name - name for manager
@@ -22,6 +23,19 @@ var spriteManagerFire = new BABYLON.SpriteManager("fireManager", fireEffect, 1, 
 var spriteManagerFrost = new BABYLON.SpriteManager("frostManager", frostEffect, 1, 192, scene); //frost
 var spriteManagerSplitter = new BABYLON.SpriteManager("splitterManager", splitterProjectileEffect, 8, 192, scene); //splitter projectiles
 var spriteManagerFireball = new BABYLON.SpriteManager("fireballManager", fireballEffect, 1, {width:877, height:802}, scene); //fireball
+
+//initially set up a sprite manager for warlock's mark sprite however when visible the
+//sprite looked glued onto the canvas like a 2D object with no way of changing it - the angle function of
+//the sprite manager only rotates the sprite itself - therefore we set up the warlock's sprite to be used as a diffuse texture
+//on a plane which we can then position properly like a 3D object, the collisons that occur on the mark are handled by
+//the transparent sphere that sits on top of the plane
+var warlockMarkPlane = BABYLON.MeshBuilder.CreatePlane("warlockPlane", {height: 30, width: 30}, scene);
+var warlockMarkPlaneMaterial = new BABYLON.StandardMaterial("warlockPlaneMaterial", scene);
+warlockMarkPlaneMaterial.diffuseTexture = new BABYLON.Texture(warlockMarkEffect, scene);
+warlockMarkPlane.material = warlockMarkPlaneMaterial;
+warlockMarkPlaneMaterial.diffuseTexture.hasAlpha = true;
+warlockMarkPlane.rotation.x = -300;
+//add particles - rather than emitting from the mark have them going towards the mark
 
 //create the sprites - new BABYLON.Sprite(name, spriteManager)
 var playerSprite = new BABYLON.Sprite("player", spriteManagerPlayerRed);
@@ -63,6 +77,8 @@ var splitterCooldown = false;
 var rechargerCooldown = false;
 //boolean to control moltonBoulder cooldown - cast only once every 20 seconds
 var moltonBoulderCooldown = false;
+//boolean to control warlock's mark cooldown - can only cast once every 40 seconds
+var warlockMarkCooldown = false;
 //boolean to control deflection shield cooldown - can only cast once every 40 seconds
 var deflectionShieldCooldown = false;
 
@@ -73,6 +89,7 @@ var frostboltSelected = false;
 var splitterSelected = false;
 var rechargerSelected = false;
 var moltonBoulderSelected = false;
+var warlockMarkSelected = false;
 var deflectionShieldSelected = false;
 
 //handles sprite animations for the player
@@ -259,6 +276,15 @@ fireballSpriteHandler = function(){
 	}//move
 }//fireballSpriteHandler
 
+//handles warlock's mark animations, using a plane instead of a spriteManager
+warlockMarkSpriteHandler = function(){
+	this.movePlane = function(){
+		warlockMarkPlane.position.x = warlockMark.position.x;
+		warlockMarkPlane.position.y = warlockMark.position.y;
+		warlockMarkPlane.position.z = warlockMark.position.z;
+	}//movePlane
+}//warlockMarkSpriteHandler
+
 //the keycodes that will be mapped when a user presses a button
 KEY_CODES = {
   65: 'left',
@@ -355,6 +381,7 @@ scene.actionManager.registerAction(
 			rechargerSelected = false;
 			moltonBoulderSelected = false;
 			deflectionShieldSelected = false;
+			warlockMarkSelected = false;
 			fireballSelected = true;
 		}//function
     )//ExecuteCodeAction - 1
@@ -374,6 +401,7 @@ scene.actionManager.registerAction(
 			rechargerSelected = false;
 			moltonBoulderSelected = false;
 			deflectionShieldSelected = false;
+			warlockMarkSelected = false;
 			frostboltSelected = true;
 		}//function
     )//ExecuteCodeAction - 2
@@ -393,6 +421,7 @@ scene.actionManager.registerAction(
 			rechargerSelected = false;
 			moltonBoulderSelected = false;
 			deflectionShieldSelected = false;
+			warlockMarkSelected = false;
 			splitterSelected = true;
 		}//function
     )//ExecuteCodeAction - 3
@@ -412,6 +441,7 @@ scene.actionManager.registerAction(
 			splitterSelected = false;
 			moltonBoulderSelected = false;
 			deflectionShieldSelected = false;
+			warlockMarkSelected = false;
 			rechargerSelected = true;
 		}//function
     )//ExecuteCodeAction - 4
@@ -431,9 +461,30 @@ scene.actionManager.registerAction(
 			splitterSelected = false;
 			rechargerSelected = false;
 			deflectionShieldSelected = false;
+			warlockMarkSelected = false;
 			moltonBoulderSelected = true;
 		}//function
     )//ExecuteCodeAction - 5
+);//registerAction
+
+//register action to warlock's mark
+scene.actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+        {
+            trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+            parameter: '6'
+        },
+        function () {
+			console.log("Warlock's mark is selected!");
+			fireballSelected = false;
+			frostboltSelected = false;
+			splitterSelected = false;
+			rechargerSelected = false;
+			deflectionShieldSelected = false;
+			moltonBoulderSelected = false;
+			warlockMarkSelected = true;
+		}//function
+    )//ExecuteCodeAction - 6
 );//registerAction
 
 //register action to select deflection shield
@@ -450,6 +501,7 @@ scene.actionManager.registerAction(
 			splitterSelected = false;
 			rechargerSelected = false;
 			moltonBoulderSelected = false;
+			warlockMarkSelected = false;
 			deflectionShieldSelected = true;
 		}//function
     )//ExecuteCodeAction - G
@@ -462,6 +514,7 @@ var frostbolt = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diamete
 var splitter = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 var recharger = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 var moltonBoulder = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
+var warlockMark = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
 var deflectionShield = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
 
 //splitter projectiles
@@ -556,6 +609,13 @@ moltonBoulderMaterial.diffuseTexture = fireTexture;
 moltonBoulder.hasAlpha = true;
 moltonBoulder.alpha = 0;
 moltonBoulder.material = moltonBoulderMaterial;
+
+//assign material to warlock's mark
+var warlockMarkMaterial = new BABYLON.StandardMaterial("warlockMarkMaterial", scene);
+//texture etc
+warlockMarkMaterial.hasAlpha = true;
+warlockMarkMaterial.alpha = 1;
+warlockMark.material = warlockMarkMaterial;
 
 //assign material to deflection shield
 var deflectionShieldMaterial = new BABYLON.StandardMaterial("deflectionShieldMaterial", scene);
@@ -740,6 +800,7 @@ Player = function(x, y, z, speed, onGrid, health){
 	
 	recharger.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	moltonBoulder.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	warlockMark.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	deflectionShield.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	
 	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites
@@ -1377,6 +1438,66 @@ Player = function(x, y, z, speed, onGrid, health){
 		}//if molton boulder is selected
 	}//castMoltonBoulder
 	
+	//handles animations for casting warlock's mark
+	this.castWarlockMark = function(){
+		//if warlockMark is selected:
+		if (warlockMarkSelected == true){
+			//once player clicks on the ground - cast the spell
+			scene.onPointerDown = function (evt, ground) {
+				//if warlockMarkCooldown == false, player can cast meteor
+				if (warlockMarkCooldown == false){
+					//set warlockMarkCooldown to true
+					warlockMarkCooldown = true;
+					//start warlockMarkTimer, after 40 seconds set warlockMarkCooldown to false
+					spellManagerPlayer.warlockMarkTimer();
+					// if the click hits the ground plane
+					if (ground.hit) {
+						//x and z cords of mouse click @ ground plane
+						gx = ground.pickedPoint.x;
+						gz = ground.pickedPoint.z;
+						
+						var direction = new BABYLON.Vector3(gx,21,gz);
+						direction.normalize(); //direction now a unit vector
+						distance = 5;
+						
+						var i = 0;
+						
+						//set meteorMaterial back to visible
+						//warlockMarkMaterial.alpha = 0.5;
+						warlockMarkMaterial.alpha = 0;
+						
+						warlockMark.position.x = gx;
+						warlockMark.position.z = gz;
+						warlockMark.position.y = player.position.y;
+						
+						//once i reaches 150, translation stops
+						scene.registerBeforeRender(function () {
+							if(i++ < 150){
+								
+								
+								//collision logic here
+								
+								//once i reaches 149 make the warlock's mark transparent,
+								//move it off the map so it doesn't collide with anyone
+								if(i == 149){
+									warlockMark.position.x = 1000;
+									warlockMarkMaterial.alpha = 0;
+								}//if
+							}//if
+						});
+						
+					}//if
+					else {
+						console.log("Clicked outside the map!");
+					}//else
+				}//if - warlockMarkCooldown
+				else {
+					console.log("Warlock's mark is on cooldown || is not selected!");
+				}//else
+			};//onPointerDown
+		}//if warlockMark is selected
+	}//castMeteor
+	
 	//handles animations for casting deflection shield
 	this.castDeflectionShield = function(){
 		//if deflectionShield is selected:
@@ -1481,6 +1602,16 @@ spellManager = function(){
 			UI.cooldownOff("moltonBoulder"); //change spell border to green
 		}, 20000); //cooldown 20 seconds	
 	}//moltonBoulderTimer
+	
+	//handles cooldown for warlock's mark
+	this.warlockMarkTimer = function(){
+		UI.cooldownOn("warlockMark"); //change spell border to red
+		setTimeout(function() {
+			warlockMarkCooldown = false;
+			console.log(warlockMarkCooldown);
+			UI.cooldownOff("warlockMark"); //change spell border to green
+		}, 5000); //cooldown 40 seconds	
+	}//warlockMarkTimer
 	
 	//handles cooldown for deflection shield
 	this.deflectionShieldTimer = function(){

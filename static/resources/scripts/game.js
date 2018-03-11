@@ -70,11 +70,13 @@ splitterSpriteObject = new splitterSpriteHandler();
 
 fireballSpriteObject = new fireballSpriteHandler();
 
+warlockMarkSpriteObject = new warlockMarkSpriteHandler();
+
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){
 	background.render();
 	
-	if (playerObject.health != 0){
+	if (playerObject.health != 200){
 		playerObject.move();
 		playerObject.playerOnGrid();
 		playerObject.castFireball();
@@ -82,12 +84,15 @@ engine.runRenderLoop(function(){
 		playerObject.castSplitter();
 		playerObject.castRecharger();
 		playerObject.castMoltonBoulder();
+		playerObject.castWarlockMark();
 		playerObject.castDeflectionShield();
 		playerSpriteObject.move();
 		fireSpriteObject.move();
 		frostSpriteObject.move();
 		splitterSpriteObject.move();
 		fireballSpriteObject.move();
+		//warlockMarkSpriteObject.move();
+		warlockMarkSpriteObject.movePlane();
 		UI.move();
 		UI.updateHealth(playerObject.health);	
 	}//if

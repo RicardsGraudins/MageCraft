@@ -160,6 +160,39 @@ playerRestarted = function(){
 	});
 }//playerRestarted
 
+//resumes the game from paused state
+resumeGame = function(){
+	engine.runRenderLoop(function(){
+		background.render();
+		
+		if (playerObject.health != 0){
+			playerObject.move();
+			playerObject.playerOnGrid();
+			playerObject.castFireball();
+			playerObject.castFrostbolt();
+			playerObject.castSplitter();
+			playerObject.castRecharger();
+			playerObject.castMoltonBoulder();
+			playerObject.castWarlockMark();
+			playerObject.castDeflectionShield();
+			playerObject.castCauterize();
+			playerSpriteObject.move();
+			fireSpriteObject.move();
+			frostSpriteObject.move();
+			splitterSpriteObject.move();
+			fireballSpriteObject.move();
+			warlockMarkSpriteObject.movePlane();
+			UI.move();
+			UI.updateHealth(playerObject.health);	
+		}//if
+		else {
+			playerDied();
+		}//else
+		
+		fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
+	});
+}//resumeGame
+
 //run this function every 3 seconds
 setInterval(function(){ 
 	//if the player is alive increment gold

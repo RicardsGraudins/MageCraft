@@ -204,7 +204,7 @@ td:hover {
 /* FPS Label */
 #fpsLabel {
 	position: absolute;
-	right: 20px;
+	left: 20px;
 	top: 20px;
 	color: #999;
 	cursor: default;
@@ -273,4 +273,66 @@ td:hover {
 /* When moving the mouse over the close button */
 .closebtn:hover {
     color: black;
+}
+
+/* Paused menu */
+.paused-menu {
+	position: absolute;
+	top: 400px;
+	left: 900px;
+	font-weight:bold;
+	color:#FFFFFF;
+	font-family:comic sans, comic sans ms, cursive, verdana, arial, sans-serif;
+	font-size: 30px;
+	cursor: default;
+	display: none;
+	text-shadow:1px 1px 1px rgba(46,39,26,1);
+}
+
+/* Pause button */
+.pausebtn {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	background: #0a0a0a;
+	background-image: -webkit-linear-gradient(top, #0a0a0a, #bacedb);
+	background-image: -moz-linear-gradient(top, #0a0a0a, #bacedb);
+	background-image: -ms-linear-gradient(top, #0a0a0a, #bacedb);
+	background-image: -o-linear-gradient(top, #0a0a0a, #bacedb);
+	background-image: linear-gradient(to bottom, #0a0a0a, #bacedb);
+	-webkit-border-radius: 6;
+	-moz-border-radius: 6;
+	border-radius: 6px;
+	font-family: comic sans, comic sans ms, cursive, verdana, arial, sans-serif;
+	color: #fafafa;
+	font-size: 20px;
+	text-decoration: none;
+}
+
+/* Pause button hover */
+.pausebtn:hover {
+	color: #FFD700;
+}
+
+.faqbtn {
+	position: absolute;
+	right: 24px;
+	top: 60px;
+	background: #0a0a0a;
+	background-image: -webkit-linear-gradient(top, #0a0a0a, #bacedb);
+	background-image: -moz-linear-gradient(top, #0a0a0a, #bacedb);
+	background-image: -ms-linear-gradient(top, #0a0a0a, #bacedb);
+	background-image: -o-linear-gradient(top, #0a0a0a, #bacedb);
+	background-image: linear-gradient(to bottom, #0a0a0a, #bacedb);
+	-webkit-border-radius: 6;
+	-moz-border-radius: 6;
+	border-radius: 6px;
+	font-family: comic sans, comic sans ms, cursive, verdana, arial, sans-serif;
+	color: #fafafa;
+	font-size: 20px;
+	text-decoration: none;
+}
+
+.faqbtn:hover {
+	color: #FFD700;
 }

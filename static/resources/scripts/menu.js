@@ -17,6 +17,8 @@ displayGold = function(){
 restart = function(){
 	//hide the game over menu
 	document.getElementById("game-over").style.display = "none";
+	//hide the paused menu
+	document.getElementById("paused-menu").style.display = "none";
 	//increase the visibility of the game from dark
 	document.getElementById("myCanvas").setAttribute("class", "reset");
 	
@@ -43,3 +45,29 @@ restart = function(){
 menu = function(){
 	window.location.replace('http://127.0.0.1:5000/');
 }//menu
+
+//pause the game and display the paused menu
+pausedMenu = function(){
+	//make the paused menu visible
+	document.getElementById("paused-menu").style.display = "block";
+	//make the game darker
+	document.getElementById("myCanvas").setAttribute("class", "fade");
+	//stop running the game
+	engine.stopRenderLoop();
+}//pausedMenu
+
+//resumes the game
+resume = function(){
+	//hide the paused menu
+	document.getElementById("paused-menu").style.display = "none";
+	//increase the visibility of the game from dark
+	document.getElementById("myCanvas").setAttribute("class", "reset");
+	//resume the game engine
+	resumeGame();
+	//bug resuming the game wipes the existing html elements off the page - fps, menu + help buttons
+}//resume
+
+//mutes or unmutes the music
+muteMusic = function(){
+	//stop/start playing the audio
+}//muteMusic

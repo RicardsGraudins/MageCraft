@@ -44,6 +44,8 @@
   
   <body>
 	<label id="fpsLabel"></label>
+	<button type="button" id ="pausebtn" class="pausebtn">Menu</button>
+	<button type="button" id ="faqbtn" class="faqbtn">Help</button>
 	<canvas id="myCanvas"></canvas>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/socketio_min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/jquery_min.js') }}"></script>
@@ -60,6 +62,8 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/menu.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/game.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/babylon_inspector_bundle.js') }}"></script>
+	
+	<!-- multiplayer chat, displays all messages -->
 	<div class="chatbox">
 		<ul id="messages"></ul>
 		<input type="text" id="myMessage">
@@ -70,11 +74,13 @@
 		<span id="playerCords" class="content">Move the mouse!</span>
 	</div-->
 	
+	<!-- alert box for uploading gold -->
 	<div class="alert" id="alert">
 	  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
 	  <label id="alertLabel"></label>
 	</div>
 	
+	<!-- game over menu pops up when the player dies -->
 	<div class="game-over" id="game-over">
 		<label style="text-decoration: underline">GAME OVER</label>
 		<table>
@@ -93,22 +99,55 @@
 			</tr>
 		</table>
 	</div>
+	
+	<!-- paused menu -->
+	<div class="paused-menu" id="paused-menu">
+		<label style="text-decoration: underline">Game Paused</label>
+		<table>
+			<tr>
+				<td onclick="resume()">Resume</td>
+			</tr>
+			<tr>
+				<td onclick="restart()">Restart</td>
+			</tr>
+			<tr>
+				<td onclick="muteMusic()">Mute Music</td>
+			</tr>
+			<tr>
+				<td onclick="menu()">Main Menu</td>
+			</tr>
+		</table>
+	</div>
+	
 	<script type="text/javascript">
 	$(document).ready(function() {
 		var socket = io.connect('http://127.0.0.1:5000');
 		
+		//on connection
 		socket.on('connect', function(){
 			socket.send('User has connected!');
 		});
 		
+		//chat, append message to chatbox
 		socket.on('message', function(msg) {
 			$("#messages").append('<li>'+msg+'</li>');
 			console.log("Received message!")
 		});
 		
+		//chat button, send message
 		$('#sendbutton').on('click', function(){
 			socket.send($('#myMessage').val());
 			$('#myMessage').val('');
+		});
+		
+		//menu button, pauses the game and opens the menu
+		$('#pausebtn').on('click', function(){
+			pausedMenu();
+		});
+		
+		//help button, redirects to faq page
+		$('#faqbtn').on('click', function(){
+			window.location.replace('http://127.0.0.1:5000/FAQ');
 		});
 		
 		//send gold val to server

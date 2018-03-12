@@ -16,7 +16,7 @@ grid.fadeOutAnimation();
 grid.createGround();
 
 //player object
-var playerObject = new Player(0, 80, 0, 1, true, 150);
+var playerObject = new Player(0, 30, 0, 1, true, 150);
 
 //handles spell cooldowns for player
 var spellManagerPlayer = new spellManager();

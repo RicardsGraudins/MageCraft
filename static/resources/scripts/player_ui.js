@@ -80,6 +80,89 @@ playerUI = function(){
 	healthText.fontSize = 40;
 	healthRestoredTexture.addControl(healthText);
 	
+	//-------------------------------------------------------------------------------------------------------------
+	//keybinds text on all the spells
+	//spell 1 - fireball
+	var spellPlane1 = BABYLON.MeshBuilder.CreatePlane("Keybind", {width: 20, height: 20}, scene);
+	var spellTexture1 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(spellPlane1, 120, 120, false);
+	var spellText1 = new BABYLON.GUI.TextBlock();
+	spellText1.fontFamily = "Comic Sans MS";
+	spellText1.text = "1";
+	spellText1.color = "white";
+	spellText1.fontSize = 30;
+	spellTexture1.addControl(spellText1);
+	
+	//spell 2 - frostbolt
+	var spellPlane2 = BABYLON.MeshBuilder.CreatePlane("Keybind", {width: 20, height: 20}, scene);
+	var spellTexture2 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(spellPlane2, 120, 120, false);
+	var spellText2 = new BABYLON.GUI.TextBlock();
+	spellText2.fontFamily = "Comic Sans MS";
+	spellText2.text = "2";
+	spellText2.color = "white";
+	spellText2.fontSize = 30;
+	spellTexture2.addControl(spellText2);
+	
+	//spell 3 - splitter
+	var spellPlane3 = BABYLON.MeshBuilder.CreatePlane("Keybind", {width: 20, height: 20}, scene);
+	var spellTexture3 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(spellPlane3, 120, 120, false);
+	var spellText3 = new BABYLON.GUI.TextBlock();
+	spellText3.fontFamily = "Comic Sans MS";
+	spellText3.text = "3";
+	spellText3.color = "white";
+	spellText3.fontSize = 30;
+	spellTexture3.addControl(spellText3);
+	
+	//spell 4 - recharger
+	var spellPlane4 = BABYLON.MeshBuilder.CreatePlane("Keybind", {width: 20, height: 20}, scene);
+	var spellTexture4 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(spellPlane4, 120, 120, false);
+	var spellText4 = new BABYLON.GUI.TextBlock();
+	spellText4.fontFamily = "Comic Sans MS";
+	spellText4.text = "4";
+	spellText4.color = "white";
+	spellText4.fontSize = 30;
+	spellTexture4.addControl(spellText4);
+	
+	//spell 5 - molten boulder
+	var spellPlane5 = BABYLON.MeshBuilder.CreatePlane("Keybind", {width: 20, height: 20}, scene);
+	var spellTexture5 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(spellPlane5, 120, 120, false);
+	var spellText5 = new BABYLON.GUI.TextBlock();
+	spellText5.fontFamily = "Comic Sans MS";
+	spellText5.text = "5";
+	spellText5.color = "white";
+	spellText5.fontSize = 30;
+	spellTexture5.addControl(spellText5);
+	
+	//spell 6 - warlock's mark
+	var spellPlane6 = BABYLON.MeshBuilder.CreatePlane("Keybind", {width: 20, height: 20}, scene);
+	var spellTexture6 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(spellPlane6, 120, 120, false);
+	var spellText6 = new BABYLON.GUI.TextBlock();
+	spellText6.fontFamily = "Comic Sans MS";
+	spellText6.text = "6";
+	spellText6.color = "white";
+	spellText6.fontSize = 30;
+	spellTexture6.addControl(spellText6);
+	
+	//spell 7(G) - deflection shield
+	var spellPlane7 = BABYLON.MeshBuilder.CreatePlane("Keybind", {width: 20, height: 20}, scene);
+	var spellTexture7 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(spellPlane7, 120, 120, false);
+	var spellText7 = new BABYLON.GUI.TextBlock();
+	spellText7.fontFamily = "Comic Sans MS";
+	spellText7.text = "G";
+	spellText7.color = "white";
+	spellText7.fontSize = 30;
+	spellTexture7.addControl(spellText7);
+	
+	//spell 8(H) - cauterize
+	var spellPlane8 = BABYLON.MeshBuilder.CreatePlane("Keybind", {width: 20, height: 20}, scene);
+	var spellTexture8 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(spellPlane8, 120, 120, false);
+	var spellText8 = new BABYLON.GUI.TextBlock();
+	spellText8.fontFamily = "Comic Sans MS";
+	spellText8.text = "H";
+	spellText8.color = "white";
+	spellText8.fontSize = 30;
+	spellTexture8.addControl(spellText8);
+	//-------------------------------------------------------------------------------------------------------------
+	
 	//control variables for UI movement
 	//these 2 store the x and z position of the previous frame @ this.move
 	//starts off as (0,0) same as playerObject, if playerObject starting position changes these values should be adjusted also
@@ -89,46 +172,56 @@ playerUI = function(){
 	//adjusting position of overlay at start of game
 	this.startingPosition = function(){
 		//setting the starting position of the UI
-		overlay.setPositionWithLocalVector(new BABYLON.Vector3(0, 21, -150));
-		spell1.setPositionWithLocalVector(new BABYLON.Vector3(-90, 21.2, -157));
-		spell2.setPositionWithLocalVector(new BABYLON.Vector3(-65, 21.2, -157));
-		spell3.setPositionWithLocalVector(new BABYLON.Vector3(-40, 21.2, -157));
-		spell4.setPositionWithLocalVector(new BABYLON.Vector3(-15, 21.2, -157));
-		spell5.setPositionWithLocalVector(new BABYLON.Vector3(15, 21.2, -157));
-		spell6.setPositionWithLocalVector(new BABYLON.Vector3(40, 21.2, -157));
-		spell7.setPositionWithLocalVector(new BABYLON.Vector3(65, 21.2, -157));
-		spell8.setPositionWithLocalVector(new BABYLON.Vector3(90, 21.2, -157));
+		overlay.setPositionWithLocalVector(new BABYLON.Vector3(0, 21, -183));
+		spell1.setPositionWithLocalVector(new BABYLON.Vector3(-90, 21.2, -190));
+		spell2.setPositionWithLocalVector(new BABYLON.Vector3(-65, 21.2, -190));
+		spell3.setPositionWithLocalVector(new BABYLON.Vector3(-40, 21.2, -190));
+		spell4.setPositionWithLocalVector(new BABYLON.Vector3(-15, 21.2, -190));
+		spell5.setPositionWithLocalVector(new BABYLON.Vector3(15, 21.2, -190));
+		spell6.setPositionWithLocalVector(new BABYLON.Vector3(40, 21.2, -190));
+		spell7.setPositionWithLocalVector(new BABYLON.Vector3(65, 21.2, -190));
+		spell8.setPositionWithLocalVector(new BABYLON.Vector3(90, 21.2, -190));
 
 		//setting the starting position of the spell borders:
 		//borders are planes placed behind the spell planes with a bit more
 		//width and height that gives an outline of a border, easier to use
 		//than lines which involves declaring 5 vectors for each spell and
 		//then translating those 5 vectors everytime the player moves
-		spell1Border.setPositionWithLocalVector(new BABYLON.Vector3(-90, 21.1, -157));
-		spell2Border.setPositionWithLocalVector(new BABYLON.Vector3(-65, 21.1, -157));
-		spell3Border.setPositionWithLocalVector(new BABYLON.Vector3(-40, 21.1, -157));
-		spell4Border.setPositionWithLocalVector(new BABYLON.Vector3(-15, 21.1, -157));
-		spell5Border.setPositionWithLocalVector(new BABYLON.Vector3(15, 21.1, -157));
-		spell6Border.setPositionWithLocalVector(new BABYLON.Vector3(40, 21.1, -157));
-		spell7Border.setPositionWithLocalVector(new BABYLON.Vector3(65, 21.1, -157));
-		spell8Border.setPositionWithLocalVector(new BABYLON.Vector3(90, 21.1, -157));
+		spell1Border.setPositionWithLocalVector(new BABYLON.Vector3(-90, 21.1, -190));
+		spell2Border.setPositionWithLocalVector(new BABYLON.Vector3(-65, 21.1, -190));
+		spell3Border.setPositionWithLocalVector(new BABYLON.Vector3(-40, 21.1, -190));
+		spell4Border.setPositionWithLocalVector(new BABYLON.Vector3(-15, 21.1, -190));
+		spell5Border.setPositionWithLocalVector(new BABYLON.Vector3(15, 21.1, -190));
+		spell6Border.setPositionWithLocalVector(new BABYLON.Vector3(40, 21.1, -190));
+		spell7Border.setPositionWithLocalVector(new BABYLON.Vector3(65, 21.1, -190));
+		spell8Border.setPositionWithLocalVector(new BABYLON.Vector3(90, 21.1, -190));
 		
 		//setting the starting position of the hearts
-		heart1.setPositionWithLocalVector(new BABYLON.Vector3(-96, 28, -140));
-		heart2.setPositionWithLocalVector(new BABYLON.Vector3(-83, 28, -140));	
-		heart3.setPositionWithLocalVector(new BABYLON.Vector3(-70, 28, -140));
+		heart1.setPositionWithLocalVector(new BABYLON.Vector3(-96, 28, -173));
+		heart2.setPositionWithLocalVector(new BABYLON.Vector3(-83, 28, -173));	
+		heart3.setPositionWithLocalVector(new BABYLON.Vector3(-70, 28, -173));
 		
 		//setting the starting position of gold text
-		goldPlane.setPositionWithLocalVector(new BABYLON.Vector3(82, 28, -140));
+		goldPlane.setPositionWithLocalVector(new BABYLON.Vector3(82, 28, -173));
 		
 		//setting the starting position of the gold coin
-		goldCoin.setPositionWithLocalVector(new BABYLON.Vector3(96, 28, -141));
+		goldCoin.setPositionWithLocalVector(new BABYLON.Vector3(96, 28, -174));
 		
 		//setting the starting position of status text
-		status.setPositionWithLocalVector(new BABYLON.Vector3(0, 28, -140));
+		status.setPositionWithLocalVector(new BABYLON.Vector3(0, 28, -173));
 		
 		//setting the starting position of health restored text
 		healthRestored.setPositionWithLocalVector(new BABYLON.Vector3(player.position.x, 35, player.position.z));
+		
+		//setting the starting positon of each spell keybind (text)
+		spellPlane1.setPositionWithLocalVector(new BABYLON.Vector3(-97, 28, -185));
+		spellPlane2.setPositionWithLocalVector(new BABYLON.Vector3(-72, 28, -185));
+		spellPlane3.setPositionWithLocalVector(new BABYLON.Vector3(-47, 28, -185));
+		spellPlane4.setPositionWithLocalVector(new BABYLON.Vector3(-22, 28, -185));
+		spellPlane5.setPositionWithLocalVector(new BABYLON.Vector3(7, 28, -185));
+		spellPlane6.setPositionWithLocalVector(new BABYLON.Vector3(32, 28, -185));
+		spellPlane7.setPositionWithLocalVector(new BABYLON.Vector3(57, 28, -185));
+		spellPlane8.setPositionWithLocalVector(new BABYLON.Vector3(82, 28, -185));
 		
 		//rotate the UI towards the camera,
 		//otherwise all the planes are on their side and cannot be seen
@@ -166,6 +259,16 @@ playerUI = function(){
 		
 		//rotate health restored
 		healthRestored.rotation.x = -200;
+		
+		//rotate keybind text
+		spellPlane1.rotation.x = -200;
+		spellPlane2.rotation.x = -200;
+		spellPlane3.rotation.x = -200;
+		spellPlane4.rotation.x = -200;
+		spellPlane5.rotation.x = -200;
+		spellPlane6.rotation.x = -200;
+		spellPlane7.rotation.x = -200;
+		spellPlane8.rotation.x = -200;
 	}//startingPosition
 	
 	//apply testing material to spell1-8
@@ -515,6 +618,15 @@ playerUI = function(){
 			status.position.x = status.position.x - 1;
 			//health restored text position
 			healthRestored.position.x = healthRestored.position.x - 1;
+			//keybinds text position
+			spellPlane1.position.x = spellPlane1.position.x - 1;
+			spellPlane2.position.x = spellPlane2.position.x - 1;
+			spellPlane3.position.x = spellPlane3.position.x - 1;
+			spellPlane4.position.x = spellPlane4.position.x - 1;
+			spellPlane5.position.x = spellPlane5.position.x - 1;
+			spellPlane6.position.x = spellPlane6.position.x - 1;
+			spellPlane7.position.x = spellPlane7.position.x - 1;
+			spellPlane8.position.x = spellPlane8.position.x - 1;
 		}//if
 		
 		//move the UI right
@@ -550,6 +662,15 @@ playerUI = function(){
 			status.position.x = status.position.x + 1;
 			//health restored text position
 			healthRestored.position.x = healthRestored.position.x + 1;
+			//keybinds text position
+			spellPlane1.position.x = spellPlane1.position.x + 1;
+			spellPlane2.position.x = spellPlane2.position.x + 1;
+			spellPlane3.position.x = spellPlane3.position.x + 1;
+			spellPlane4.position.x = spellPlane4.position.x + 1;
+			spellPlane5.position.x = spellPlane5.position.x + 1;
+			spellPlane6.position.x = spellPlane6.position.x + 1;
+			spellPlane7.position.x = spellPlane7.position.x + 1;
+			spellPlane8.position.x = spellPlane8.position.x + 1;
 		}//if
 		
 		//move the UI downwards
@@ -585,6 +706,15 @@ playerUI = function(){
 			status.position.z = status.position.z - 1;
 			//health restored text position
 			healthRestored.position.z = healthRestored.position.z - 1;
+			//keybinds text position
+			spellPlane1.position.z = spellPlane1.position.z - 1;
+			spellPlane2.position.z = spellPlane2.position.z - 1;
+			spellPlane3.position.z = spellPlane3.position.z - 1;
+			spellPlane4.position.z = spellPlane4.position.z - 1;
+			spellPlane5.position.z = spellPlane5.position.z - 1;
+			spellPlane6.position.z = spellPlane6.position.z - 1;
+			spellPlane7.position.z = spellPlane7.position.z - 1;
+			spellPlane8.position.z = spellPlane8.position.z - 1;
 		}//if
 		
 		//move the UI upwards
@@ -620,6 +750,15 @@ playerUI = function(){
 			status.position.z = status.position.z + 1;
 			//health restored text position
 			healthRestored.position.z = healthRestored.position.z + 1;
+			//keybinds text position
+			spellPlane1.position.z = spellPlane1.position.z + 1;
+			spellPlane2.position.z = spellPlane2.position.z + 1;
+			spellPlane3.position.z = spellPlane3.position.z + 1;
+			spellPlane4.position.z = spellPlane4.position.z + 1;
+			spellPlane5.position.z = spellPlane5.position.z + 1;
+			spellPlane6.position.z = spellPlane6.position.z + 1;
+			spellPlane7.position.z = spellPlane7.position.z + 1;
+			spellPlane8.position.z = spellPlane8.position.z + 1;
 		}//if
 		
 		//update xMove and zMove every frame

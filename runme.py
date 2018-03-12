@@ -176,35 +176,19 @@ def handleMessage(msg):
 	print('Message: ' + msg)
 	send(msg, broadcast=True)
 	
-#Movement - arrow keys
-@socketio.on('leftArrow')
-def leftArrow(msg):
-	print(msg)
-	emit('leftArrow', msg, broadcast=True)
-	
-@socketio.on('upArrow')
-def upArrow(msg):
-	print(msg)
-	emit('upArrow', msg, broadcast=True)
-	
-@socketio.on('rightArrow')
-def rightArrow(msg):
-	print(msg)
-	emit('rightArrow', msg, broadcast=True)
-	
-@socketio.on('downArrow')
-def downArrow(msg):
-	print(msg)
-	emit('downArrow', msg, broadcast=True)
-
-#Player moved event
-@socketio.on('moved')
-def moved(xpos, ypos):
-	print(xpos, ypos)
-	#Recieving null on clientside if sending both x and y therefore sending them seperately for now
-	#Emit('moved', data=(xpos, ypos), broadcast=True)
-	emit('movedX', xpos, broadcast=True)
-	emit('movedY', ypos, broadcast=True)
+#Handles upload gold functionality @ game.html
+#Once the user clicks upload on the game over menu, server recieves gold value
+#If the user is logged in save the gold value in the database and respond message with "success"
+#Otherwise respond message with "failed"
+@socketio.on('upload')
+def upload(gold):
+	if 'username' in session:
+		users = mongo.db.users
+		user = users.find_one({'name' : session['username']})
+		user['gold'] = gold
+		users.save(user)
+		emit('uploadResult', 'success')
+	emit('uploadResult', 'failed')
 
 if __name__ == "__main__":
 	#app.run(debug=True)

@@ -76,7 +76,7 @@ warlockMarkSpriteObject = new warlockMarkSpriteHandler();
 engine.runRenderLoop(function(){
 	background.render();
 	
-	if (playerObject.health != 200){
+	if (playerObject.health != 0){
 		playerObject.move();
 		playerObject.playerOnGrid();
 		playerObject.castFireball();
@@ -97,11 +97,68 @@ engine.runRenderLoop(function(){
 		UI.updateHealth(playerObject.health);	
 	}//if
 	else {
-		playerSpriteObject.dead();
+		playerDied();
 	}//else
 	
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });
+
+//run this function when the player dies:
+//we terminate the existing engine loop and start up a new one while
+//the player is dead which runs fewer functions and limits what the player can do i.e.
+//we don't want the player moving or casting spells while dead - in order to exit this loop
+//the player can quit to the main menu or click on restart and both options are available through
+//the gameOver menu
+playerDied = function(){
+	engine.stopRenderLoop();
+	gameOver(); //display the gameOver menu
+	
+	//start the loop
+	engine.runRenderLoop(function(){
+		playerSpriteObject.dead(); //death animation loop
+		background.render(); //continue running the scene
+	});
+}//playerDied
+
+//run this function when the player hits the restart button on the game over menu
+playerRestarted = function(){
+	player.position.x = 0;
+	player.position.y = 80;
+	player.position.z = 0;
+	playerObject.health = 150;
+	//reset: UI, cooldowns, starting positions of every mesh, sprites etc.
+	
+	//start up a new engine loop
+	engine.runRenderLoop(function(){
+		background.render();
+		
+		if (playerObject.health != 0){
+			playerObject.move();
+			playerObject.playerOnGrid();
+			playerObject.castFireball();
+			playerObject.castFrostbolt();
+			playerObject.castSplitter();
+			playerObject.castRecharger();
+			playerObject.castMoltonBoulder();
+			playerObject.castWarlockMark();
+			playerObject.castDeflectionShield();
+			playerObject.castCauterize();
+			playerSpriteObject.move();
+			fireSpriteObject.move();
+			frostSpriteObject.move();
+			splitterSpriteObject.move();
+			fireballSpriteObject.move();
+			warlockMarkSpriteObject.movePlane();
+			UI.move();
+			UI.updateHealth(playerObject.health);	
+		}//if
+		else {
+			playerDied();
+		}//else
+		
+		fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
+	});
+}//playerRestarted
 
 //run this function every 3 seconds
 setInterval(function(){ 

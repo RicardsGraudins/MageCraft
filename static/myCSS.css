@@ -209,3 +209,68 @@ td:hover {
 	color: #999;
 	cursor: default;
 }
+
+/* Game over menu */
+.game-over {
+	position: absolute;
+	top: 400px;
+	left: 900px;
+	font-weight:bold;
+	color:#FFFFFF;
+	font-family:comic sans, comic sans ms, cursive, verdana, arial, sans-serif;
+	font-size: 30px;
+	cursor: default;
+	display: none;
+	text-shadow:1px 1px 1px rgba(46,39,26,1);
+}
+
+.fade {
+	opacity: 0.1;
+	position: absolute;
+}
+
+.reset {
+	opacity: 1;
+	position: absolute;
+}
+
+#uploadButton {
+	font-size: 30px;
+	border: none;
+	font-weight:bold;
+	color:#FFFFFF;
+	font-family:comic sans, comic sans ms, cursive, verdana, arial, sans-serif;
+	font-size: 30px;
+	cursor: default;
+	text-shadow:1px 1px 1px rgba(46,39,26,1);
+	background: none;
+}
+
+/* The alert message box */
+.alert {
+	position: absolute;
+	top: 33%;
+	left: 47%;
+    padding: 20px;
+    background-color: #2196F3;
+    color: white;
+    margin-bottom: 15px;
+	display: none;
+}
+
+/* The close button */
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
+}

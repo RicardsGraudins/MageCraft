@@ -72,6 +72,19 @@ fireballSpriteObject = new fireballSpriteHandler();
 
 warlockMarkSpriteObject = new warlockMarkSpriteHandler();
 
+//audio assets
+var gameAudio = new Audio("static/resources/sounds/game_music.mp3");
+var playerDiedAudio = new Audio("static/resources/sounds/died.mp3");
+var explosionAudio = new Audio("static/resources/sounds/explosion.wav");
+
+//looping audio
+gameAudio.loop = true;
+playerDiedAudio.loop = true;
+
+//play game audio
+gameAudio.play();
+var musicEnabled = true;
+
 //--------------------
 var enemyUno = new fireElemental(0,21,150,10,2);
 var enemyDos = new fireElemental(0,21,-150,10,2);

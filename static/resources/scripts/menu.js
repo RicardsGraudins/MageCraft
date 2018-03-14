@@ -6,6 +6,12 @@ gameOver = function(){
 	document.getElementById("myCanvas").setAttribute("class", "fade");
 	//display gold earned on the menu
 	displayGold();
+	//stop playing game music
+	gameAudio.pause();
+	//play player died music
+	if (musicEnabled == true){
+		playerDiedAudio.play();
+	}//if
 }//gameOver
 
 //change the gold earned value displayed
@@ -54,6 +60,8 @@ pausedMenu = function(){
 	document.getElementById("myCanvas").setAttribute("class", "fade");
 	//stop running the game
 	engine.stopRenderLoop();
+	//stop playing game music
+	gameAudio.pause();
 }//pausedMenu
 
 //resumes the game
@@ -62,6 +70,10 @@ resume = function(){
 	document.getElementById("paused-menu").style.display = "none";
 	//increase the visibility of the game from dark
 	document.getElementById("myCanvas").setAttribute("class", "reset");
+	//resume audio
+	if (musicEnabled == true){
+		gameAudio.play();
+	}//if
 	//resume the game engine
 	resumeGame();
 	//bug resuming the game wipes the existing html elements off the page - fps, menu + help buttons
@@ -69,5 +81,10 @@ resume = function(){
 
 //mutes or unmutes the music
 muteMusic = function(){
-	//stop/start playing the audio
+	if (musicEnabled == true){
+		musicEnabled = false;
+	}//if
+	else {
+		musicEnabled = true;
+	}//else
 }//muteMusic

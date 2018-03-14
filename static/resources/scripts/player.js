@@ -1152,6 +1152,11 @@ Player = function(x, y, z, speed, onGrid, health){
 								fireball.translate(direction, distance, BABYLON.Space.WORLD);
 								fireballSprite.angle += 0.03;
 								
+								//enforce y limit
+								if (fireball.position.y != YLIMIT){
+									fireball.position.y = YLIMIT;
+								}//if
+								
 								//once i reaches 149 make the fireball transparent,
 								//move it off the map so it doesn't collide with anyone and switch off particle systems
 								if(i == 149){
@@ -1239,6 +1244,11 @@ Player = function(x, y, z, speed, onGrid, health){
 								//distance = speed of the mesh moving
 								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
 								frostbolt.translate(direction, distance, BABYLON.Space.WORLD);
+
+								//enforce y limit
+								if (frostbolt.position.y != YLIMIT){
+									frostbolt.position.y = YLIMIT;
+								}//if
 								
 								//once i reaches 149 make the splitter transparent,
 								//move it off the map so it doesn't collide with anyone
@@ -1325,6 +1335,11 @@ Player = function(x, y, z, speed, onGrid, health){
 								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
 								splitter.translate(direction, distance, BABYLON.Space.WORLD);
 								splitter.rotation.y += 0.1;
+								
+								//enforce y limit
+								if (splitter.position.y != YLIMIT){
+									splitter.position.y = YLIMIT;
+								}//if
 								
 								//once i reaches 49 splitter stops moving and
 								//splitter projectiles begin to spawn
@@ -1457,6 +1472,46 @@ Player = function(x, y, z, speed, onGrid, health){
 					splitterProjectile6.translate(direction, distance, BABYLON.Space.WORLD);
 					splitterProjectile7.translate(direction, distance, BABYLON.Space.WORLD);
 					splitter.rotation.y += 0.1;
+					
+					//enforce y limit
+					if (splitterProjectile0.position.y != YLIMIT){
+						splitterProjectile0.position.y = YLIMIT;
+					}//if
+					
+					//enforce y limit
+					if (splitterProjectile1.position.y != YLIMIT){
+						splitterProjectile1.position.y = YLIMIT;
+					}//if
+					
+					//enforce y limit
+					if (splitterProjectile2.position.y != YLIMIT){
+						splitterProjectile2.position.y = YLIMIT;
+					}//if
+					
+					//enforce y limit
+					if (splitterProjectile3.position.y != YLIMIT){
+						splitterProjectile3.position.y = YLIMIT;
+					}//if
+					
+					//enforce y limit
+					if (splitterProjectile4.position.y != YLIMIT){
+						splitterProjectile4.position.y = YLIMIT;
+					}//if
+					
+					//enforce y limit
+					if (splitterProjectile5.position.y != YLIMIT){
+						splitterProjectile5.position.y = YLIMIT;
+					}//if
+					
+					//enforce y limit
+					if (splitterProjectile6.position.y != YLIMIT){
+						splitterProjectile6.position.y = YLIMIT;
+					}//if
+					
+					//enforce y limit
+					if (splitterProjectile7.position.y != YLIMIT){
+						splitterProjectile7.position.y = YLIMIT;
+					}//if
 				}//if
 				
 				//when x is 49 remove the highlight, hide the splitter and move it off the map along with the projectiles
@@ -1530,6 +1585,11 @@ Player = function(x, y, z, speed, onGrid, health){
 								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
 								recharger.translate(direction, distance, BABYLON.Space.WORLD);
 								recharger.rotation.y += 0.3;
+								
+								//enforce y limit
+								if (recharger.position.y != YLIMIT){
+									recharger.position.y = YLIMIT;
+								}//if
 								
 								//recharger cooldown logic should go here, keep checking for collision every iteration
 								//if collision occurs set rechargerCooldown back to false
@@ -1612,6 +1672,11 @@ Player = function(x, y, z, speed, onGrid, health){
 								//space = BABYLON.Space.WORLD / BABYLON.Space.LOCAL - no difference
 								moltonBoulder.translate(direction, distance, BABYLON.Space.WORLD);
 								
+								//enforce y limit
+								if (moltonBoulder.position.y != YLIMIT){
+									moltonBoulder.position.y = YLIMIT;
+								}//if
+								
 								//start the particle system
 								boulderSystem.start();
 								
@@ -1686,8 +1751,6 @@ Player = function(x, y, z, speed, onGrid, health){
 						//once i reaches 150, translation stops
 						scene.registerBeforeRender(function () {
 							if(i++ < 150){
-								
-								
 								//collision logic here
 								
 								//once i reaches 149 make the warlock's mark transparent,

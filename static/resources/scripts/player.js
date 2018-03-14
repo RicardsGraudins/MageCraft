@@ -561,7 +561,7 @@ scene.actionManager.registerAction(
 );//registerAction
 
 //track cords - player.getPositionExpressedInLocalSpace();
-var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX: 20}, scene);
+var player = BABYLON.MeshBuilder.CreateSphere("player", {diameter: 20, diameterX: 20}, scene);
 var fireball = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 var frostbolt = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
 var splitter = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
@@ -585,7 +585,7 @@ var splitterProjectile7 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5
 //note that the hitbox is currently larger than the sprite for testing ***
 var playerMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
 playerMaterial.wireframe = true;
-playerMaterial.alpha = 0.01;
+playerMaterial.alpha = 1;;
 player.material = playerMaterial;
 
 //asign material to fireball with fire texture - fire_procedural_texture.js

@@ -72,11 +72,18 @@ fireballSpriteObject = new fireballSpriteHandler();
 
 warlockMarkSpriteObject = new warlockMarkSpriteHandler();
 
+//--------------------
+var enemyUno = new fireElemental(0,21,150,10,2);
+var enemyDos = new fireElemental(0,21,-150,10,2);
+enemyUno.startingLocation();
+enemyDos.startingLocation();
+//--------------------
+
 //render loop 60 fps, render the scene
 engine.runRenderLoop(function(){
 	background.render();
 	
-	if (playerObject.health != 0){
+	if (playerObject.health > 0){
 		playerObject.move();
 		playerObject.playerOnGrid();
 		playerObject.castFireball();
@@ -94,7 +101,11 @@ engine.runRenderLoop(function(){
 		fireballSpriteObject.move();
 		warlockMarkSpriteObject.movePlane();
 		UI.move();
-		UI.updateHealth(playerObject.health);	
+		UI.updateHealth(playerObject.health);;
+		enemyUno.move();
+		enemyDos.move();
+		enemyUno.playerCollision();
+		enemyDos.playerCollision();
 	}//if
 	else {
 		playerDied();
@@ -132,7 +143,7 @@ playerRestarted = function(){
 	engine.runRenderLoop(function(){
 		background.render();
 		
-		if (playerObject.health != 0){
+		if (playerObject.health > 0){
 			playerObject.move();
 			playerObject.playerOnGrid();
 			playerObject.castFireball();
@@ -165,7 +176,7 @@ resumeGame = function(){
 	engine.runRenderLoop(function(){
 		background.render();
 		
-		if (playerObject.health != 0){
+		if (playerObject.health > 0){
 			playerObject.move();
 			playerObject.playerOnGrid();
 			playerObject.castFireball();
@@ -196,7 +207,7 @@ resumeGame = function(){
 //run this function every 3 seconds
 setInterval(function(){ 
 	//if the player is alive increment gold
-	if (playerObject.health != 0){
+	if (playerObject.health > 0){
 		gold++;
 		UI.updateGold(gold);
 	} //if

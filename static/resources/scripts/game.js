@@ -86,8 +86,8 @@ gameAudio.play();
 var musicEnabled = true;
 
 //--------------------
-var enemyUno = new fireElemental(0,21,150,10,2);
-var enemyDos = new fireElemental(0,21,-150,10,2);
+var enemyUno = new dragon(0,21,150,10,2,"red", "test");
+var enemyDos = new dragon(0,21,-150,10,2,"red", "test1");
 enemyUno.startingLocation();
 enemyDos.startingLocation();
 //--------------------
@@ -119,6 +119,9 @@ engine.runRenderLoop(function(){
 		enemyDos.move();
 		enemyUno.playerCollision();
 		enemyDos.playerCollision();
+		enemyUno.moveRed();
+		enemyDos.moveRed();
+		enemyUno.fireballCollision();
 	}//if
 	else {
 		playerDied();

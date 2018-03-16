@@ -567,8 +567,8 @@ var frostbolt = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diamete
 var splitter = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 var recharger = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 10, diameterX: 10}, scene);
 var moltonBoulder = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
-var warlockMark = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
-var deflectionShield = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 20, diameterX: 20}, scene);
+var warlockMark = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 60, diameterX: 60}, scene);
+var deflectionShield = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 40, diameterX: 40}, scene);
 
 //splitter projectiles
 var splitterProjectile0 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5, diameterX: 5}, scene);
@@ -1737,9 +1737,8 @@ Player = function(x, y, z, speed, onGrid, health){
 						
 						var i = 0;
 						
-						//set meteorMaterial back to visible
 						//warlockMarkMaterial.alpha = 0.5;
-						warlockMarkMaterial.alpha = 0;
+						warlockMarkMaterial.alpha = 0.5;
 						
 						warlockMark.position.x = gx;
 						warlockMark.position.z = gz;
@@ -1748,14 +1747,14 @@ Player = function(x, y, z, speed, onGrid, health){
 						warlockSystem0.start();
 						warlockSystem1.start();
 						
-						//once i reaches 150, translation stops
+						//once i reaches 350, translation stops
 						scene.registerBeforeRender(function () {
-							if(i++ < 150){
+							if(i++ < 350){
 								//collision logic here
 								
-								//once i reaches 149 make the warlock's mark transparent,
+								//once i reaches 349 make the warlock's mark transparent,
 								//move it off the map so it doesn't collide with anyone
-								if(i == 149){
+								if(i == 349){
 									warlockMark.position.x = 1000;
 									warlockMarkMaterial.alpha = 0;
 									
@@ -1809,10 +1808,7 @@ Player = function(x, y, z, speed, onGrid, health){
 								deflectionShield.position.y = player.position.y;
 								deflectionShield.position.z = player.position.z - 4;
 								
-								//collision logic here
-								//if something hits the shield while its up either cancel it out or deflect back
-								
-								//once i reaches 149 make the moltonBoulder transparent,
+								//once i reaches 349 make the moltonBoulder transparent,
 								//move it off the map so it doesn't collide with anyone
 								if(i == 349){
 									deflectionShield.position.x = 1000;

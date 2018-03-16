@@ -86,8 +86,8 @@ gameAudio.play();
 var musicEnabled = true;
 
 //--------------------
-var enemyUno = new dragon(0,21,150,10,2,"red", "test");
-var enemyDos = new dragon(0,21,-150,10,2,"red", "test1");
+var enemyUno = new dragon(0,21,150,10,2,"red", "test", false);
+var enemyDos = new dragon(0,21,-150,10,2,"red", "test1", false);
 enemyUno.startingLocation();
 enemyDos.startingLocation();
 //--------------------
@@ -122,6 +122,22 @@ engine.runRenderLoop(function(){
 		enemyUno.moveRed();
 		enemyDos.moveRed();
 		enemyUno.fireballCollision();
+		enemyUno.frostboltCollision();
+		//enemyUno.frozenDragon();
+		enemyUno.splitterCollision();
+		enemyUno.splitterProjectile0Collision();
+		enemyUno.splitterProjectile1Collision();
+		enemyUno.splitterProjectile2Collision();
+		enemyUno.splitterProjectile3Collision();
+		enemyUno.splitterProjectile4Collision();
+		enemyUno.splitterProjectile5Collision();
+		enemyUno.splitterProjectile6Collision();
+		enemyUno.splitterProjectile7Collision();
+		enemyUno.rechargerCollision();
+		enemyUno.moltonBoulderCollision();
+		enemyUno.warlockMarkCollision();
+		enemyUno.deflectionShieldCollision();
+		enemyUno.dead();
 	}//if
 	else {
 		playerDied();

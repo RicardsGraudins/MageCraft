@@ -85,11 +85,66 @@ playerDiedAudio.loop = true;
 gameAudio.play();
 var musicEnabled = true;
 
-//--------------------
-var enemyUno = new dragon(0,21,150,10,2,"red", "test", false);
-var enemyDos = new dragon(0,21,-150,10,2,"red", "test1", false);
-enemyUno.startingLocation();
-enemyDos.startingLocation();
+//dragon(x, y, z, health, speed, sprite, spriteMove, frozen)
+var dragonsLeft = {};
+var howManyDragons = 10;
+var xPos = -1150;
+var zPos = 300;
+var spriteId = 0;
+var spriteIdToString = spriteId.toString();
+
+//initializing dragonsLeft on the left side of the map
+for (i = 0; i < howManyDragons; i++){
+	dragonsLeft[i] = new dragon(xPos, YLIMIT, zPos, 10, 2, "red", spriteIdToString, false);
+	zPos -= 50;
+	xPos = getRandomInt(-1150, -800);
+	spriteId++;
+	spriteIdToString = spriteId.toString();
+	dragonsLeft[i].startingLocation();
+}//for
+
+var dragonsRight = {};
+xPos = 1150;
+zPos = 300;
+
+//initializing dragonsRight on the right side of the map
+for (i = 0; i < howManyDragons; i++){
+	dragonsRight[i] = new dragon(xPos, YLIMIT, zPos, 10, 2, "red", spriteIdToString, false);
+	zPos -= 50;
+	xPos = getRandomInt(1150, 800);
+	spriteId++;
+	spriteIdToString = spriteId.toString();
+	dragonsRight[i].startingLocation();
+}//for
+
+var dragonsTop = {};
+xPos = 0;
+zPos = 1050;
+
+//initializing dragonsTop on the top side of the map
+for (i = 0; i < howManyDragons; i++){
+	dragonsTop[i] = new dragon(xPos, YLIMIT, zPos, 10, 2, "red", spriteIdToString, false);
+	zPos -= 50;
+	xPos = getRandomInt(-300, 300);
+	spriteId++;
+	spriteIdToString = spriteId.toString();
+	dragonsTop[i].startingLocation();
+}//for
+
+var dragonsBottom = {};
+xPos = 0;
+zPos = -700;
+
+//initializing dragonsBottom on the bottom side of the map
+for (i = 0; i < howManyDragons; i++){
+	dragonsBottom[i] = new dragon(xPos, YLIMIT, zPos, 10, 2, "red", spriteIdToString, false);
+	zPos -= 50;
+	xPos = getRandomInt(-300, 300);
+	spriteId++;
+	spriteIdToString = spriteId.toString();
+	dragonsBottom[i].startingLocation();
+}//for
+
 //--------------------
 
 //render loop 60 fps, render the scene
@@ -115,34 +170,93 @@ engine.runRenderLoop(function(){
 		warlockMarkSpriteObject.movePlane();
 		UI.move();
 		UI.updateHealth(playerObject.health);;
-		enemyUno.move();
-		enemyDos.move();
-		enemyUno.playerCollision();
-		enemyDos.playerCollision();
-		enemyUno.moveRed();
-		enemyDos.moveRed();
-		enemyUno.fireballCollision();
-		enemyDos.fireballCollision();
-		enemyUno.frostboltCollision();
-		enemyDos.frostboltCollision();
-		//enemyUno.frozenDragon();
-		enemyUno.splitterCollision();
-		enemyUno.splitterProjectile0Collision();
-		enemyUno.splitterProjectile1Collision();
-		enemyUno.splitterProjectile2Collision();
-		enemyUno.splitterProjectile3Collision();
-		enemyUno.splitterProjectile4Collision();
-		enemyUno.splitterProjectile5Collision();
-		enemyUno.splitterProjectile6Collision();
-		enemyUno.splitterProjectile7Collision();
-		enemyUno.rechargerCollision();
-		enemyDos.rechargerCollision();
-		enemyUno.moltonBoulderCollision();
-		enemyDos.moltonBoulderCollision();
-		enemyUno.warlockMarkCollision();
-		enemyUno.deflectionShieldCollision();
-		enemyUno.dead();
-		enemyDos.dead();
+
+		//
+		for (i = 0; i < howManyDragons; i++){
+			dragonsLeft[i].onMap();
+			dragonsLeft[i].move();
+			dragonsLeft[i].moveRed();
+			dragonsLeft[i].playerCollision();
+			dragonsLeft[i].fireballCollision();
+			dragonsLeft[i].frostboltCollision();
+			dragonsLeft[i].splitterCollision();
+			dragonsLeft[i].splitterProjectile0Collision();
+			dragonsLeft[i].splitterProjectile1Collision();
+			dragonsLeft[i].splitterProjectile2Collision();
+			dragonsLeft[i].splitterProjectile3Collision();
+			dragonsLeft[i].splitterProjectile4Collision();
+			dragonsLeft[i].splitterProjectile5Collision();
+			dragonsLeft[i].splitterProjectile6Collision();
+			dragonsLeft[i].splitterProjectile7Collision();
+			dragonsLeft[i].rechargerCollision();
+			dragonsLeft[i].moltonBoulderCollision();
+			dragonsLeft[i].warlockMarkCollision();
+			dragonsLeft[i].deflectionShieldCollision();
+			dragonsLeft[i].dead();
+			
+			dragonsRight[i].onMap();
+			dragonsRight[i].move();
+			dragonsRight[i].moveRed();
+			dragonsRight[i].playerCollision();
+			dragonsRight[i].fireballCollision();
+			dragonsRight[i].frostboltCollision();
+			dragonsRight[i].splitterCollision();
+			dragonsRight[i].splitterProjectile0Collision();
+			dragonsRight[i].splitterProjectile1Collision();
+			dragonsRight[i].splitterProjectile2Collision();
+			dragonsRight[i].splitterProjectile3Collision();
+			dragonsRight[i].splitterProjectile4Collision();
+			dragonsRight[i].splitterProjectile5Collision();
+			dragonsRight[i].splitterProjectile6Collision();
+			dragonsRight[i].splitterProjectile7Collision();
+			dragonsRight[i].rechargerCollision();
+			dragonsRight[i].moltonBoulderCollision();
+			dragonsRight[i].warlockMarkCollision();
+			dragonsRight[i].deflectionShieldCollision();
+			dragonsRight[i].dead();
+			
+			dragonsTop[i].onMap();
+			dragonsTop[i].move();
+			dragonsTop[i].moveRed();
+			dragonsTop[i].playerCollision();
+			dragonsTop[i].fireballCollision();
+			dragonsTop[i].frostboltCollision();
+			dragonsTop[i].splitterCollision();
+			dragonsTop[i].splitterProjectile0Collision();
+			dragonsTop[i].splitterProjectile1Collision();
+			dragonsTop[i].splitterProjectile2Collision();
+			dragonsTop[i].splitterProjectile3Collision();
+			dragonsTop[i].splitterProjectile4Collision();
+			dragonsTop[i].splitterProjectile5Collision();
+			dragonsTop[i].splitterProjectile6Collision();
+			dragonsTop[i].splitterProjectile7Collision();
+			dragonsTop[i].rechargerCollision();
+			dragonsTop[i].moltonBoulderCollision();
+			dragonsTop[i].warlockMarkCollision();
+			dragonsTop[i].deflectionShieldCollision();
+			dragonsTop[i].dead();
+			
+			dragonsBottom[i].onMap();
+			dragonsBottom[i].move();
+			dragonsBottom[i].moveRed();
+			dragonsBottom[i].playerCollision();
+			dragonsBottom[i].fireballCollision();
+			dragonsBottom[i].frostboltCollision();
+			dragonsBottom[i].splitterCollision();
+			dragonsBottom[i].splitterProjectile0Collision();
+			dragonsBottom[i].splitterProjectile1Collision();
+			dragonsBottom[i].splitterProjectile2Collision();
+			dragonsBottom[i].splitterProjectile3Collision();
+			dragonsBottom[i].splitterProjectile4Collision();
+			dragonsBottom[i].splitterProjectile5Collision();
+			dragonsBottom[i].splitterProjectile6Collision();
+			dragonsBottom[i].splitterProjectile7Collision();
+			dragonsBottom[i].rechargerCollision();
+			dragonsBottom[i].moltonBoulderCollision();
+			dragonsBottom[i].warlockMarkCollision();
+			dragonsBottom[i].deflectionShieldCollision();
+			dragonsBottom[i].dead();
+		}//for
 	}//if
 	else {
 		playerDied();

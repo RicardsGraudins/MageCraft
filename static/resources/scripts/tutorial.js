@@ -450,6 +450,12 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 	//can be used if another dragon dies
 	var deathAnimated = 0;
 	
+	//controls when to respawn the dragon
+	var respawnTimer = 0;
+	
+	//controls whether respawning for each dragon is enabled
+	var endlessMode = true;
+	
 	//create sprite manager based on sprite parameter passed
 	if (sprite == "red"){
 		var spriteManagerRedDragon = new BABYLON.SpriteManager("red dragon", redDragonSprite, 1, {width:191.5, height:125}, scene);
@@ -539,10 +545,23 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 			
 			//reposition the dragon off the map after 1 second
 			setTimeout(function() {
-				dragon.setPositionWithLocalVector(new BABYLON.Vector3(1000, 21, 0)); //repositon dragon
+				dragon.setPositionWithLocalVector(new BABYLON.Vector3(1100, 21, 0)); //repositon dragon
 			}, 1000); //wait 1 second
 		}//if
-		  
+		
+		//if the dragon is dead and endless is true
+		//start incrementing the timer
+		if (this.health <= 0 && endlessMode == true){
+			respawnTimer++;
+		}//if
+		
+		//if the dragon is dead and respawnTimer hits 600
+		//respawn the dragon and reset the timer
+		if (this.health <= 0 && respawnTimer == 600){
+			console.log(respawnTimer);
+			this.reset();
+			respawnTimer = 0;
+		}
 		//update xMove every frame
 		xMove = dragon.position.x;
 	}//move
@@ -585,6 +604,30 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 			}//if
 		}//if
 	}//dead
+	
+	//check if the dragon is within the map boundaries, if the dragon position
+	//exceeds a limit then reset it to its starting location
+	this.onMap = function(){
+		//if the dragon goes off the right edge of the map
+		if (dragon.position.x > 1300){
+			this.startingLocation();
+		}//if
+		
+		//if the dragon goes off the left edge of the map
+		if (dragon.position.x < -1300){
+			this.startingLocation();
+		}//if
+		
+		//if the dragon goes off the top edge of the map
+		if (dragon.position.z > 1300){
+			this.startingLocation();
+		}//if
+		
+		//if the dragon goes off the bottom edge of the map
+		if (dragon.position.z < - 1300){
+			this.startingLocation();
+		}//if
+	}//onMap
 	
 	//collision between player fireball and the dragon
 	this.fireballCollision = function(){

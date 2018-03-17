@@ -122,7 +122,9 @@ engine.runRenderLoop(function(){
 		enemyUno.moveRed();
 		enemyDos.moveRed();
 		enemyUno.fireballCollision();
+		enemyDos.fireballCollision();
 		enemyUno.frostboltCollision();
+		enemyDos.frostboltCollision();
 		//enemyUno.frozenDragon();
 		enemyUno.splitterCollision();
 		enemyUno.splitterProjectile0Collision();
@@ -134,10 +136,13 @@ engine.runRenderLoop(function(){
 		enemyUno.splitterProjectile6Collision();
 		enemyUno.splitterProjectile7Collision();
 		enemyUno.rechargerCollision();
+		enemyDos.rechargerCollision();
 		enemyUno.moltonBoulderCollision();
+		enemyDos.moltonBoulderCollision();
 		enemyUno.warlockMarkCollision();
 		enemyUno.deflectionShieldCollision();
 		enemyUno.dead();
+		enemyDos.dead();
 	}//if
 	else {
 		playerDied();

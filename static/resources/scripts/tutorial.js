@@ -37,7 +37,8 @@ function enemy(){
 	this.deflectionShieldCollision = function(){};
 }//enemy
 
-//sprite handler for frozen animation - when the dragon gets hit by frostbolt
+//sprite manager for frozen animation - when the dragon gets hit by frostbolt
+//only need 1 sprite for this animation since only 1 dragon can be frozen at a time
 var spriteManagerFrozen = new BABYLON.SpriteManager("frostManager", frostEffect, 1, 192, scene);
 var frozenSprite = new BABYLON.Sprite("spell", spriteManagerFrozen);
 //adjust sprite settings
@@ -47,16 +48,376 @@ frozenSprite.position.x = 1000;
 frozenSprite.position.y = YLIMIT;
 frozenSprite.position.z = 0;
 
+//using a different sprite manager for the dragon burning the frost animation since the sprite sheet is poorly spaced - need
+//different width & height for several frames, only need 1 sprite for this animation since only 1 dragon can be frozen at a time
+//and only 1 dragon can burn the frost away at a time
+var spriteManagerRedDragonBurn = new BABYLON.SpriteManager("red dragon", redDragonSprite, 1, {width:191.1, height:118}, scene);
+//create the sprite itself
+var spriteBurn = new BABYLON.Sprite("red dragon", spriteManagerRedDragonBurn);
+//adjust sprite settings
+spriteBurn.size = 35;
+spriteBurn.playAnimation(28, 31, true, 150);
+spriteBurn.position.x = 1000;
+spriteBurn.position.y = YLIMIT;
+spriteBurn.position.z = 0;
+
+//sprite manager for dragon death animation, once again using a different sprite manager since the sprite sheet is poorly spaced and
+//requires different width & height for several frames
+var spriteManagerRedDragonDeath = new BABYLON.SpriteManager("red dragon", redDragonSprite, 10, {width:119.33, height:123}, scene);
+//create the sprite itself
+var spriteDeath = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+//adjust sprite settings
+spriteDeath.size = 35;
+spriteDeath.cellIndex = 64;
+//spriteDeath.playAnimation(64, 69, false, 150);
+spriteDeath.position.x = 1000;
+spriteDeath.position.y = YLIMIT;
+spriteDeath.position.z = 0;
+
+//spriteDeath 1-10
+var spriteDeath1 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+spriteDeath1.size = 35;
+spriteDeath1.cellIndex = 64;
+spriteDeath1.position.x = 1000;
+spriteDeath1.position.y = YLIMIT;
+spriteDeath1.position.z = 0;
+
+var spriteDeath2 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+spriteDeath2.size = 35;
+spriteDeath2.cellIndex = 64;
+spriteDeath2.position.x = 1000;
+spriteDeath2.position.y = YLIMIT;
+spriteDeath2.position.z = 0;
+
+var spriteDeath3 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+spriteDeath3.size = 35;
+spriteDeath3.cellIndex = 64;
+spriteDeath3.position.x = 1000;
+spriteDeath3.position.y = YLIMIT;
+spriteDeath3.position.z = 0;
+
+var spriteDeath4 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+spriteDeath4.size = 35;
+spriteDeath4.cellIndex = 64;
+spriteDeath4.position.x = 1000;
+spriteDeath4.position.y = YLIMIT;
+spriteDeath4.position.z = 0;
+
+var spriteDeath5 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+spriteDeath5.size = 35;
+spriteDeath5.cellIndex = 64;
+spriteDeath5.position.x = 1000;
+spriteDeath5.position.y = YLIMIT;
+spriteDeath5.position.z = 0;
+
+var spriteDeath6 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+spriteDeath6.size = 35;
+spriteDeath6.cellIndex = 64;
+spriteDeath6.position.x = 1000;
+spriteDeath6.position.y = YLIMIT;
+spriteDeath6.position.z = 0;
+
+var spriteDeath7 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+spriteDeath7.size = 35;
+spriteDeath7.cellIndex = 64;
+spriteDeath7.position.x = 1000;
+spriteDeath7.position.y = YLIMIT;
+spriteDeath7.position.z = 0;
+
+var spriteDeath8 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+spriteDeath8.size = 35;
+spriteDeath8.cellIndex = 64;
+spriteDeath8.position.x = 1000;
+spriteDeath8.position.y = YLIMIT;
+spriteDeath8.position.z = 0;
+
+var spriteDeath9 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
+spriteDeath9.size = 35;
+spriteDeath9.cellIndex = 64;
+spriteDeath9.position.x = 1000;
+spriteDeath9.position.y = YLIMIT;
+spriteDeath9.position.z = 0;
+
+//reposition the spriteBurn sprite to the passed cordinates and after 2 second
+//move the sprite off the map
+function burnFrost(x,y,z){
+	spriteBurn.position.x = x;
+	spriteBurn.position.y = y;
+	spriteBurn.position.z = z + 3;
+	
+	//after 2 second move the animation away
+	setTimeout(function() {
+		spriteBurn.position.x = 1000;
+		spriteBurn.position.y = YLIMIT;
+		spriteBurn.position.z = 0;
+	}, 2000); //wait 2 second
+}//burnFrost
+
+//reposition a spriteDeathX sprite to the passed cordinates
+//unlike the other sprite managers spriteManagerRedDragonDeath allows up to 10 sprites to be used at once meaning
+//up to 10 dragons can be dying at the same time and using one of these sprites for that animation, we determine which
+//sprite is available for use simply by checking if its x position is at 1000, if it is then it is available to use
+function dragonDeath(x,y,z){
+	if (spriteDeath.position.x == 1000){
+		spriteDeath.position.x = x;
+		spriteDeath.position.y = y + 3;
+		spriteDeath.position.z = z;
+		
+		//play the death animation
+		spriteDeath.playAnimation(64, 69, false, 150);
+		//wait 2 seconds then begin decreasing y, dragon begins to sink into the lava
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		//wait 6 seconds then move the spriteDeath sprite off the map
+		setTimeout(function() {
+			spriteDeath.position.x = 1000;
+			spriteDeath.position.y = YLIMIT;
+			spriteDeath.position.z = 0;
+		}, 6000);
+	}
+	
+	else if (spriteDeath1.position.x == 1000) {
+		spriteDeath1.position.x = x;
+		spriteDeath1.position.y = y + 3;
+		spriteDeath1.position.z = z;
+		
+		spriteDeath1.playAnimation(64, 69, false, 150);
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath1.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		setTimeout(function() {
+			spriteDeath1.position.x = 1000;
+			spriteDeath1.position.y = YLIMIT;
+			spriteDeath1.position.z = 0;
+		}, 6000);
+	}
+	
+	else if (spriteDeath2.position.x == 1000) {
+		spriteDeath2.position.x = x;
+		spriteDeath2.position.y = y + 3;
+		spriteDeath2.position.z = z;
+		
+		spriteDeath2.playAnimation(64, 69, false, 150);
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath2.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		setTimeout(function() {
+			spriteDeath2.position.x = 1000;
+			spriteDeath2.position.y = YLIMIT;
+			spriteDeath2.position.z = 0;
+		}, 6000);
+	}
+	
+	else if (spriteDeath3.position.x == 1000) {
+		spriteDeath3.position.x = x;
+		spriteDeath3.position.y = y + 3;
+		spriteDeath3.position.z = z;
+		
+		spriteDeath3.playAnimation(64, 69, false, 150);
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath3.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		setTimeout(function() {
+			spriteDeath3.position.x = 1000;
+			spriteDeath3.position.y = YLIMIT;
+			spriteDeath3.position.z = 0;
+		}, 6000);
+	}
+	
+	else if (spriteDeath4.position.x == 1000) {
+		spriteDeath4.position.x = x;
+		spriteDeath4.position.y = y + 3;
+		spriteDeath4.position.z = z;
+		
+		spriteDeath4.playAnimation(64, 69, false, 150);
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath4.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		setTimeout(function() {
+			spriteDeath4.position.x = 1000;
+			spriteDeath4.position.y = YLIMIT;
+			spriteDeath4.position.z = 0;
+		}, 6000);
+	}
+	
+	else if (spriteDeath5.position.x == 1000) {
+		spriteDeath5.position.x = x;
+		spriteDeath5.position.y = y + 3;
+		spriteDeath5.position.z = z;
+		
+		spriteDeath5.playAnimation(64, 69, false, 150);
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath5.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		setTimeout(function() {
+			spriteDeath5.position.x = 1000;
+			spriteDeath5.position.y = YLIMIT;
+			spriteDeath5.position.z = 0;
+		}, 6000);
+	}
+	
+	else if (spriteDeath6.position.x == 1000) {
+		spriteDeath6.position.x = x;
+		spriteDeath6.position.y = y + 3;
+		spriteDeath6.position.z = z;
+		
+		spriteDeath6.playAnimation(64, 69, false, 150);
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath6.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		setTimeout(function() {
+			spriteDeath6.position.x = 1000;
+			spriteDeath6.position.y = YLIMIT;
+			spriteDeath6.position.z = 0;
+		}, 6000);
+	}
+	
+	else if (spriteDeath7.position.x == 1000) {
+		spriteDeath7.position.x = x;
+		spriteDeath7.position.y = y + 3;
+		spriteDeath7.position.z = z;
+		
+		spriteDeath7.playAnimation(64, 69, false, 150);
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath7.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		setTimeout(function() {
+			spriteDeath7.position.x = 1000;
+			spriteDeath7.position.y = YLIMIT;
+			spriteDeath7.position.z = 0;
+		}, 6000);
+	}
+	
+	else if (spriteDeath8.position.x == 1000) {
+		spriteDeath8.position.x = x;
+		spriteDeath8.position.y = y + 3;
+		spriteDeath8.position.z = z;
+		
+		spriteDeath8.playAnimation(64, 69, false, 150);
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath8.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		setTimeout(function() {
+			spriteDeath8.position.x = 1000;
+			spriteDeath8.position.y = YLIMIT;
+			spriteDeath8.position.z = 0;
+		}, 6000);
+	}
+	
+	else if (spriteDeath9.position.x == 1000) {
+		spriteDeath9.position.x = x;
+		spriteDeath9.position.y = y + 3;
+		spriteDeath9.position.z = z;
+		
+		spriteDeath9.playAnimation(64, 69, false, 150);
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath9.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		setTimeout(function() {
+			spriteDeath9.position.x = 1000;
+			spriteDeath9.position.y = YLIMIT;
+			spriteDeath9.position.z = 0;
+		}, 6000);
+	}
+	
+	//if all the other spriteDeath are occupied simply end the animation on the first spriteDeath and use it here
+	else {
+		spriteDeath.position.x = x;
+		spriteDeath.position.y = y + 3;
+		spriteDeath.position.z = z;
+		
+		//play the death animation
+		spriteDeath.playAnimation(64, 69, false, 150);
+		//wait 2 seconds then begin decreasing y, dragon begins to sink into the lava
+		setTimeout(function() {
+			for (var i = 0; i < 30; i++) {
+			  (function (i) {
+				setTimeout(function () {
+				  spriteDeath.position.y -= .8;
+				}, 100*i);
+			  })(i);
+			};
+		}, 2000);
+		//wait 6 seconds then move the spriteDeath sprite off the map
+		setTimeout(function() {
+			spriteDeath.position.x = 1000;
+			spriteDeath.position.y = YLIMIT;
+			spriteDeath.position.z = 0;
+		}, 6000);
+	}//else
+}//dragonDeath
+
 //dragon enemy
-//spriteId = variable name for sprite, must be a unique string for every dragon
-function dragon(x, y, z, health, speed, sprite, spriteId, frozen){
+//spriteMove = variable name for sprite, must be a unique string for every dragon
+function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 	this.x = x;
 	this.y = y;
 	this.z = z;
 	this.health = health;
 	this.speed = speed;
 	this.sprite = sprite;
-	this.spriteId = spriteId;
+	this.spriteMove = spriteMove;
 	this.frozen = frozen;
 	
 	//create dragon hitbox
@@ -76,15 +437,28 @@ function dragon(x, y, z, health, speed, sprite, spriteId, frozen){
 	//when set to true unfreeze the dragon
 	var unfreeze = false;
 	
+	//controls when to play the animation
+	var burnFrostAnimation = false;
+	
+	//controls when to hide the moveSprite in order to display other sprite animations
+	var hideSprite = false;
+	
+	//controls when to display death animation
+	var deathAnimation = false;
+	//only display death animation if deathAnimated = 0, otherwise we would have this animation
+	//loop endlessly while the dragon health is <= 0, this way we free up the sprite such that it
+	//can be used if another dragon dies
+	var deathAnimated = 0;
+	
 	//create sprite manager based on sprite parameter passed
 	if (sprite == "red"){
 		var spriteManagerRedDragon = new BABYLON.SpriteManager("red dragon", redDragonSprite, 1, {width:191.5, height:125}, scene);
 		//create the sprite itself
-		this.spriteId = new BABYLON.Sprite("red dragon", spriteManagerRedDragon);
+		this.spriteMove = new BABYLON.Sprite("red dragon", spriteManagerRedDragon);
 		//adjust sprite settings
-		this.spriteId.size = 35;
-		this.spriteId.cellIndex = 11;
-		this.spriteId.playAnimation(9, 11, true, 150);
+		this.spriteMove.size = 35;
+		this.spriteMove.cellIndex = 11;
+		this.spriteMove.playAnimation(9, 11, true, 150);
 	}//if
 	else if (sprite == "black"){
 		console.log("add sprite");
@@ -106,7 +480,7 @@ function dragon(x, y, z, health, speed, sprite, spriteId, frozen){
 		
 		//if the dragons health is greater than 0 and the dragon is outside the warlock's mark zone
 		//move towards the player
-		if (this.health > 0 && zoned == false && this.frozen == false){
+		if (this.health > 0 && zoned == false && this.frozen == false && hideSprite == false){
 		  dragon.translate(direction, distance, BABYLON.Space.WORLD);
 		  if (dragon.position.y != YLIMIT){
 				dragon.position.y = YLIMIT;
@@ -127,26 +501,49 @@ function dragon(x, y, z, health, speed, sprite, spriteId, frozen){
 		
 		//if the dragon is frozen, stop animations and don't move
 		else if (this.health > 0 && this.frozen == true){
-			this.spriteId.stopAnimation();
+			this.spriteMove.stopAnimation();
 		}//else if
 		  
 		//make the sprite face right
 		if (xMove > dragon.position.x){
-		  this.spriteId.invertU = 1;
+		  this.spriteMove.invertU = 1;
 		}//if
 		//otherwise face left
 		else {
-		  this.spriteId.invertU = 0;
+		  this.spriteMove.invertU = 0;
 		}//else
 			
 		//restart the animations if unfreeze is set to true
 		if (unfreeze == true){
 			this.frozen = false;
-			this.spriteId.playAnimation(9, 11, true, 150)
+			this.spriteMove.playAnimation(9, 11, true, 150)
 			unfreeze = false; //set unfreeze back to false
+			this.spriteMove.size = 35; //set the size back to 35
+		}//if
+		
+		//if the burnFrostAnimation is set to true and hideSprite is set to true
+		//then pass the cordinates of this dragon to burnFrost to make the burnFrost sprite animation appear
+		//at this dragon's cordinates while it stays hidden (size = 0) for 2 seconds
+		if (burnFrostAnimation == true && hideSprite == true){
+			burnFrost(dragon.position.x, dragon.position.y, dragon.position.z);
+			this.spriteMove.size = 0;
+		}//if
+		
+		//when deathAnimation is set to true pass dragon cordinates to dragonDeath to begin the death animation
+		//once death animation has begun resposition the dragon off the map
+		if (deathAnimation == true){
+			dragonDeath(dragon.position.x, dragon.position.y, dragon.position.z); //begin death animation
+			deathAnimation = false; //set deathAnimation back to false
+			//dragon.setPositionWithLocalVector(new BABYLON.Vector3(1000, 21, 0)); //repositon dragon
+			deathAnimated = 1; //change deathAnimated from 0 to 1, no longer loops
+			
+			//reposition the dragon off the map after 1 second
+			setTimeout(function() {
+				dragon.setPositionWithLocalVector(new BABYLON.Vector3(1000, 21, 0)); //repositon dragon
+			}, 1000); //wait 1 second
 		}//if
 		  
-		  //update xMove every frame
+		//update xMove every frame
 		xMove = dragon.position.x;
 	}//move
 	
@@ -164,24 +561,28 @@ function dragon(x, y, z, health, speed, sprite, spriteId, frozen){
 	
 	//move the red dragon sprite
 	this.moveRed = function(){
-		this.spriteId.position.x = dragon.position.x;
-		this.spriteId.position.y = dragon.position.y;
-		this.spriteId.position.z = dragon.position.z;
+		this.spriteMove.position.x = dragon.position.x;
+		this.spriteMove.position.y = dragon.position.y;
+		this.spriteMove.position.z = dragon.position.z;
 	}//moveRed
 	
 	//reset the dragon
 	this.reset = function(){
 		dragonMaterial.alpha = 0.3;
-		this.spriteId.size = 35;
+		this.spriteMove.size = 35;
+		this.health = 10;
+		deathAnimated = 0;
 		this.startingLocation();
 	}//reset
 	
-	//check if the dragon health is 0, if it is make it invisable and move it off the map
+	//check if the dragon health is 0, if it is make it invisable and begin the death animation
 	this.dead = function(){
 		if (this.health <= 0){
 			dragonMaterial.alpha = 0;
-			this.spriteId.size = 0;
-			dragon.setPositionWithLocalVector(new BABYLON.Vector3(1000, 21, 0));
+			this.spriteMove.size = 0;
+			if (deathAnimated == 0){
+				deathAnimation = true; //set to true to start the death animation
+			}//if
 		}//if
 	}//dead
 	
@@ -223,14 +624,22 @@ function dragon(x, y, z, health, speed, sprite, spriteId, frozen){
 			frozenSprite.position.y = dragon.position.y;
 			frozenSprite.position.z = dragon.position.z;
 			
-			//after 5 seconds unfreeze the dragon
+			//animation before unfreeze
+			setTimeout(function() {
+				burnFrostAnimation = true;
+				hideSprite = true;
+			}, 4000);//wait 4 seconds
+			
+			//after 6 seconds unfreeze the dragon
 			setTimeout(function() {
 				frozenSprite.position.x = 1000;
 				frozenSprite.position.y = YLIMIT;
 				frozenSprite.position.z = 0;
 				//this.frozen = false; //cannot unfreeze within this function
+				burnFrostAnimation = false; //set burnFrostAnimation back to false
+				hideSprite = false; //set hideSprite back to false
 				unfreeze = true; //set unfreeze to true from false
-			}, 5000); //wait 5 seconds
+			}, 6000); //wait 6 seconds
 		}//if
 	}//frozenDragon
 

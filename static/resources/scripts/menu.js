@@ -47,11 +47,6 @@ restart = function(){
 	//fully to their starting positions and values which is quite tedious
 }//restart
 
-//navigate back to the main menu
-menu = function(){
-	window.location.replace('http://127.0.0.1:5000/');
-}//menu
-
 //pause the game and display the paused menu
 pausedMenu = function(){
 	//make the paused menu visible

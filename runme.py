@@ -164,11 +164,25 @@ def resetPassword():
 		flash('That username does not exist.')
 	return render_template('resetPassword.html')
 	
-#When routed to /logout remove the session(logout the user) and redirect
+#When routed to /logout remove the session(logout the user) and redirect to profile
 @app.route('/logout')
 def logout():
 	session.pop('username', None)
 	return redirect(url_for('profile'))
+	
+#Handles delete account functionality @ profile.html
+#If the user is logged in remove the record from the database and pop session
+#Otherwise return FAQ.html with a message
+@app.route('/deleteAccount')
+def deleteAccount():
+	if 'username' in session:
+		users = mongo.db.users
+		delUser = session['username']
+		users.remove({"name": delUser})
+		session.pop('username', None)
+		return redirect(url_for('profile'))
+	displayMessage = 'You must be logged in to delete your account!'
+	return render_template('FAQ.html', displayMessage = displayMessage)
 	
 #Using socketio for multiplayer - work in progress
 @socketio.on('message')

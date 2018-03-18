@@ -61,6 +61,42 @@
    margin-left: 2%;
 }
 
+.button3 {
+   border: 2px solid #080808;
+   background: #212121;
+   background: -webkit-gradient(linear, left top, left bottom, from(#787878), to(#212121));
+   background: -webkit-linear-gradient(top, #787878, #212121);
+   background: -moz-linear-gradient(top, #787878, #212121);
+   background: -ms-linear-gradient(top, #787878, #212121);
+   background: -o-linear-gradient(top, #787878, #212121);
+   background-image: -ms-linear-gradient(top, #787878 0%, #212121 100%);
+   padding: 2%;
+   -webkit-border-radius: 12px;
+   -moz-border-radius: 12px;
+   border-radius: 12px;
+   -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+   -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+   box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+   text-shadow: #5a707d 0 1px 0;
+   color: #ffffff;
+   font-size: 16px;
+   font-family: helvetica, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   width: 100%;	
+   margin-left: 2%;
+}
+
+.button3:hover {
+  background: #2e9c02;
+  background-image: -webkit-linear-gradient(top, #2e9c02, #000000);
+  background-image: -moz-linear-gradient(top, #2e9c02, #000000);
+  background-image: -ms-linear-gradient(top, #2e9c02, #000000);
+  background-image: -o-linear-gradient(top, #2e9c02, #000000);
+  background-image: linear-gradient(to bottom, #2e9c02, #000000);
+  text-decoration: none;
+}
+
 /* Links */
 .link {
 	color: #000000;
@@ -109,6 +145,31 @@
 
 .link4:hover {
 	color: #f0a118;
+}
+
+.link5 {
+	color: #ffffff;
+}
+
+.link5:visited {
+	color: #ffffff;
+} 
+
+.link5:hover {
+	color: #000000;
+}
+
+.link6 {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.link6:visited {
+	color: #ffffff;
+} 
+
+.link6:hover {
+	color: #FFD700;
 }
 
 /* Paragraphs/div etc */
@@ -335,4 +396,16 @@ td:hover {
 
 .faqbtn:hover {
 	color: #FFD700;
+}
+
+/* Alert message box for delete account */
+.alertDelete {
+	position: absolute;
+	top: 90.5%;
+	left: 42%;
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+    margin-bottom: 15px;
+	display: none;
 }

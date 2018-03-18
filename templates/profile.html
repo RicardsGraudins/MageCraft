@@ -20,16 +20,31 @@
   
   <body>
 	<p class="title"> Login Successful! Hello {{ session['username'] }}.</p>
-	<!-- Placeholder navigation menu -->
-	<div id='cssmenu'>
-	<ul>
-	   <li class='active'><a href="{{ url_for('profile') }}"><span>Profile</span></a></li>
-	   <li><a href="{{ url_for('game') }}"><span>Play</span></a></li>
-	   <li><a href="{{ url_for('changePassword') }}"><span>Change Password</span></a></li>
-	   <li><a href="{{ url_for('resetPassword') }}"><span>Reset Password</span></a></li>
-	   <li class='last'><a href="{{ url_for('logout') }}"><span>Logout</span></a></li>
-	</ul>
+		
+	<!-- Alert box for deleting account -->
+	<div class="alertDelete" id="alertDeleteAccount">
+	  <span class="closebtn" onclick="this.parentElement.style.display='none';">&#10006;</span>
+	  <span class="closebtn"><a class="link5" href="{{ url_for('deleteAccount') }}">&#10004;</a></span>
+	  <label id="alertDeleteAccountLabel"></label>
 	</div>
+	
+	<!-- Profile Menu -->
+	<button class="button3" style="width: 40%; margin-top: 5%; margin-left: 30%"><a class="link2" href="{{ url_for('game') }}">Play!</a></button>
+	<button class="button3" style="width: 40%; margin-top: 2%; margin-left: 30%"><a class="link2" href="{{ url_for('changePassword') }}">Change Password</a></button>
+	<button class="button3" style="width: 40%; margin-top: 2%; margin-left: 30%"><a class="link2" href="{{ url_for('resetPassword') }}">Reset Password</a></button>
+	<button class="button3" style="width: 40%; margin-top: 2%; margin-left: 30%" id ="deleteAccount"><a class="link2">Delete Account</a></button>
+	<button class="button3" style="width: 40%; margin-top: 2%; margin-left: 30%"><a class="link2" href="{{ url_for('logout') }}">Logout</a></button>
+	
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/jquery_min.js') }}"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			//Simply display the alert box if the user clicks on delete account
+			$('#deleteAccount').on('click', function(){
+				document.getElementById("alertDeleteAccount").style.display = "block";
+				document.getElementById('alertDeleteAccountLabel').innerHTML = '<Strong>Are you sure you want to delete your account?</Strong>';
+			});
+		});
+	</script>
   </body>
   
 </html>

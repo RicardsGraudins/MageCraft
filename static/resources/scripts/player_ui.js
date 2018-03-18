@@ -65,9 +65,9 @@ playerUI = function(){
 	var statusTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(status, 160, 120, false);
 	var statusText = new BABYLON.GUI.TextBlock();
 	statusText.fontFamily = "Comic Sans MS";
-	statusText.text = "Status";
+	statusText.text = "";
 	statusText.color = "white";
-	statusText.fontSize = 50;
+	statusText.fontSize = 40;
 	statusTexture.addControl(statusText);
 	
 	//cauterize spell, displays amount healed for above the player

@@ -10,6 +10,14 @@
 */
 var YLIMIT = 21;
 
+//damage dealt to enemy on hit
+var FIREBALL_DAMAGE = 5;
+var FROSTBOLT_DAMAGE = 5;
+var SPLITTER_DAMAGE = 5;
+var SPLITTER_PROJECTILE_DAMAGE = 3;
+var RECHARGER_DAMAGE = 5;
+var MOLTON_BOULDER_DAMAGE = 10;
+
 //load enemy sprites
 redDragonSprite = "static/resources/images/sprites/red_dragon.png";
 
@@ -33,6 +41,7 @@ function enemy(){
 	this.splitterProjectile6Collision = function(){};
 	this.splitterProjectile7Collision = function(){};
 	this.rechargerCollision = function(){};
+	this.moltonBoulderCollision  = function(){};
 	this.warlockMarkCollision = function(){};
 	this.deflectionShieldCollision = function(){};
 }//enemy
@@ -574,6 +583,8 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				playerObject.health -= 50;
 				//reposition the dragon to its original starting location
 				this.startingLocation();
+				//update status text
+				UI.updateStatus("Hit! -50", "Red");
 			}//if
 		}//if
 	}//playerCollision
@@ -634,12 +645,14 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (fireball.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 2;
+				this.health -= FIREBALL_DAMAGE;
 				//make the fireball invisable and move it off the map
 				fireball.position.x = 1000;
 				fireballMaterial.alpha = 0;
 				smokeSystem.stop();
 				fireSystem.stop();
+				//update status
+				UI.updateStatus("HIT! -" + FIREBALL_DAMAGE, "White");
 			}//if
 		}//if
 	}//fireballCollision
@@ -649,12 +662,14 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (frostbolt.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 5;
+				this.health -= FROSTBOLT_DAMAGE;
 				//make the frostbolt invisable and move it off the map
 				frostbolt.position.x = 1000;
 				frostSprite.size = 0;
 				this.frozen = true;
 				this.frozenDragon();
+				//update status
+				UI.updateStatus("HIT! -" + FROSTBOLT_DAMAGE, "White");
 			}//if
 		}//if
 	}//frostboltCollision
@@ -691,12 +706,14 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (splitter.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= SPLITTER_DAMAGE;
 				//make the splitter invisable and move it off the map
 				//all the splitter projectiles are naturally affected also since they
 				//spawn off of splitter and the player should aim such that the splitter doesn't
 				//get hit before the projectiles spawn
 				splitter.position.x = 1000;
+				//update status
+				UI.updateStatus("HIT! -" + SPLITTER_DAMAGE, "White");
 			}//if
 		}//if
 	}//splitterCollision	
@@ -706,9 +723,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (splitterProjectile0.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
 				splitterProjectile0.position.x = 1000;
+				//update status
+				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
 		}//if
 	}//splitterProjectile0Collision
@@ -718,9 +737,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (splitterProjectile1.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
 				splitterProjectile1.position.x = 1000;
+				//update status
+				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
 		}//if
 	}//splitterProjectile1Collision
@@ -730,9 +751,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (splitterProjectile2.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
 				splitterProjectile2.position.x = 1000;
+				//update status
+				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
 		}//if
 	}//splitterProjectile2Collision
@@ -742,9 +765,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (splitterProjectile3.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
 				splitterProjectile3.position.x = 1000;
+				//update status
+				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
 		}//if
 	}//splitterProjectile3Collision
@@ -754,9 +779,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (splitterProjectile4.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
 				splitterProjectile4.position.x = 1000;
+				//update status
+				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
 		}//if
 	}//splitterProjectile4Collision
@@ -766,9 +793,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (splitterProjectile5.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
 				splitterProjectile5.position.x = 1000;
+				//update status
+				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
 		}//if
 	}//splitterProjectile5Collision
@@ -778,9 +807,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (splitterProjectile6.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
 				splitterProjectile6.position.x = 1000;
+				//update status
+				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
 		}//if
 	}//splitterProjectile6Collision
@@ -790,9 +821,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (splitterProjectile7.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
 				splitterProjectile7.position.x = 1000;
+				//update status
+				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
 		}//if
 	}//splitterProjectile7Collision	
@@ -802,12 +835,14 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (recharger.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= RECHARGER_DAMAGE;
 				//make the projectile invisable and move it off the map
 				recharger.position.x = 1000;
 				//reset the cooldown
 				rechargerCooldown = false;
 				UI.cooldownOff("recharger");
+				//update status
+				UI.updateStatus("HIT! -" + RECHARGER_DAMAGE, "White");
 			}//if
 		}//if
 	}//rechargerCollision
@@ -817,9 +852,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if(this.health > 0){
 			if (moltonBoulder.intersectsMesh(dragon, false)) {
 				//dragon takes damage
-				this.health -= 10;
+				this.health -= MOLTON_BOULDER_DAMAGE;
 				//once the boulder hits it doesn't reset it's location like the other spells
 				//instead it keeps going, effective way to take out multiple enemies that are lined up
+				//update status
+				UI.updateStatus("HIT! -" + MOLTON_BOULDER_DAMAGE, "White");
 			}//if
 		}//if
 	}//moltonBoulderCollision
@@ -843,6 +880,8 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 	this.deflectionShieldCollision = function(){
 		if(this.health > 0){
 			if (deflectionShield.intersectsMesh(dragon, true)) {
+				//update status
+				UI.updateStatus("Blocked", "White");
 				this.startingLocation();
 			}//if
 		}//if

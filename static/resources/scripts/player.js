@@ -196,6 +196,8 @@ fireSpriteHandler = function(){
 			fireSprite.position.y = player.position.y - 1; // - 1 to have it a bit behind the player sprite
 			fireSprite.position.z = player.position.z;
 			playerObject.health--;
+			//update status
+			UI.updateStatus("On Fire!", "Red");
 		}//if
 		
 		//if the player is on the grid and the size of the fire sprite isn't 0, change it to 0
@@ -1007,7 +1009,7 @@ Player = function(x, y, z, speed, onGrid, health){
 	recharger.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	moltonBoulder.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	warlockMark.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	deflectionShield.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	deflectionShield.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
 	
 	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites
 	playerSprite.position.x = x;
@@ -1811,7 +1813,7 @@ Player = function(x, y, z, speed, onGrid, health){
 								//once i reaches 349 make the moltonBoulder transparent,
 								//move it off the map so it doesn't collide with anyone
 								if(i == 349){
-									deflectionShield.position.x = 1000;
+									deflectionShield.position.x = 2000;
 									deflectionShieldMaterial.alpha = 0;
 								}//if
 							}//if
@@ -1852,6 +1854,8 @@ Player = function(x, y, z, speed, onGrid, health){
 					
 					//player heals for the healRounded value
 					playerObject.health += healRounded;
+					//update status
+					UI.updateStatus("Heal +" + healRounded, "Lime");
 					
 					//if current health + heal exceeds base health (150) set the health to 150
 					if (playerObject.health > 150){

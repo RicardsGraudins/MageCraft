@@ -103,6 +103,24 @@ Simple commit summary for project supervisor to keep track of progress.
 24. User Interface: Added user interface that tracks spell cooldowns and health with animations.
 25. Babylon GUI - Gold + Status Trackers: Added gold and status trackers to UI.
 26. Frostbolt + Splitter: Added both spells with sprite animations and updated UI.
+27. Recharger: Added recharger spell with sprite animations.
+28. Molten Boulder & Fireball Sprite: Added molten boulder spell with sprite animations and updated fireball.
+29. Deflection Shield: Added deflection shield spell with sprite animations.
+30. Warlock's Mark: Added warlock's mark spell with sprite animations.
+31. Cauterize: Added cauterize spell.
+32. Particle Systems - Molten Boulder & Warlock's Mark: Added sprite systems for both spells.
+33. Game Over Menu: Added game over menu and upload gold functionality.
+34. Pause Menu: Added pause menu.
+35. Updated UI + Keybinds Text: Updated UI textures & added text for keybinds on UI.
+36. Enemy AI Movement: Added basic enemy with basic movement towards the player.
+37. Music + Enforced Y Limit: Added music and enforcing all objects to stay below a certain Y level.
+38. Red Dragon Sprite: Added red dragon sprite with movement animations.
+39. All Spell Collisions + Interactions: Added collision detection and various interactions for every spell.
+40. Dragon Death + Burn Frost Animations: Added additional dragon animations.
+41. Dragon Collections: Added dragon collections and interactions for each dragon functioning properly.
+42. Profile Menu, Improved Navigation & Delete Account: Replaced placeholder profile menu, improved navigation between pages such that it works on the cloud and added delete account functionality.
+43. Status Updates: Added various status updates for interactions.
+44. Edited Index Page + Chat: Updated index page to be a bit more interesting and improved the chat.
 
 ## References:
 * [Flask](http://flask.pocoo.org/docs/0.12/)  

@@ -282,6 +282,7 @@ $(function() {
 		}
 	}
 	
+	//run the functions
 	left();
 	right();
 })

@@ -1,3 +1,4 @@
+//BABYLON JS extension -- refer to https://doc.babylonjs.com/extensions/water
 /// <reference path="../../../dist/preview release/babylon.d.ts"/>
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||

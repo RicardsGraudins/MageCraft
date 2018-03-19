@@ -1,4 +1,13 @@
-//load textures for UI
+/* this script handles the player user interface essentially we build up the UI here
+* which displays the various spells the player can cast, their cooldowns, keybinds,
+* player's health, gold earned and player status - unlike the menus the UI is created
+* within the scene using BABYLON JS and the GUI extension, naturally the GUI extension
+* offers a variety of features and the UI here can be built further upon by using those 
+* features to create an interactive system that allows spells to be upgraded using gold earned
+* and to display what the spells do and their damage numbers when hovered over for example
+*/
+
+//load textures for UI, these icons represent the various spells the player can cast
 overlayTexture = "static/resources/images/textures/overlay.png";
 fireballIcon = "static/resources/images/textures/fireball_icon.png";
 frostboltIcon = "static/resources/images/textures/frostbolt_icon.png";
@@ -48,7 +57,7 @@ playerUI = function(){
 	//since tracking that is costly and unnecessary in this case
 	var goldTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(goldPlane, 120, 120, false);
 	//adding a control(text) to the AdvancedDynamicTexture with various settings,
-	//can also add buttons, sliders, checkboxes, virtualKeyboard etc - will add some of these to a different menu
+	//can also add buttons, sliders, checkboxes, virtualKeyboard etc.
 	var goldText = new BABYLON.GUI.TextBlock();
 	goldText.fontFamily = "Comic Sans MS";
 	goldText.text = "0";

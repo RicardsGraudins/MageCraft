@@ -1,19 +1,30 @@
+/* this script is essentially responsible for instantiating and running the entire game
+* note that background.js must be the first script loaded after all the external
+* libraries since without having the scene created none of the other scripts can work, likewise game.js must be the last
+* script loaded since it requires all the other game concepts to be loaded - the entire game is loosely coupled meaning
+* that any game concept can be run or disabled without negatively affecting the rest of the game e.g. we can disable the enemy
+* AI without breaking the game which is nifty since later on the AI can be replaced for multiplayer mode for example
+*/
+
 console.log("Game Ready!")
 
-//init player grid
+//player grid
 //4 player map
 var grid = new playerGrid(-200, 10, 250, 25, 25, 16);
-//example of 8 player map
-//var grid = new playerGrid(-200,10,250, 25,25,32);
+//var grid = new playerGrid(-200,10,250, 25,25,32); //example of 8 player map
 
 //draw the grid
 grid.drawParameter();
 grid.drawGrid();
+
+//set grid textures
 //grid.testingMaterial();
 grid.setTextures();
+
+//start the fadeOutAnimation and create the transparent ground plane
 grid.fadeOutAnimation();
-//grid.boundaryTest();
 grid.createGround();
+//grid.boundaryTest();
 
 //player object
 var playerObject = new Player(0, 30, 0, 1, true, 150);
@@ -21,12 +32,16 @@ var playerObject = new Player(0, 30, 0, 1, true, 150);
 //handles spell cooldowns for player
 var spellManagerPlayer = new spellManager();
 
-//sprites
+//player sprites
 var playerSpriteObject = new playerSpriteHandler(); //dont forget to adjust hitbox size
 var fireSpriteObject = new fireSpriteHandler();
 
-fireSpriteObject.onLava(); //start the animation and just have it going endlessly
+//start the animation and just have it going endlessly
+//when the player steps off the grid onto the lava the sprite appears at the player location
+//otherwise it stays hidden
+fireSpriteObject.onLava();
 
+//camera that follows the player:
 //parameters: name, position, scene  
 var camera = new BABYLON.FollowCamera("followPlayerCam", new BABYLON.Vector3(0, 350, -300), scene);
 //lockedTarget must be a mesh and its .lockedTarget for version 2.5 onwards not .target
@@ -37,7 +52,6 @@ camera.radius = 350;
 camera.heightOffset = 350;
 //acceleration of camera in moving from current to goal position
 camera.cameraAcceleration = 0;
-
 //the speed at which acceleration is halted 
 camera.maxCameraSpeed = 0;
 //the goal rotation of camera around local origin (centre) of target in x y plane
@@ -45,32 +59,26 @@ camera.rotationOffset = 0;
 //dont allow the player to move the camera
 //camera.attachControl(canvas,true);
 
-//test
-//camera.noRotationConstraint=true;
-//camera.upVector = new BABYLON.Vector3(0, 3, 3);
-
+//creating player UI
 var UI = new playerUI();
 UI.startingPosition();
-UI.testingMaterial();
+//setting textures
+//UI.testingMaterial();
 UI.setTextures();
 UI.setHeartTextures();
 UI.setBorders();
 
+//player gold, increases the longer the games goes on
 var gold = 0;
 
-//engine.resize();
-//UI.updateStatus("Frozen!", "blue");
-
+//spell sprites
 frostSpriteObject = new frostSpriteHandler();
-
-//start the animation
-frostSpriteObject.rotate();
-
 splitterSpriteObject = new splitterSpriteHandler();
-
 fireballSpriteObject = new fireballSpriteHandler();
-
 warlockMarkSpriteObject = new warlockMarkSpriteHandler();
+
+//start the frostSprite animation
+frostSpriteObject.rotate();
 
 //audio assets
 var gameAudio = new Audio("static/resources/sounds/game_music.mp3");
@@ -83,6 +91,8 @@ playerDiedAudio.loop = true;
 
 //play game audio
 gameAudio.play();
+
+//controls when to mute/unmute the music
 var musicEnabled = true;
 
 //dragon(x, y, z, health, speed, sprite, spriteMove, frozen)
@@ -145,12 +155,13 @@ for (i = 0; i < howManyDragons; i++){
 	dragonsBottom[i].startingLocation();
 }//for
 
-//--------------------
-
 //render loop 60 fps, render the scene
+//every frame we run a series of functions which updates the game
 engine.runRenderLoop(function(){
+	//have the background rendering at all times
 	background.render();
 	
+	//run these functions only if the player's health is above 0
 	if (playerObject.health > 0){
 		playerObject.move();
 		playerObject.playerOnGrid();
@@ -171,8 +182,9 @@ engine.runRenderLoop(function(){
 		UI.move();
 		UI.updateHealth(playerObject.health);;
 
-		//
+		//this for loop updates every dragon
 		for (i = 0; i < howManyDragons; i++){
+			//functions @ dragonsLeft
 			dragonsLeft[i].onMap();
 			dragonsLeft[i].move();
 			dragonsLeft[i].moveRed();
@@ -194,6 +206,7 @@ engine.runRenderLoop(function(){
 			dragonsLeft[i].deflectionShieldCollision();
 			dragonsLeft[i].dead();
 			
+			//functions @ dragonsRight
 			dragonsRight[i].onMap();
 			dragonsRight[i].move();
 			dragonsRight[i].moveRed();
@@ -215,6 +228,7 @@ engine.runRenderLoop(function(){
 			dragonsRight[i].deflectionShieldCollision();
 			dragonsRight[i].dead();
 			
+			//functions @ dragonsTop
 			dragonsTop[i].onMap();
 			dragonsTop[i].move();
 			dragonsTop[i].moveRed();
@@ -236,6 +250,7 @@ engine.runRenderLoop(function(){
 			dragonsTop[i].deflectionShieldCollision();
 			dragonsTop[i].dead();
 			
+			//functions @ dragonsBottom
 			dragonsBottom[i].onMap();
 			dragonsBottom[i].move();
 			dragonsBottom[i].moveRed();
@@ -259,9 +274,12 @@ engine.runRenderLoop(function(){
 		}//for
 	}//if
 	else {
+		//if the player's health goes below 0 run playerDied()
+		//which exits this loop and displays the game over menu
 		playerDied();
 	}//else
 	
+	//update fps
 	fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 });
 
@@ -273,7 +291,7 @@ engine.runRenderLoop(function(){
 //the gameOver menu
 playerDied = function(){
 	engine.stopRenderLoop();
-	gameOver(); //display the gameOver menu
+	gameOver(); //display the game over menu
 	
 	//start the loop
 	engine.runRenderLoop(function(){
@@ -292,8 +310,10 @@ playerRestarted = function(){
 	
 	//start up a new engine loop
 	engine.runRenderLoop(function(){
+		//have the background rendering at all times
 		background.render();
 		
+		//run these functions only if the player's health is above 0
 		if (playerObject.health > 0){
 			playerObject.move();
 			playerObject.playerOnGrid();
@@ -312,12 +332,106 @@ playerRestarted = function(){
 			fireballSpriteObject.move();
 			warlockMarkSpriteObject.movePlane();
 			UI.move();
-			UI.updateHealth(playerObject.health);	
+			UI.updateHealth(playerObject.health);;
+
+			//this for loop updates every dragon
+			for (i = 0; i < howManyDragons; i++){
+				//functions @ dragonsLeft
+				dragonsLeft[i].onMap();
+				dragonsLeft[i].move();
+				dragonsLeft[i].moveRed();
+				dragonsLeft[i].playerCollision();
+				dragonsLeft[i].fireballCollision();
+				dragonsLeft[i].frostboltCollision();
+				dragonsLeft[i].splitterCollision();
+				dragonsLeft[i].splitterProjectile0Collision();
+				dragonsLeft[i].splitterProjectile1Collision();
+				dragonsLeft[i].splitterProjectile2Collision();
+				dragonsLeft[i].splitterProjectile3Collision();
+				dragonsLeft[i].splitterProjectile4Collision();
+				dragonsLeft[i].splitterProjectile5Collision();
+				dragonsLeft[i].splitterProjectile6Collision();
+				dragonsLeft[i].splitterProjectile7Collision();
+				dragonsLeft[i].rechargerCollision();
+				dragonsLeft[i].moltonBoulderCollision();
+				dragonsLeft[i].warlockMarkCollision();
+				dragonsLeft[i].deflectionShieldCollision();
+				dragonsLeft[i].dead();
+				
+				//functions @ dragonsRight
+				dragonsRight[i].onMap();
+				dragonsRight[i].move();
+				dragonsRight[i].moveRed();
+				dragonsRight[i].playerCollision();
+				dragonsRight[i].fireballCollision();
+				dragonsRight[i].frostboltCollision();
+				dragonsRight[i].splitterCollision();
+				dragonsRight[i].splitterProjectile0Collision();
+				dragonsRight[i].splitterProjectile1Collision();
+				dragonsRight[i].splitterProjectile2Collision();
+				dragonsRight[i].splitterProjectile3Collision();
+				dragonsRight[i].splitterProjectile4Collision();
+				dragonsRight[i].splitterProjectile5Collision();
+				dragonsRight[i].splitterProjectile6Collision();
+				dragonsRight[i].splitterProjectile7Collision();
+				dragonsRight[i].rechargerCollision();
+				dragonsRight[i].moltonBoulderCollision();
+				dragonsRight[i].warlockMarkCollision();
+				dragonsRight[i].deflectionShieldCollision();
+				dragonsRight[i].dead();
+				
+				//functions @ dragonsTop
+				dragonsTop[i].onMap();
+				dragonsTop[i].move();
+				dragonsTop[i].moveRed();
+				dragonsTop[i].playerCollision();
+				dragonsTop[i].fireballCollision();
+				dragonsTop[i].frostboltCollision();
+				dragonsTop[i].splitterCollision();
+				dragonsTop[i].splitterProjectile0Collision();
+				dragonsTop[i].splitterProjectile1Collision();
+				dragonsTop[i].splitterProjectile2Collision();
+				dragonsTop[i].splitterProjectile3Collision();
+				dragonsTop[i].splitterProjectile4Collision();
+				dragonsTop[i].splitterProjectile5Collision();
+				dragonsTop[i].splitterProjectile6Collision();
+				dragonsTop[i].splitterProjectile7Collision();
+				dragonsTop[i].rechargerCollision();
+				dragonsTop[i].moltonBoulderCollision();
+				dragonsTop[i].warlockMarkCollision();
+				dragonsTop[i].deflectionShieldCollision();
+				dragonsTop[i].dead();
+				
+				//functions @ dragonsBottom
+				dragonsBottom[i].onMap();
+				dragonsBottom[i].move();
+				dragonsBottom[i].moveRed();
+				dragonsBottom[i].playerCollision();
+				dragonsBottom[i].fireballCollision();
+				dragonsBottom[i].frostboltCollision();
+				dragonsBottom[i].splitterCollision();
+				dragonsBottom[i].splitterProjectile0Collision();
+				dragonsBottom[i].splitterProjectile1Collision();
+				dragonsBottom[i].splitterProjectile2Collision();
+				dragonsBottom[i].splitterProjectile3Collision();
+				dragonsBottom[i].splitterProjectile4Collision();
+				dragonsBottom[i].splitterProjectile5Collision();
+				dragonsBottom[i].splitterProjectile6Collision();
+				dragonsBottom[i].splitterProjectile7Collision();
+				dragonsBottom[i].rechargerCollision();
+				dragonsBottom[i].moltonBoulderCollision();
+				dragonsBottom[i].warlockMarkCollision();
+				dragonsBottom[i].deflectionShieldCollision();
+				dragonsBottom[i].dead();
+			}//for
 		}//if
 		else {
+			//if the player's health goes below 0 run playerDied()
+			//which exits this loop and displays the game over menu
 			playerDied();
 		}//else
 		
+		//update fps
 		fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 	});
 }//playerRestarted
@@ -325,8 +439,10 @@ playerRestarted = function(){
 //resumes the game from paused state
 resumeGame = function(){
 	engine.runRenderLoop(function(){
+		//have the background rendering at all times
 		background.render();
 		
+		//run these functions only if the player's health is above 0
 		if (playerObject.health > 0){
 			playerObject.move();
 			playerObject.playerOnGrid();
@@ -345,12 +461,106 @@ resumeGame = function(){
 			fireballSpriteObject.move();
 			warlockMarkSpriteObject.movePlane();
 			UI.move();
-			UI.updateHealth(playerObject.health);	
+			UI.updateHealth(playerObject.health);;
+
+			//this for loop updates every dragon
+			for (i = 0; i < howManyDragons; i++){
+				//functions @ dragonsLeft
+				dragonsLeft[i].onMap();
+				dragonsLeft[i].move();
+				dragonsLeft[i].moveRed();
+				dragonsLeft[i].playerCollision();
+				dragonsLeft[i].fireballCollision();
+				dragonsLeft[i].frostboltCollision();
+				dragonsLeft[i].splitterCollision();
+				dragonsLeft[i].splitterProjectile0Collision();
+				dragonsLeft[i].splitterProjectile1Collision();
+				dragonsLeft[i].splitterProjectile2Collision();
+				dragonsLeft[i].splitterProjectile3Collision();
+				dragonsLeft[i].splitterProjectile4Collision();
+				dragonsLeft[i].splitterProjectile5Collision();
+				dragonsLeft[i].splitterProjectile6Collision();
+				dragonsLeft[i].splitterProjectile7Collision();
+				dragonsLeft[i].rechargerCollision();
+				dragonsLeft[i].moltonBoulderCollision();
+				dragonsLeft[i].warlockMarkCollision();
+				dragonsLeft[i].deflectionShieldCollision();
+				dragonsLeft[i].dead();
+				
+				//functions @ dragonsRight
+				dragonsRight[i].onMap();
+				dragonsRight[i].move();
+				dragonsRight[i].moveRed();
+				dragonsRight[i].playerCollision();
+				dragonsRight[i].fireballCollision();
+				dragonsRight[i].frostboltCollision();
+				dragonsRight[i].splitterCollision();
+				dragonsRight[i].splitterProjectile0Collision();
+				dragonsRight[i].splitterProjectile1Collision();
+				dragonsRight[i].splitterProjectile2Collision();
+				dragonsRight[i].splitterProjectile3Collision();
+				dragonsRight[i].splitterProjectile4Collision();
+				dragonsRight[i].splitterProjectile5Collision();
+				dragonsRight[i].splitterProjectile6Collision();
+				dragonsRight[i].splitterProjectile7Collision();
+				dragonsRight[i].rechargerCollision();
+				dragonsRight[i].moltonBoulderCollision();
+				dragonsRight[i].warlockMarkCollision();
+				dragonsRight[i].deflectionShieldCollision();
+				dragonsRight[i].dead();
+				
+				//functions @ dragonsTop
+				dragonsTop[i].onMap();
+				dragonsTop[i].move();
+				dragonsTop[i].moveRed();
+				dragonsTop[i].playerCollision();
+				dragonsTop[i].fireballCollision();
+				dragonsTop[i].frostboltCollision();
+				dragonsTop[i].splitterCollision();
+				dragonsTop[i].splitterProjectile0Collision();
+				dragonsTop[i].splitterProjectile1Collision();
+				dragonsTop[i].splitterProjectile2Collision();
+				dragonsTop[i].splitterProjectile3Collision();
+				dragonsTop[i].splitterProjectile4Collision();
+				dragonsTop[i].splitterProjectile5Collision();
+				dragonsTop[i].splitterProjectile6Collision();
+				dragonsTop[i].splitterProjectile7Collision();
+				dragonsTop[i].rechargerCollision();
+				dragonsTop[i].moltonBoulderCollision();
+				dragonsTop[i].warlockMarkCollision();
+				dragonsTop[i].deflectionShieldCollision();
+				dragonsTop[i].dead();
+				
+				//functions @ dragonsBottom
+				dragonsBottom[i].onMap();
+				dragonsBottom[i].move();
+				dragonsBottom[i].moveRed();
+				dragonsBottom[i].playerCollision();
+				dragonsBottom[i].fireballCollision();
+				dragonsBottom[i].frostboltCollision();
+				dragonsBottom[i].splitterCollision();
+				dragonsBottom[i].splitterProjectile0Collision();
+				dragonsBottom[i].splitterProjectile1Collision();
+				dragonsBottom[i].splitterProjectile2Collision();
+				dragonsBottom[i].splitterProjectile3Collision();
+				dragonsBottom[i].splitterProjectile4Collision();
+				dragonsBottom[i].splitterProjectile5Collision();
+				dragonsBottom[i].splitterProjectile6Collision();
+				dragonsBottom[i].splitterProjectile7Collision();
+				dragonsBottom[i].rechargerCollision();
+				dragonsBottom[i].moltonBoulderCollision();
+				dragonsBottom[i].warlockMarkCollision();
+				dragonsBottom[i].deflectionShieldCollision();
+				dragonsBottom[i].dead();
+			}//for
 		}//if
 		else {
+			//if the player's health goes below 0 run playerDied()
+			//which exits this loop and displays the game over menu
 			playerDied();
 		}//else
 		
+		//update fps
 		fpsLabel.innerHTML = engine.getFps().toFixed() + " FPS";
 	});
 }//resumeGame

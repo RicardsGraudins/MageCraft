@@ -235,6 +235,7 @@
 	margin-top: 17%;
 }
 
+/* reCAPTCHA */
 .g-recaptcha{
    margin: 15px auto !important;
    width: auto !important;
@@ -245,6 +246,7 @@
    text-align: -ms-center;
 }
 
+/* Menu @ home.html */
 .menu {
 	/*
 	position: absolute;
@@ -264,6 +266,7 @@
 	text-shadow:1px 1px 1px rgba(46,39,26,1);
 }
 
+/* Table @ home.html */
 table, td, th {    
 	text-align: left;
 }
@@ -304,6 +307,7 @@ td:hover {
 	text-shadow:1px 1px 1px rgba(46,39,26,1);
 }
 
+/* Controls canvas opacity */
 .fade {
 	opacity: 0.1;
 	position: absolute;
@@ -314,6 +318,7 @@ td:hover {
 	position: absolute;
 }
 
+/* Button @ game over menu */
 #uploadButton {
 	font-size: 30px;
 	border: none;
@@ -326,7 +331,7 @@ td:hover {
 	background: none;
 }
 
-/* The alert message box */
+/* Alert message box */
 .alert {
 	position: absolute;
 	top: 33%;
@@ -338,7 +343,7 @@ td:hover {
 	display: none;
 }
 
-/* The close button */
+/* Close button for alert message boxes */
 .closebtn {
     margin-left: 15px;
     color: white;
@@ -350,7 +355,6 @@ td:hover {
     transition: 0.3s;
 }
 
-/* When moving the mouse over the close button */
 .closebtn:hover {
     color: black;
 }
@@ -389,11 +393,11 @@ td:hover {
 	text-decoration: none;
 }
 
-/* Pause button hover */
 .pausebtn:hover {
 	color: #FFD700;
 }
 
+/* Button @ game.html "Help" */
 .faqbtn {
 	position: absolute;
 	right: 24px;
@@ -451,7 +455,7 @@ td:hover {
 	display: none;
 }
 
-/* Index page title, adapted from https://codepen.io/natewiley/pen/xGyZXp */
+/* Homepage.html page title, adapted from https://codepen.io/hendrysadrak/pen/VLMOMJ */
 @import url(https://fonts.googleapis.com/css?family=Ubuntu:300);
 .anim-text-flow,
 .anim-text-flow-hover:hover {
@@ -1112,6 +1116,7 @@ td:hover {
           animation-delay: 0s;
 }
 
+/* Title @ home.html "MAGECRAFT" */
 .containerTitle {
 	position: absolute;
 	margin-left: 35%;
@@ -1126,6 +1131,7 @@ td:hover {
 	*/
 }
 
+/* Title @ home.html "BETA" */
 .containerTitle2 {
 	position: absolute;
 	margin-left: 45%;
@@ -1141,6 +1147,7 @@ td:hover {
 	*/
 }
 
+/* Title text @ home.html */
 .txt {
   font-family: Ubuntu;
   font-size:100px;

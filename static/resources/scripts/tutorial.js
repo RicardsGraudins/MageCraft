@@ -1,4 +1,9 @@
-//tutorial AI
+/* this script contains the tutorial AI for the game which includes code for creating the AI, all the collision detection associated with
+* the AI and the player, AI movement and various AI sprite animations
+* note that the tutorial AI is not meant to be difficult to beat or be actively trying to murder the player, it is simply here as a replacement
+* for multiplayer which demonstrates the various concepts that would be used in multiplayer i.e. collision detection, animations etc. 
+*/
+
 /*
 * y axis limitation, meshes/objects shouldn't go above or below this value:
 * the ideal way of enforcing objects to stay grounded is to use cannon.js physics i.e.
@@ -19,6 +24,9 @@ var RECHARGER_DAMAGE = 5;
 var MOLTON_BOULDER_DAMAGE = 10;
 
 //load enemy sprites
+//intended to use more than one dragon sprite and have an attack animation however due to poorly spaced sprite sheets and the amount of time it takes to edit
+//these sprite sheets we will simply be using the red dragon sprite however the dragon function is coded up in such a way that it isn't difficult to add a different
+//sprite for the dragon that functions properly, all it takes is having the proper sprite sheet and creating a sprite manager for the sprite within the dragon function
 redDragonSprite = "static/resources/images/sprites/red_dragon.png";
 
 //abstract enemy - not used to its fullest extent but does provide an idea of the functions each enemy should possess
@@ -418,7 +426,12 @@ function dragonDeath(x,y,z){
 }//dragonDeath
 
 //dragon enemy
+//x, y, z = cordinates
+//health = the health of the dragon
+//speed = speed of the dragon
+//sprite = creates a sprite manager depending on the variable passed e.g. "Red" - create a red dragon sprite
 //spriteMove = variable name for sprite, must be a unique string for every dragon
+//frozen = is the dragon frozen in place - frostbolt
 function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 	this.x = x;
 	this.y = y;
@@ -434,7 +447,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 	
 	//create and set the material for the dragon hitbox
 	var dragonMaterial = new BABYLON.StandardMaterial("dragonMaterial", scene);
-	dragonMaterial.alpha = 0.3;
+	dragonMaterial.alpha = 0;
 	dragon.material = dragonMaterial;
 	
 	//stores the x position(dragon) of the previous frame, used for changing the way the sprite is facing
@@ -475,8 +488,9 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		this.spriteMove.cellIndex = 11;
 		this.spriteMove.playAnimation(9, 11, true, 150);
 	}//if
+	//can easily add a variety of different dragon sprites here and the dragon will function as intended with a different sprite
 	else if (sprite == "black"){
-		console.log("add sprite");
+		console.log("add sprite for black dragon");
 	}//else if
 	else {
 		console.log("Undefined Sprite!");
@@ -493,8 +507,8 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		direction.normalize();
 		distance = this.speed;
 		
-		//if the dragons health is greater than 0 and the dragon is outside the warlock's mark zone
-		//move towards the player
+		//if the dragons health is greater than 0, the dragon is outside the warlock's mark zone
+		//the dragon is not frozen and hideSprite is false move towards the player
 		if (this.health > 0 && zoned == false && this.frozen == false && hideSprite == false){
 		  dragon.translate(direction, distance, BABYLON.Space.WORLD);
 		  if (dragon.position.y != YLIMIT){
@@ -549,7 +563,6 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		if (deathAnimation == true){
 			dragonDeath(dragon.position.x, dragon.position.y, dragon.position.z); //begin death animation
 			deathAnimation = false; //set deathAnimation back to false
-			//dragon.setPositionWithLocalVector(new BABYLON.Vector3(1000, 21, 0)); //repositon dragon
 			deathAnimated = 1; //change deathAnimated from 0 to 1, no longer loops
 			
 			//reposition the dragon off the map after 1 second
@@ -639,6 +652,11 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 			this.startingLocation();
 		}//if
 	}//onMap
+	
+	//collision detection is made very very simple using BABYLON JS
+	//when compared to using standalone HTML5 Canvas 2D Context or other libraries
+	//i.e. one would have to code various algorithms to detect collisions between
+	//shapes whereas using BABYLON JS the math is already done for you using intersectsMesh()
 	
 	//collision between player fireball and the dragon
 	this.fireballCollision = function(){

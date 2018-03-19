@@ -51,12 +51,14 @@
   <body>
 	<label id="fpsLabel"></label>
 	<button type="button" id ="pausebtn" class="pausebtn">Menu</button>
-	<button type="button" id ="faqbtn" class="faqbtn">Help</button>
+	<!--button type="button" id ="faqbtn" class="faqbtn">Help</button-->
+	<button type="button" id ="faqbtn" class="faqbtn"><a class="link6" href="{{ url_for('faq') }}">Help</a></button>
 	<canvas id="myCanvas"></canvas>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/socketio_min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/jquery_min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/babylon.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/babylon_gui_min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/babylon_inspector_bundle.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/cannon_min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/lava_material.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/fire_procedural_texture.js') }}"></script>
@@ -68,26 +70,26 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/player_ui.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/menu.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/game.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/babylon_inspector_bundle.js') }}"></script>
 	
-	<!-- multiplayer chat, displays all messages -->
+	<!-- Multiplayer chat, displays all messages -->
 	<div class="chatbox">
 		<ul id="messages" class="content4"></ul>
 		<input type="text" id="myMessage" class="inputMessage">
 		<button id="sendbutton" class="sendbtn">Send</button>
 	</div>
 	
+	<!-- Outdated, used to track mouse cordinates using jQuery -->
 	<!--div class="playerCordsDiv">
 		<span id="playerCords" class="content">Move the mouse!</span>
 	</div-->
 	
-	<!-- alert box for uploading gold -->
+	<!-- Alert box for uploading gold -->
 	<div class="alert" id="alert">
 	  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
 	  <label id="alertLabel"></label>
 	</div>
 	
-	<!-- game over menu pops up when the player dies -->
+	<!-- Game over menu pops up when the player dies -->
 	<div class="game-over" id="game-over">
 		<label style="text-decoration: underline">GAME OVER</label>
 		<table>
@@ -107,7 +109,7 @@
 		</table>
 	</div>
 	
-	<!-- paused menu -->
+	<!-- Paused menu -->
 	<div class="paused-menu" id="paused-menu">
 		<label style="text-decoration: underline">Game Paused</label>
 		<table>
@@ -152,10 +154,12 @@
 			pausedMenu();
 		});
 		
-		//help button, redirects to faq page
+		/*
+		//help button, redirects to faq page - using href instead with proper flask pathing
 		$('#faqbtn').on('click', function(){
 			window.location.replace('http://127.0.0.1:5000/FAQ');
 		});
+		*/
 		
 		//send gold val to server
 		//which then saves it in the database assuming the player is logged in
@@ -168,6 +172,7 @@
 			$("#messages").append('<li>'+msg+'</li>');
 		}//appendMessage
 		
+		//output text to chatbox
 		appendMessage("Welcome to MageCraft Beta.");
 		appendMessage("----------------------------------");
 		appendMessage("Use the WASD keys to move.")
@@ -175,6 +180,7 @@
 		appendMessage("Use G,H for defensive spells.");
 		appendMessage("----------------------------------");
 		
+		//recieving result message from server
 		socket.on('uploadResult', function(result) {
 			//display the alert box
 			document.getElementById("alert").style.display = "block";

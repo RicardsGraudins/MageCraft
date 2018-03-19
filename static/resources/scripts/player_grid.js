@@ -1,3 +1,11 @@
+/* this script contains code for creating the player grid which as the game progresses reduces in size
+* and this limits the area the players can stand on without taking damage which makes the battle more difficult
+* the longer the game goes on, there is a bit of testing code in this script which allows us to experiment with
+* various grid sizes and different looking grids by switching textures which can be useful for creating seasonal
+* events i.e during a holiday season some of the textures can be switched to represent the season, changing the grid
+* size is also beneficial for finding the right grid size depending on the number of players in the game to keep it balanced
+*/
+
 console.log("Player Grid Ready!");
 
 //max number of plane rows
@@ -31,7 +39,7 @@ var planeN = "static/resources/images/testing_images/n.png";
 var planeO = "static/resources/images/testing_images/o.png";
 var planeP = "static/resources/images/testing_images/p.png";
 
-//textures
+//textures for plane tiles
 var customTile0 = "static/resources/images/textures/customTile0.png";
 var customTile1 = "static/resources/images/textures/customTile1.png";
 
@@ -131,7 +139,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 		//log to console
 		console.log(planes);
 		console.log(planes.length);
-	}//draw
+	}//drawParameter
 	
 	//hide the parameter by changing material
 	this.hideParameter = function(){
@@ -467,8 +475,8 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 	//the following function reduces the size of the grid using a sort of rectangle shape i.e
 	//using the various arrays we take elements off the top,bottom,right and left planes,
 	//each plane "rectangle" turns red before fading and reduces the area where the player can move without taking damage.
-	//left some obsolete commented code that should be not be touched and only exists as a recap for myself in case
-	//I decide to change it a bit.
+	//left some obsolete commented code that should not be touched and only exists as a recap for myself in case
+	//I decide to change it a bit
 	this.fadeOutAnimation = function(){
 		//change to a different material:
 		//using a different material for each array despite them all using the same texture (customTile1),

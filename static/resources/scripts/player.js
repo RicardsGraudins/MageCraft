@@ -1,3 +1,11 @@
+/* this script contains code for spawning the player, spawning the spells, player movement using WASD keys, spell keybinds 1-6 and G H,
+* spell movement using a series of registerBeforeRender functions, spell cycle which allows the player to switch between selected spells,
+* spellManager for handling spell cooldowns + updating the UI, particle systems for various spells, tracking where the player clicks in
+* order to fire the spell in that direction, setting up various materials for every spell + player and controlling when the spells are
+* visible or hidden and lastly various textures and sprites that are used for animations by the player and spells as well as controlling
+* which/when the animations occur and/or stay hidden
+*/
+
 console.log("Player Ready!");
 
 //sprites
@@ -208,7 +216,7 @@ fireSpriteHandler = function(){
 	}//move
 }//fireSpriteHandler
 
-//handles frostbolt animations + frozen status for player
+//handles frostbolt animations
 frostSpriteHandler = function(){
 	//frostbolt rotating animation
 	this.rotate = function(){
@@ -285,7 +293,8 @@ splitterSpriteHandler = function(){
 
 //handles fireball animations, don't necessarily need to use a sprite manager for fireball
 //since theres no actual sprite frame animations occuring i.e. no fireball.playAnimation(startingFrame, endingFrame, loop, delay) just a single image
-//therefore could use basic WEBGL for displaying the image however it is quicker and easier(take advantage of sprite manager functions) to still use a sprite manager 
+//therefore could use basic WEBGL for displaying the image however it is quicker and easier(take advantage of sprite manager functions) to still use a sprite manager
+//and it is recommended by the BABYLON JS devs
 fireballSpriteHandler = function(){
 	this.move = function(){
 		fireballSprite.position.x = fireball.position.x;
@@ -355,10 +364,10 @@ document.onkeyup = function(e) {
 
 //the idea was to cast spells @ players mouse location however with the way the game view is set up
 //the mouse trackers are way off the mark and are in fact more suited to 2D games, to get around the issue
-//but still have the spells be aimed using mouse location we set up the ground (transparent plane 2000x2000 - sits on top of lava)
+//but still have the spells be aimed using mouse location we set up the ground (transparent plane 2000x2000 - sits on top of lava) @ background.js
 //to be clickable - once clicked we get (x,y,z) cords of the mouse and fire the spell towards that location
 
-//left the mouse tracking code - may still be used later
+//left the mouse tracking code - may still be used later for something else
 
 //0 and 0 since width and height are both 100%
 //var topPos = canvas.offsetTop;
@@ -632,7 +641,7 @@ splitterProjectile7.material = splitterProjectileMaterial;
 //splitter highlight
 var splitterHighLight = new BABYLON.HighlightLayer("Red-Highlight", scene);
 
-//asign highlight to splitter projectiles
+//asign highlight to splitter projectiles - too flashy
 /*
 splitterHighLight.addMesh(splitterProjectile0, BABYLON.Color3.White());
 splitterHighLight.addMesh(splitterProjectile1, BABYLON.Color3.White());
@@ -656,7 +665,7 @@ splitterHighLight.addMesh(recharger, BABYLON.Color3.Purple()); //adding a purple
 
 //assign material to molton boulder
 var moltonBoulderMaterial = new BABYLON.StandardMaterial("moltonBoulderMaterial", scene);
-//texture etc
+//setting texture & material settings
 var fireTexture = new BABYLON.FireProceduralTexture("fireTexture", 256, scene);
 fireTexture.speed = new BABYLON.Vector2(1,1,1);
 fireTexture.shift = new BABYLON.Vector2(0,1,0);
@@ -667,14 +676,14 @@ moltonBoulder.material = moltonBoulderMaterial;
 
 //assign material to warlock's mark
 var warlockMarkMaterial = new BABYLON.StandardMaterial("warlockMarkMaterial", scene);
-//texture etc
+//setting material settings
 warlockMarkMaterial.hasAlpha = true;
 warlockMarkMaterial.alpha = 1;
 warlockMark.material = warlockMarkMaterial;
 
 //assign material to deflection shield
 var deflectionShieldMaterial = new BABYLON.StandardMaterial("deflectionShieldMaterial", scene);
-//texture etc
+//setting material settings
 deflectionShieldMaterial.hasAlpha = true;
 deflectionShieldMaterial.alpha = 0;
 deflectionShieldMaterial.wireframe = true;
@@ -976,6 +985,9 @@ warlockSystem1.updateSpeed = 0.007;
 //warlockSystem1System.start();
 //---------------------------------------------------------------------------------------------
 
+//player object in this function we essentially set up the player & spells starting positions,
+//player movement and spell movement which starts from the player to the point clicked on the transparent ground plane
+//excluding warlock's mark which simpy spawns on top of the location clicked
 Player = function(x, y, z, speed, onGrid, health){
 	this.x = x;
 	this.y = y;
@@ -984,19 +996,13 @@ Player = function(x, y, z, speed, onGrid, health){
 	this.onGrid = onGrid;
 	this.health = health;
 	
-	//var player = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 20, diameterX: 20}, scene);
-	
-	//spawning position
+	//starting position of player
 	player.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
-	//fireball.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
-	//frostbolt.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
-	//splitter.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
 	
-	//set them off the map instead
+	//set spell starting position off the map
 	fireball.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	frostbolt.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	splitter.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	
 	splitterProjectile0.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	splitterProjectile1.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	splitterProjectile2.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
@@ -1004,14 +1010,13 @@ Player = function(x, y, z, speed, onGrid, health){
 	splitterProjectile4.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	splitterProjectile5.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	splitterProjectile6.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitterProjectile7.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	
+	splitterProjectile7.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));	
 	recharger.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	moltonBoulder.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	warlockMark.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
 	deflectionShield.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
 	
-	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites
+	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites have to set x, y and z seperately 
 	playerSprite.position.x = x;
 	playerSprite.position.y = y;
 	playerSprite.position.z = z;
@@ -1104,6 +1109,7 @@ Player = function(x, y, z, speed, onGrid, health){
 			}//if
 		}//if
 	}//playerOnGrid
+	
 	//create ground functions moved to their proper scripts - background & player_grid
 	
 	//handles animations for casting fireball
@@ -1132,14 +1138,12 @@ Player = function(x, y, z, speed, onGrid, health){
 						gx = ground.pickedPoint.x;
 						gz = ground.pickedPoint.z;
 						
+						//mesh.translate(vector, distance, space)
 						var direction = new BABYLON.Vector3(gx,21,gz);
 						direction.normalize(); //direction now a unit vector
 						distance = 2;
 						
 						var i = 0;
-						
-						//set fireballMaterial back to visible
-						//fireballMaterial.alpha = 1;
 						
 						//reset fireballSprite angle to 0
 						fireballSprite.angle = 0;
@@ -1593,15 +1597,7 @@ Player = function(x, y, z, speed, onGrid, health){
 									recharger.position.y = YLIMIT;
 								}//if
 								
-								//recharger cooldown logic should go here, keep checking for collision every iteration
-								//if collision occurs set rechargerCooldown back to false
-								//otherwise set it on cooldown  spellManagerPlayer.rechargerTimer();
-								
-								//also border here - casts -> red
-								//hits -> green
-								//otherwise 15 second red
-								
-								//once i reaches 199 make the recharger transparent,
+								//once i reaches 99 make the recharger transparent,
 								//move it off the map so it doesn't collide with anyone
 								if(i == 99){
 									recharger.position.x = 1000;
@@ -1752,8 +1748,6 @@ Player = function(x, y, z, speed, onGrid, health){
 						//once i reaches 350, translation stops
 						scene.registerBeforeRender(function () {
 							if(i++ < 350){
-								//collision logic here
-								
 								//once i reaches 349 make the warlock's mark transparent,
 								//move it off the map so it doesn't collide with anyone
 								if(i == 349){
@@ -1797,7 +1791,6 @@ Player = function(x, y, z, speed, onGrid, health){
 						
 						var i = 0;
 						
-						//
 						deflectionShieldMaterial.alpha = 0.03;
 						
 						scene.registerBeforeRender(function () {
@@ -1875,7 +1868,7 @@ Player = function(x, y, z, speed, onGrid, health){
 	}//castCauterize
 }//Player
 
-//handles cooldowns for spells
+//spellManager handles cooldowns for spells and updates the UI
 spellManager = function(){
 	//handles cooldown for fireball
 	this.fireballTimer = function(){
@@ -1959,6 +1952,7 @@ spellManager = function(){
 }//spellManager
 
 //returns a random integer between the specified values - used for cauterize
+//and randomizing spawning location of dragons @ game.js
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);

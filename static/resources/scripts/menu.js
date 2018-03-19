@@ -1,3 +1,8 @@
+/* this script contains code for the game over menu and the pause menu
+* essentially this code controls when the menus are displayed/hidden
+* and a few other features such as muting/unmuting music, restarting and resuming
+*/
+
 //menu that pops up when the player dies
 gameOver = function(){
 	//make the gameOver menu visible

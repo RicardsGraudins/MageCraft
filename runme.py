@@ -184,16 +184,21 @@ def deleteAccount():
 	displayMessage = 'You must be logged in to delete your account!'
 	return render_template('FAQ.html', displayMessage = displayMessage)
 	
-#Using socketio for multiplayer - work in progress
+#Using socketio for multiplayer chat @ game.html
+#Once a message is recieved broadcast the message to everyone that is connected
 @socketio.on('message')
 def handleMessage(msg):
 	print('Message: ' + msg)
 	send(msg, broadcast=True)
 	
+#Note:
+#Older socketio code that was used for tracking and updating player movement removed @ commit "33. Game Over Menu"
+#The code tracked the player on a 2D canvas and when the player moved all users connected by sockets saw the movement
+	
 #Handles upload gold functionality @ game.html
 #Once the user clicks upload on the game over menu, server recieves gold value
 #If the user is logged in save the gold value in the database and respond message with "success"
-#Otherwise respond message with "failed"
+#Otherwise respond message with "failed" both messages trigger an alert message box
 @socketio.on('upload')
 def upload(gold):
 	if 'username' in session:
@@ -205,5 +210,7 @@ def upload(gold):
 	emit('uploadResult', 'failed')
 
 if __name__ == "__main__":
+	#Run the application with debug enabled
 	#app.run(debug=True)
+	#Run the application using socketio
 	socketio.run(app)

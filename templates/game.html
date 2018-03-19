@@ -32,6 +32,12 @@
 			bottom: 0;
 		}
 		
+		.inputMessage {
+			background-color: black;
+			color: white;
+			font-family: comic sans, comic sans ms, cursive, verdana, arial, sans-serif;
+		}
+		
 		.playerCordsDiv {
 			position: fixed;
 			right: 0;
@@ -66,9 +72,9 @@
 	
 	<!-- multiplayer chat, displays all messages -->
 	<div class="chatbox">
-		<ul id="messages"></ul>
-		<input type="text" id="myMessage">
-		<button id="sendbutton">Send</button>
+		<ul id="messages" class="content4"></ul>
+		<input type="text" id="myMessage" class="inputMessage">
+		<button id="sendbutton" class="sendbtn">Send</button>
 	</div>
 	
 	<!--div class="playerCordsDiv">
@@ -156,6 +162,18 @@
 		upload = function(){
 			socket.emit('upload', gold);
 		}//upload
+		
+		//append message to the chat box
+		appendMessage = function(msg){
+			$("#messages").append('<li>'+msg+'</li>');
+		}//appendMessage
+		
+		appendMessage("Welcome to MageCraft Beta.");
+		appendMessage("----------------------------------");
+		appendMessage("Use the WASD keys to move.")
+		appendMessage("Use 1-6 for offensive spells.");
+		appendMessage("Use G,H for defensive spells.");
+		appendMessage("----------------------------------");
 		
 		socket.on('uploadResult', function(result) {
 			//display the alert box

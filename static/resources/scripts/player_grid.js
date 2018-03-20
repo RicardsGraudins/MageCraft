@@ -10,6 +10,29 @@ console.log("Player Grid Ready!");
 
 //max number of plane rows
 const MAX_ROWS = 16;
+//material switch timers control when grid material switches to a different material
+//fade out timers control when grid planes fade out and boundaries increase
+//each grid plane parameter "rectangle" is assigned a different timer starting from the outer rectangle
+const MATERIAL_SWITCH_TIMER_0 = 20000;
+const FADE_OUT_TIMER_0 = 22000;
+
+const MATERIAL_SWITCH_TIMER_1 = 32000; 
+const FADE_OUT_TIMER_1 = 34000;
+
+const MATERIAL_SWITCH_TIMER_2 = 44000; 
+const FADE_OUT_TIMER_2 = 46000;
+
+const MATERIAL_SWITCH_TIMER_3 = 56000; 
+const FADE_OUT_TIMER_3 = 58000;
+
+const MATERIAL_SWITCH_TIMER_4 = 68000; 
+const FADE_OUT_TIMER_4 = 70000;
+
+const MATERIAL_SWITCH_TIMER_5 = 80000;
+const FADE_OUT_TIMER_5 = 82000;
+
+const MATERIAL_SWITCH_TIMER_6 = 92000; 
+const FADE_OUT_TIMER_6 = 94000;
 //planes parameter array
 var planes = [];
 //several small arrays for grid planes
@@ -497,7 +520,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			for (i = 0; i < planes.length; i++){
 				planes[i].material = gridMaterial1;
 			}//for
-		}, 1000);
+		}, MATERIAL_SWITCH_TIMER_0);
 		
 		
 		//wait...
@@ -515,7 +538,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			boundaryRight = boundaryRight - planeWidth;
 			boundaryTop = boundaryTop - planeHeight;
 			boundaryBottom = boundaryBottom + planeHeight;
-		}, 5000);		
+		}, FADE_OUT_TIMER_0);		
 		
 		//---------------------------------------------------------
 		//change to a different material
@@ -571,7 +594,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				planesA[i].material = gridMaterial2;
 				planesP[i].material = gridMaterial2;
 			}//for
-		}, 7000);
+		}, MATERIAL_SWITCH_TIMER_1);
 		
 		//wait...
 		setTimeout(function() {
@@ -588,7 +611,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			boundaryRight = boundaryRight - planeWidth;
 			boundaryTop = boundaryTop - planeHeight;
 			boundaryBottom = boundaryBottom + planeHeight;
-		}, 8000);
+		}, FADE_OUT_TIMER_1);
 		//---------------------------------------------------------
 		//change to a different material
 		var gridMaterial3 = new BABYLON.StandardMaterial("gridMaterial3", scene);
@@ -643,7 +666,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				planesB[i].material = gridMaterial3;
 				planesO[i].material = gridMaterial3;
 			}//for
-		}, 10000);
+		}, MATERIAL_SWITCH_TIMER_2);
 		
 		//wait...
 		setTimeout(function() {
@@ -660,7 +683,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			boundaryRight = boundaryRight - planeWidth;
 			boundaryTop = boundaryTop - planeHeight;
 			boundaryBottom = boundaryBottom + planeHeight;
-		}, 12000);
+		}, FADE_OUT_TIMER_2);
 		//---------------------------------------------------------
 		//change to a different material
 		var gridMaterial4 = new BABYLON.StandardMaterial("gridMaterial4", scene);
@@ -713,7 +736,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				planesC[i].material = gridMaterial4;
 				planesN[i].material = gridMaterial4;
 			}//for
-		}, 14000);
+		}, MATERIAL_SWITCH_TIMER_3);
 		
 		//wait...
 		setTimeout(function() {
@@ -730,7 +753,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			boundaryRight = boundaryRight - planeWidth;
 			boundaryTop = boundaryTop - planeHeight;
 			boundaryBottom = boundaryBottom + planeHeight;
-		}, 16000);
+		}, FADE_OUT_TIMER_3);
 		//---------------------------------------------------------
 		//change to a different material
 		var gridMaterial5 = new BABYLON.StandardMaterial("gridMaterial5", scene);
@@ -783,7 +806,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				planesD[i].material = gridMaterial5;
 				planesM[i].material = gridMaterial5;
 			}//for
-		}, 18000);
+		}, MATERIAL_SWITCH_TIMER_4);
 		
 		//wait...
 		setTimeout(function() {
@@ -800,7 +823,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			boundaryRight = boundaryRight - planeWidth;
 			boundaryTop = boundaryTop - planeHeight;
 			boundaryBottom = boundaryBottom + planeHeight;
-		}, 20000);
+		}, FADE_OUT_TIMER_4);
 		//---------------------------------------------------------
 		//change to a different material
 		var gridMaterial6 = new BABYLON.StandardMaterial("gridMaterial6", scene);
@@ -853,7 +876,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				planesE[i].material = gridMaterial6;
 				planesL[i].material = gridMaterial6;
 			}//for
-		}, 22000);
+		}, MATERIAL_SWITCH_TIMER_5);
 		
 		//wait...
 		setTimeout(function() {
@@ -870,7 +893,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			boundaryRight = boundaryRight - planeWidth;
 			boundaryTop = boundaryTop - planeHeight;
 			boundaryBottom = boundaryBottom + planeHeight;
-		}, 24000);
+		}, FADE_OUT_TIMER_5);
 		//---------------------------------------------------------
 		//change to a different material
 		var gridMaterial7 = new BABYLON.StandardMaterial("gridMaterial7", scene);
@@ -923,7 +946,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 				planesF[i].material = gridMaterial7;
 				planesK[i].material = gridMaterial7;
 			}//for
-		}, 26000);
+		}, MATERIAL_SWITCH_TIMER_6);
 		
 		//wait...
 		setTimeout(function() {
@@ -940,7 +963,7 @@ var playerGrid = function(x, y, z, planeHeight, planeWidth, planeNum) {
 			boundaryRight = boundaryRight - planeWidth;
 			boundaryTop = boundaryTop - planeHeight;
 			boundaryBottom = boundaryBottom + planeHeight;
-		}, 28000);
+		}, FADE_OUT_TIMER_6);
 		//leave the rest of the planes untouched as the final stand area
 		//setTimeouts will be adjusted later and other terrain will be most likely added here.
 	}//fadeOutAnimation

@@ -20,6 +20,10 @@ warlockMarkIcon = "static/resources/images/textures/warlock_mark_icon.png";
 deflectionShieldIcon = "static/resources/images/textures/deflection_shield_icon.png";
 cauterizeIcon = "static/resources/images/textures/cauterize_icon.png";
 
+//controls the UI move speed, this value should always be the same as player speed
+//otherwise the UI would get mispositioned when the player moves
+const TRANSITION_SPEED = 1;
+
 //6 basic spells & 2 defensives
 playerUI = function(){
 	//overlay plane that holds all the spells
@@ -592,182 +596,182 @@ playerUI = function(){
 	//move the entire UI with the player
 	//the following code keeps track of which way the player moves
 	//and then moves the UI in the appropriate direction
-	//note the "1" should be equal to playerObject speed
+	//note the TRANSITION_SPEED should be equal to playerObject speed
 	this.move = function(){
 		//move the UI left
 		if(xMove > player.position.x){
-			overlay.position.x = overlay.position.x - 1; //overlay position
+			overlay.position.x = overlay.position.x - TRANSITION_SPEED; //overlay position
 			//spell1-8 position
-			spell1.position.x = spell1.position.x - 1;
-			spell2.position.x = spell2.position.x - 1;
-			spell3.position.x = spell3.position.x - 1;
-			spell4.position.x = spell4.position.x - 1;
-			spell5.position.x = spell5.position.x - 1;
-			spell6.position.x = spell6.position.x - 1;
-			spell7.position.x = spell7.position.x - 1;
-			spell8.position.x = spell8.position.x - 1;
+			spell1.position.x = spell1.position.x - TRANSITION_SPEED;
+			spell2.position.x = spell2.position.x - TRANSITION_SPEED;
+			spell3.position.x = spell3.position.x - TRANSITION_SPEED;
+			spell4.position.x = spell4.position.x - TRANSITION_SPEED;
+			spell5.position.x = spell5.position.x - TRANSITION_SPEED;
+			spell6.position.x = spell6.position.x - TRANSITION_SPEED;
+			spell7.position.x = spell7.position.x - TRANSITION_SPEED;
+			spell8.position.x = spell8.position.x - TRANSITION_SPEED;
 			//spell1-8 border position
-			spell1Border.position.x = spell1Border.position.x - 1;
-			spell2Border.position.x = spell2Border.position.x - 1;
-			spell3Border.position.x = spell3Border.position.x - 1;
-			spell4Border.position.x = spell4Border.position.x - 1;
-			spell5Border.position.x = spell5Border.position.x - 1;
-			spell6Border.position.x = spell6Border.position.x - 1;
-			spell7Border.position.x = spell7Border.position.x - 1;
-			spell8Border.position.x = spell8Border.position.x - 1;
+			spell1Border.position.x = spell1Border.position.x - TRANSITION_SPEED;
+			spell2Border.position.x = spell2Border.position.x - TRANSITION_SPEED;
+			spell3Border.position.x = spell3Border.position.x - TRANSITION_SPEED;
+			spell4Border.position.x = spell4Border.position.x - TRANSITION_SPEED;
+			spell5Border.position.x = spell5Border.position.x - TRANSITION_SPEED;
+			spell6Border.position.x = spell6Border.position.x - TRANSITION_SPEED;
+			spell7Border.position.x = spell7Border.position.x - TRANSITION_SPEED;
+			spell8Border.position.x = spell8Border.position.x - TRANSITION_SPEED;
 			//heart1-3 position
-			heart1.position.x = heart1.position.x - 1;
-			heart2.position.x = heart2.position.x - 1;
-			heart3.position.x = heart3.position.x - 1;
+			heart1.position.x = heart1.position.x - TRANSITION_SPEED;
+			heart2.position.x = heart2.position.x - TRANSITION_SPEED;
+			heart3.position.x = heart3.position.x - TRANSITION_SPEED;
 			//gold text position
-			goldPlane.position.x = goldPlane.position.x - 1; 
+			goldPlane.position.x = goldPlane.position.x - TRANSITION_SPEED; 
 			//gold coin position
-			goldCoin.position.x = goldCoin.position.x - 1;
+			goldCoin.position.x = goldCoin.position.x - TRANSITION_SPEED;
 			//status text position
-			status.position.x = status.position.x - 1;
+			status.position.x = status.position.x - TRANSITION_SPEED;
 			//health restored text position
-			healthRestored.position.x = healthRestored.position.x - 1;
+			healthRestored.position.x = healthRestored.position.x - TRANSITION_SPEED;
 			//keybinds text position
-			spellPlane1.position.x = spellPlane1.position.x - 1;
-			spellPlane2.position.x = spellPlane2.position.x - 1;
-			spellPlane3.position.x = spellPlane3.position.x - 1;
-			spellPlane4.position.x = spellPlane4.position.x - 1;
-			spellPlane5.position.x = spellPlane5.position.x - 1;
-			spellPlane6.position.x = spellPlane6.position.x - 1;
-			spellPlane7.position.x = spellPlane7.position.x - 1;
-			spellPlane8.position.x = spellPlane8.position.x - 1;
+			spellPlane1.position.x = spellPlane1.position.x - TRANSITION_SPEED;
+			spellPlane2.position.x = spellPlane2.position.x - TRANSITION_SPEED;
+			spellPlane3.position.x = spellPlane3.position.x - TRANSITION_SPEED;
+			spellPlane4.position.x = spellPlane4.position.x - TRANSITION_SPEED;
+			spellPlane5.position.x = spellPlane5.position.x - TRANSITION_SPEED;
+			spellPlane6.position.x = spellPlane6.position.x - TRANSITION_SPEED;
+			spellPlane7.position.x = spellPlane7.position.x - TRANSITION_SPEED;
+			spellPlane8.position.x = spellPlane8.position.x - TRANSITION_SPEED;
 		}//if
 		
 		//move the UI right
 		if(xMove < player.position.x){
-			overlay.position.x = overlay.position.x + 1; //overlay position
+			overlay.position.x = overlay.position.x + TRANSITION_SPEED; //overlay position
 			//spell1-8 position
-			spell1.position.x = spell1.position.x + 1;
-			spell2.position.x = spell2.position.x + 1;
-			spell3.position.x = spell3.position.x + 1;
-			spell4.position.x = spell4.position.x + 1;
-			spell5.position.x = spell5.position.x + 1;
-			spell6.position.x = spell6.position.x + 1;
-			spell7.position.x = spell7.position.x + 1;
-			spell8.position.x = spell8.position.x + 1;
+			spell1.position.x = spell1.position.x + TRANSITION_SPEED;
+			spell2.position.x = spell2.position.x + TRANSITION_SPEED;
+			spell3.position.x = spell3.position.x + TRANSITION_SPEED;
+			spell4.position.x = spell4.position.x + TRANSITION_SPEED;
+			spell5.position.x = spell5.position.x + TRANSITION_SPEED;
+			spell6.position.x = spell6.position.x + TRANSITION_SPEED;
+			spell7.position.x = spell7.position.x + TRANSITION_SPEED;
+			spell8.position.x = spell8.position.x + TRANSITION_SPEED;
 			//spell1-8 border position
-			spell1Border.position.x = spell1Border.position.x + 1;
-			spell2Border.position.x = spell2Border.position.x + 1;
-			spell3Border.position.x = spell3Border.position.x + 1;
-			spell4Border.position.x = spell4Border.position.x + 1;
-			spell5Border.position.x = spell5Border.position.x + 1;
-			spell6Border.position.x = spell6Border.position.x + 1;
-			spell7Border.position.x = spell7Border.position.x + 1;
-			spell8Border.position.x = spell8Border.position.x + 1;
+			spell1Border.position.x = spell1Border.position.x + TRANSITION_SPEED;
+			spell2Border.position.x = spell2Border.position.x + TRANSITION_SPEED;
+			spell3Border.position.x = spell3Border.position.x + TRANSITION_SPEED;
+			spell4Border.position.x = spell4Border.position.x + TRANSITION_SPEED;
+			spell5Border.position.x = spell5Border.position.x + TRANSITION_SPEED;
+			spell6Border.position.x = spell6Border.position.x + TRANSITION_SPEED;
+			spell7Border.position.x = spell7Border.position.x + TRANSITION_SPEED;
+			spell8Border.position.x = spell8Border.position.x + TRANSITION_SPEED;
 			//heart1-3 position
-			heart1.position.x = heart1.position.x + 1;
-			heart2.position.x = heart2.position.x + 1;
-			heart3.position.x = heart3.position.x + 1;
+			heart1.position.x = heart1.position.x + TRANSITION_SPEED;
+			heart2.position.x = heart2.position.x + TRANSITION_SPEED;
+			heart3.position.x = heart3.position.x + TRANSITION_SPEED;
 			//gold text position
-			goldPlane.position.x = goldPlane.position.x + 1;
+			goldPlane.position.x = goldPlane.position.x + TRANSITION_SPEED;
 			//gold coin position
-			goldCoin.position.x = goldCoin.position.x + 1;
+			goldCoin.position.x = goldCoin.position.x + TRANSITION_SPEED;
 			//status text position
-			status.position.x = status.position.x + 1;
+			status.position.x = status.position.x + TRANSITION_SPEED;
 			//health restored text position
-			healthRestored.position.x = healthRestored.position.x + 1;
+			healthRestored.position.x = healthRestored.position.x + TRANSITION_SPEED;
 			//keybinds text position
-			spellPlane1.position.x = spellPlane1.position.x + 1;
-			spellPlane2.position.x = spellPlane2.position.x + 1;
-			spellPlane3.position.x = spellPlane3.position.x + 1;
-			spellPlane4.position.x = spellPlane4.position.x + 1;
-			spellPlane5.position.x = spellPlane5.position.x + 1;
-			spellPlane6.position.x = spellPlane6.position.x + 1;
-			spellPlane7.position.x = spellPlane7.position.x + 1;
-			spellPlane8.position.x = spellPlane8.position.x + 1;
+			spellPlane1.position.x = spellPlane1.position.x + TRANSITION_SPEED;
+			spellPlane2.position.x = spellPlane2.position.x + TRANSITION_SPEED;
+			spellPlane3.position.x = spellPlane3.position.x + TRANSITION_SPEED;
+			spellPlane4.position.x = spellPlane4.position.x + TRANSITION_SPEED;
+			spellPlane5.position.x = spellPlane5.position.x + TRANSITION_SPEED;
+			spellPlane6.position.x = spellPlane6.position.x + TRANSITION_SPEED;
+			spellPlane7.position.x = spellPlane7.position.x + TRANSITION_SPEED;
+			spellPlane8.position.x = spellPlane8.position.x + TRANSITION_SPEED;
 		}//if
 		
 		//move the UI downwards
 		if(zMove > player.position.z){
-			overlay.position.z = overlay.position.z - 1; //overlay position
+			overlay.position.z = overlay.position.z - TRANSITION_SPEED; //overlay position
 			//spell1-8 position
-			spell1.position.z = spell1.position.z - 1;
-			spell2.position.z = spell2.position.z - 1;
-			spell3.position.z = spell3.position.z - 1;
-			spell4.position.z = spell4.position.z - 1;
-			spell5.position.z = spell5.position.z - 1;
-			spell6.position.z = spell6.position.z - 1;
-			spell7.position.z = spell7.position.z - 1;
-			spell8.position.z = spell8.position.z - 1;
+			spell1.position.z = spell1.position.z - TRANSITION_SPEED;
+			spell2.position.z = spell2.position.z - TRANSITION_SPEED;
+			spell3.position.z = spell3.position.z - TRANSITION_SPEED;
+			spell4.position.z = spell4.position.z - TRANSITION_SPEED;
+			spell5.position.z = spell5.position.z - TRANSITION_SPEED;
+			spell6.position.z = spell6.position.z - TRANSITION_SPEED;
+			spell7.position.z = spell7.position.z - TRANSITION_SPEED;
+			spell8.position.z = spell8.position.z - TRANSITION_SPEED;
 			//spell1-8 border position
-			spell1Border.position.z = spell1Border.position.z - 1;
-			spell2Border.position.z = spell2Border.position.z - 1;
-			spell3Border.position.z = spell3Border.position.z - 1;
-			spell4Border.position.z = spell4Border.position.z - 1;
-			spell5Border.position.z = spell5Border.position.z - 1;
-			spell6Border.position.z = spell6Border.position.z - 1;
-			spell7Border.position.z = spell7Border.position.z - 1;
-			spell8Border.position.z = spell8Border.position.z - 1;
+			spell1Border.position.z = spell1Border.position.z - TRANSITION_SPEED;
+			spell2Border.position.z = spell2Border.position.z - TRANSITION_SPEED;
+			spell3Border.position.z = spell3Border.position.z - TRANSITION_SPEED;
+			spell4Border.position.z = spell4Border.position.z - TRANSITION_SPEED;
+			spell5Border.position.z = spell5Border.position.z - TRANSITION_SPEED;
+			spell6Border.position.z = spell6Border.position.z - TRANSITION_SPEED;
+			spell7Border.position.z = spell7Border.position.z - TRANSITION_SPEED;
+			spell8Border.position.z = spell8Border.position.z - TRANSITION_SPEED;
 			//heart1-3 position
-			heart1.position.z = heart1.position.z - 1;
-			heart2.position.z = heart2.position.z - 1;
-			heart3.position.z = heart3.position.z - 1;
+			heart1.position.z = heart1.position.z - TRANSITION_SPEED;
+			heart2.position.z = heart2.position.z - TRANSITION_SPEED;
+			heart3.position.z = heart3.position.z - TRANSITION_SPEED;
 			//gold text position
-			goldPlane.position.z = goldPlane.position.z - 1;
+			goldPlane.position.z = goldPlane.position.z - TRANSITION_SPEED;
 			//gold coin position
-			goldCoin.position.z = goldCoin.position.z - 1;
+			goldCoin.position.z = goldCoin.position.z - TRANSITION_SPEED;
 			//status text position
-			status.position.z = status.position.z - 1;
+			status.position.z = status.position.z - TRANSITION_SPEED;
 			//health restored text position
-			healthRestored.position.z = healthRestored.position.z - 1;
+			healthRestored.position.z = healthRestored.position.z - TRANSITION_SPEED;
 			//keybinds text position
-			spellPlane1.position.z = spellPlane1.position.z - 1;
-			spellPlane2.position.z = spellPlane2.position.z - 1;
-			spellPlane3.position.z = spellPlane3.position.z - 1;
-			spellPlane4.position.z = spellPlane4.position.z - 1;
-			spellPlane5.position.z = spellPlane5.position.z - 1;
-			spellPlane6.position.z = spellPlane6.position.z - 1;
-			spellPlane7.position.z = spellPlane7.position.z - 1;
-			spellPlane8.position.z = spellPlane8.position.z - 1;
+			spellPlane1.position.z = spellPlane1.position.z - TRANSITION_SPEED;
+			spellPlane2.position.z = spellPlane2.position.z - TRANSITION_SPEED;
+			spellPlane3.position.z = spellPlane3.position.z - TRANSITION_SPEED;
+			spellPlane4.position.z = spellPlane4.position.z - TRANSITION_SPEED;
+			spellPlane5.position.z = spellPlane5.position.z - TRANSITION_SPEED;
+			spellPlane6.position.z = spellPlane6.position.z - TRANSITION_SPEED;
+			spellPlane7.position.z = spellPlane7.position.z - TRANSITION_SPEED;
+			spellPlane8.position.z = spellPlane8.position.z - TRANSITION_SPEED;
 		}//if
 		
 		//move the UI upwards
 		if(zMove < player.position.z){
-			overlay.position.z = overlay.position.z + 1; //overlay position
+			overlay.position.z = overlay.position.z + TRANSITION_SPEED; //overlay position
 			//spell1-8 position
-			spell1.position.z = spell1.position.z + 1;
-			spell2.position.z = spell2.position.z + 1;
-			spell3.position.z = spell3.position.z + 1;
-			spell4.position.z = spell4.position.z + 1;
-			spell5.position.z = spell5.position.z + 1;
-			spell6.position.z = spell6.position.z + 1;
-			spell7.position.z = spell7.position.z + 1;
-			spell8.position.z = spell8.position.z + 1;
+			spell1.position.z = spell1.position.z + TRANSITION_SPEED;
+			spell2.position.z = spell2.position.z + TRANSITION_SPEED;
+			spell3.position.z = spell3.position.z + TRANSITION_SPEED;
+			spell4.position.z = spell4.position.z + TRANSITION_SPEED;
+			spell5.position.z = spell5.position.z + TRANSITION_SPEED;
+			spell6.position.z = spell6.position.z + TRANSITION_SPEED;
+			spell7.position.z = spell7.position.z + TRANSITION_SPEED;
+			spell8.position.z = spell8.position.z + TRANSITION_SPEED;
 			//spell1-8 border position
-			spell1Border.position.z = spell1Border.position.z + 1;
-			spell2Border.position.z = spell2Border.position.z + 1;
-			spell3Border.position.z = spell3Border.position.z + 1;
-			spell4Border.position.z = spell4Border.position.z + 1;
-			spell5Border.position.z = spell5Border.position.z + 1;
-			spell6Border.position.z = spell6Border.position.z + 1;
-			spell7Border.position.z = spell7Border.position.z + 1;
-			spell8Border.position.z = spell8Border.position.z + 1;
+			spell1Border.position.z = spell1Border.position.z + TRANSITION_SPEED;
+			spell2Border.position.z = spell2Border.position.z + TRANSITION_SPEED;
+			spell3Border.position.z = spell3Border.position.z + TRANSITION_SPEED;
+			spell4Border.position.z = spell4Border.position.z + TRANSITION_SPEED;
+			spell5Border.position.z = spell5Border.position.z + TRANSITION_SPEED;
+			spell6Border.position.z = spell6Border.position.z + TRANSITION_SPEED;
+			spell7Border.position.z = spell7Border.position.z + TRANSITION_SPEED;
+			spell8Border.position.z = spell8Border.position.z + TRANSITION_SPEED;
 			//heart1-3 position
-			heart1.position.z = heart1.position.z + 1;
-			heart2.position.z = heart2.position.z + 1;
-			heart3.position.z = heart3.position.z + 1;
+			heart1.position.z = heart1.position.z + TRANSITION_SPEED;
+			heart2.position.z = heart2.position.z + TRANSITION_SPEED;
+			heart3.position.z = heart3.position.z + TRANSITION_SPEED;
 			//gold text position
-			goldPlane.position.z = goldPlane.position.z + 1;
+			goldPlane.position.z = goldPlane.position.z + TRANSITION_SPEED;
 			//gold coin position
-			goldCoin.position.z = goldCoin.position.z + 1;
+			goldCoin.position.z = goldCoin.position.z + TRANSITION_SPEED;
 			//status text position
-			status.position.z = status.position.z + 1;
+			status.position.z = status.position.z + TRANSITION_SPEED;
 			//health restored text position
-			healthRestored.position.z = healthRestored.position.z + 1;
+			healthRestored.position.z = healthRestored.position.z + TRANSITION_SPEED;
 			//keybinds text position
-			spellPlane1.position.z = spellPlane1.position.z + 1;
-			spellPlane2.position.z = spellPlane2.position.z + 1;
-			spellPlane3.position.z = spellPlane3.position.z + 1;
-			spellPlane4.position.z = spellPlane4.position.z + 1;
-			spellPlane5.position.z = spellPlane5.position.z + 1;
-			spellPlane6.position.z = spellPlane6.position.z + 1;
-			spellPlane7.position.z = spellPlane7.position.z + 1;
-			spellPlane8.position.z = spellPlane8.position.z + 1;
+			spellPlane1.position.z = spellPlane1.position.z + TRANSITION_SPEED;
+			spellPlane2.position.z = spellPlane2.position.z + TRANSITION_SPEED;
+			spellPlane3.position.z = spellPlane3.position.z + TRANSITION_SPEED;
+			spellPlane4.position.z = spellPlane4.position.z + TRANSITION_SPEED;
+			spellPlane5.position.z = spellPlane5.position.z + TRANSITION_SPEED;
+			spellPlane6.position.z = spellPlane6.position.z + TRANSITION_SPEED;
+			spellPlane7.position.z = spellPlane7.position.z + TRANSITION_SPEED;
+			spellPlane8.position.z = spellPlane8.position.z + TRANSITION_SPEED;
 		}//if
 		
 		//update xMove and zMove every frame

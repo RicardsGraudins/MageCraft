@@ -596,7 +596,7 @@ var splitterProjectile7 = BABYLON.MeshBuilder.CreateSphere("spell", {diameter: 5
 //note that the hitbox is currently larger than the sprite for testing ***
 var playerMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
 playerMaterial.wireframe = true;
-playerMaterial.alpha = 1;
+playerMaterial.alpha = 0;
 player.material = playerMaterial;
 
 //asign material to fireball with fire texture - fire_procedural_texture.js
@@ -678,7 +678,7 @@ moltonBoulder.material = moltonBoulderMaterial;
 var warlockMarkMaterial = new BABYLON.StandardMaterial("warlockMarkMaterial", scene);
 //setting material settings
 warlockMarkMaterial.hasAlpha = true;
-warlockMarkMaterial.alpha = 1;
+warlockMarkMaterial.alpha = 0;
 warlockMark.material = warlockMarkMaterial;
 
 //assign material to deflection shield
@@ -1000,20 +1000,20 @@ Player = function(x, y, z, speed, onGrid, health){
 	player.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z));
 	
 	//set spell starting position off the map
-	fireball.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	frostbolt.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitter.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitterProjectile0.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitterProjectile1.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitterProjectile2.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitterProjectile3.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitterProjectile4.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitterProjectile5.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitterProjectile6.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	splitterProjectile7.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));	
-	recharger.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	moltonBoulder.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
-	warlockMark.setPositionWithLocalVector(new BABYLON.Vector3(1000, y, z));
+	fireball.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	frostbolt.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	splitter.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	splitterProjectile0.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	splitterProjectile1.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	splitterProjectile2.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	splitterProjectile3.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	splitterProjectile4.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	splitterProjectile5.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	splitterProjectile6.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	splitterProjectile7.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));	
+	recharger.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	moltonBoulder.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
+	warlockMark.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
 	deflectionShield.setPositionWithLocalVector(new BABYLON.Vector3(2000, y, z));
 	
 	//playerSprite.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); //cannot use this function with sprites have to set x, y and z seperately 
@@ -1166,7 +1166,7 @@ Player = function(x, y, z, speed, onGrid, health){
 								//once i reaches 149 make the fireball transparent,
 								//move it off the map so it doesn't collide with anyone and switch off particle systems
 								if(i == 149){
-									fireball.position.x = 1000;
+									fireball.position.x = 2000;
 									fireballMaterial.alpha = 0;
 									smokeSystem.stop();
 									fireSystem.stop();
@@ -1260,7 +1260,7 @@ Player = function(x, y, z, speed, onGrid, health){
 								//move it off the map so it doesn't collide with anyone
 								if(i == 149){
 									//once the frostbolt changes to this position the frostSprite becomes invisible
-									frostbolt.position.x = 1000;
+									frostbolt.position.x = 2000;
 									frostSprite.size = 0;
 								}//if
 							}//if
@@ -1524,15 +1524,15 @@ Player = function(x, y, z, speed, onGrid, health){
 				if (x == 49){
 					splitterHighLight.removeMesh(splitter);
 					splitterMaterial.alpha = 0;
-					splitter.position.x = 1000;
-					splitterProjectile0.position.x = 1000;
-					splitterProjectile1.position.x = 1000;
-					splitterProjectile2.position.x = 1000;
-					splitterProjectile3.position.x = 1000;
-					splitterProjectile4.position.x = 1000;
-					splitterProjectile5.position.x = 1000;
-					splitterProjectile6.position.x = 1000;
-					splitterProjectile7.position.x = 1000;
+					splitter.position.x = 2000;
+					splitterProjectile0.position.x = 2000;
+					splitterProjectile1.position.x = 2000;
+					splitterProjectile2.position.x = 2000;
+					splitterProjectile3.position.x = 2000;
+					splitterProjectile4.position.x = 2000;
+					splitterProjectile5.position.x = 2000;
+					splitterProjectile6.position.x = 2000;
+					splitterProjectile7.position.x = 2000;
 					//reset splitter projectile sprites
 					splitterSprite0.size = 0;
 					splitterSprite1.size = 0;
@@ -1600,7 +1600,7 @@ Player = function(x, y, z, speed, onGrid, health){
 								//once i reaches 99 make the recharger transparent,
 								//move it off the map so it doesn't collide with anyone
 								if(i == 99){
-									recharger.position.x = 1000;
+									recharger.position.x = 2000;
 									rechargerMaterial.alpha = 0;
 								}//if
 							}//if
@@ -1692,7 +1692,7 @@ Player = function(x, y, z, speed, onGrid, health){
 								//once i reaches 149 make the moltonBoulder transparent,
 								//move it off the map so it doesn't collide with anyone
 								if(i == 149){
-									moltonBoulder.position.x = 1000;
+									moltonBoulder.position.x = 2000;
 									moltonBoulderMaterial.alpha = 0;
 									boulderSystem.stop();
 								}//if
@@ -1736,7 +1736,6 @@ Player = function(x, y, z, speed, onGrid, health){
 						var i = 0;
 						
 						//warlockMarkMaterial.alpha = 0.5;
-						warlockMarkMaterial.alpha = 0.5;
 						
 						warlockMark.position.x = gx;
 						warlockMark.position.z = gz;
@@ -1751,7 +1750,7 @@ Player = function(x, y, z, speed, onGrid, health){
 								//once i reaches 349 make the warlock's mark transparent,
 								//move it off the map so it doesn't collide with anyone
 								if(i == 349){
-									warlockMark.position.x = 1000;
+									warlockMark.position.x = 2000;
 									warlockMarkMaterial.alpha = 0;
 									
 									warlockSystem0.stop();

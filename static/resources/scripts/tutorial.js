@@ -61,7 +61,7 @@ var frozenSprite = new BABYLON.Sprite("spell", spriteManagerFrozen);
 //adjust sprite settings
 frozenSprite.cellIndex = 20;
 frozenSprite.size = 40;
-frozenSprite.position.x = 1000;
+frozenSprite.position.x = 2000;
 frozenSprite.position.y = YLIMIT;
 frozenSprite.position.z = 0;
 
@@ -74,7 +74,7 @@ var spriteBurn = new BABYLON.Sprite("red dragon", spriteManagerRedDragonBurn);
 //adjust sprite settings
 spriteBurn.size = 35;
 spriteBurn.playAnimation(28, 31, true, 150);
-spriteBurn.position.x = 1000;
+spriteBurn.position.x = 2000;
 spriteBurn.position.y = YLIMIT;
 spriteBurn.position.z = 0;
 
@@ -87,7 +87,7 @@ var spriteDeath = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath.size = 35;
 spriteDeath.cellIndex = 64;
 //spriteDeath.playAnimation(64, 69, false, 150);
-spriteDeath.position.x = 1000;
+spriteDeath.position.x = 2000;
 spriteDeath.position.y = YLIMIT;
 spriteDeath.position.z = 0;
 
@@ -95,63 +95,63 @@ spriteDeath.position.z = 0;
 var spriteDeath1 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath1.size = 35;
 spriteDeath1.cellIndex = 64;
-spriteDeath1.position.x = 1000;
+spriteDeath1.position.x = 2000;
 spriteDeath1.position.y = YLIMIT;
 spriteDeath1.position.z = 0;
 
 var spriteDeath2 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath2.size = 35;
 spriteDeath2.cellIndex = 64;
-spriteDeath2.position.x = 1000;
+spriteDeath2.position.x = 2000;
 spriteDeath2.position.y = YLIMIT;
 spriteDeath2.position.z = 0;
 
 var spriteDeath3 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath3.size = 35;
 spriteDeath3.cellIndex = 64;
-spriteDeath3.position.x = 1000;
+spriteDeath3.position.x = 2000;
 spriteDeath3.position.y = YLIMIT;
 spriteDeath3.position.z = 0;
 
 var spriteDeath4 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath4.size = 35;
 spriteDeath4.cellIndex = 64;
-spriteDeath4.position.x = 1000;
+spriteDeath4.position.x = 2000;
 spriteDeath4.position.y = YLIMIT;
 spriteDeath4.position.z = 0;
 
 var spriteDeath5 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath5.size = 35;
 spriteDeath5.cellIndex = 64;
-spriteDeath5.position.x = 1000;
+spriteDeath5.position.x = 2000;
 spriteDeath5.position.y = YLIMIT;
 spriteDeath5.position.z = 0;
 
 var spriteDeath6 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath6.size = 35;
 spriteDeath6.cellIndex = 64;
-spriteDeath6.position.x = 1000;
+spriteDeath6.position.x = 2000;
 spriteDeath6.position.y = YLIMIT;
 spriteDeath6.position.z = 0;
 
 var spriteDeath7 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath7.size = 35;
 spriteDeath7.cellIndex = 64;
-spriteDeath7.position.x = 1000;
+spriteDeath7.position.x = 2000;
 spriteDeath7.position.y = YLIMIT;
 spriteDeath7.position.z = 0;
 
 var spriteDeath8 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath8.size = 35;
 spriteDeath8.cellIndex = 64;
-spriteDeath8.position.x = 1000;
+spriteDeath8.position.x = 2000;
 spriteDeath8.position.y = YLIMIT;
 spriteDeath8.position.z = 0;
 
 var spriteDeath9 = new BABYLON.Sprite("red dragon", spriteManagerRedDragonDeath);
 spriteDeath9.size = 35;
 spriteDeath9.cellIndex = 64;
-spriteDeath9.position.x = 1000;
+spriteDeath9.position.x = 2000;
 spriteDeath9.position.y = YLIMIT;
 spriteDeath9.position.z = 0;
 
@@ -164,7 +164,7 @@ function burnFrost(x,y,z){
 	
 	//after 2 second move the animation away
 	setTimeout(function() {
-		spriteBurn.position.x = 1000;
+		spriteBurn.position.x = 2000;
 		spriteBurn.position.y = YLIMIT;
 		spriteBurn.position.z = 0;
 	}, 2000); //wait 2 second
@@ -173,9 +173,9 @@ function burnFrost(x,y,z){
 //reposition a spriteDeathX sprite to the passed cordinates
 //unlike the other sprite managers spriteManagerRedDragonDeath allows up to 10 sprites to be used at once meaning
 //up to 10 dragons can be dying at the same time and using one of these sprites for that animation, we determine which
-//sprite is available for use simply by checking if its x position is at 1000, if it is then it is available to use
+//sprite is available for use simply by checking if its x position is at 2000, if it is then it is available to use
 function dragonDeath(x,y,z){
-	if (spriteDeath.position.x == 1000){
+	if (spriteDeath.position.x == 2000){
 		spriteDeath.position.x = x;
 		spriteDeath.position.y = y + 3;
 		spriteDeath.position.z = z;
@@ -194,13 +194,13 @@ function dragonDeath(x,y,z){
 		}, 2000);
 		//wait 6 seconds then move the spriteDeath sprite off the map
 		setTimeout(function() {
-			spriteDeath.position.x = 1000;
+			spriteDeath.position.x = 2000;
 			spriteDeath.position.y = YLIMIT;
 			spriteDeath.position.z = 0;
 		}, 6000);
 	}
 	
-	else if (spriteDeath1.position.x == 1000) {
+	else if (spriteDeath1.position.x == 2000) {
 		spriteDeath1.position.x = x;
 		spriteDeath1.position.y = y + 3;
 		spriteDeath1.position.z = z;
@@ -216,13 +216,13 @@ function dragonDeath(x,y,z){
 			};
 		}, 2000);
 		setTimeout(function() {
-			spriteDeath1.position.x = 1000;
+			spriteDeath1.position.x = 2000;
 			spriteDeath1.position.y = YLIMIT;
 			spriteDeath1.position.z = 0;
 		}, 6000);
 	}
 	
-	else if (spriteDeath2.position.x == 1000) {
+	else if (spriteDeath2.position.x == 2000) {
 		spriteDeath2.position.x = x;
 		spriteDeath2.position.y = y + 3;
 		spriteDeath2.position.z = z;
@@ -238,13 +238,13 @@ function dragonDeath(x,y,z){
 			};
 		}, 2000);
 		setTimeout(function() {
-			spriteDeath2.position.x = 1000;
+			spriteDeath2.position.x = 2000;
 			spriteDeath2.position.y = YLIMIT;
 			spriteDeath2.position.z = 0;
 		}, 6000);
 	}
 	
-	else if (spriteDeath3.position.x == 1000) {
+	else if (spriteDeath3.position.x == 2000) {
 		spriteDeath3.position.x = x;
 		spriteDeath3.position.y = y + 3;
 		spriteDeath3.position.z = z;
@@ -260,13 +260,13 @@ function dragonDeath(x,y,z){
 			};
 		}, 2000);
 		setTimeout(function() {
-			spriteDeath3.position.x = 1000;
+			spriteDeath3.position.x = 2000;
 			spriteDeath3.position.y = YLIMIT;
 			spriteDeath3.position.z = 0;
 		}, 6000);
 	}
 	
-	else if (spriteDeath4.position.x == 1000) {
+	else if (spriteDeath4.position.x == 2000) {
 		spriteDeath4.position.x = x;
 		spriteDeath4.position.y = y + 3;
 		spriteDeath4.position.z = z;
@@ -282,13 +282,13 @@ function dragonDeath(x,y,z){
 			};
 		}, 2000);
 		setTimeout(function() {
-			spriteDeath4.position.x = 1000;
+			spriteDeath4.position.x = 2000;
 			spriteDeath4.position.y = YLIMIT;
 			spriteDeath4.position.z = 0;
 		}, 6000);
 	}
 	
-	else if (spriteDeath5.position.x == 1000) {
+	else if (spriteDeath5.position.x == 2000) {
 		spriteDeath5.position.x = x;
 		spriteDeath5.position.y = y + 3;
 		spriteDeath5.position.z = z;
@@ -304,13 +304,13 @@ function dragonDeath(x,y,z){
 			};
 		}, 2000);
 		setTimeout(function() {
-			spriteDeath5.position.x = 1000;
+			spriteDeath5.position.x = 2000;
 			spriteDeath5.position.y = YLIMIT;
 			spriteDeath5.position.z = 0;
 		}, 6000);
 	}
 	
-	else if (spriteDeath6.position.x == 1000) {
+	else if (spriteDeath6.position.x == 2000) {
 		spriteDeath6.position.x = x;
 		spriteDeath6.position.y = y + 3;
 		spriteDeath6.position.z = z;
@@ -326,13 +326,13 @@ function dragonDeath(x,y,z){
 			};
 		}, 2000);
 		setTimeout(function() {
-			spriteDeath6.position.x = 1000;
+			spriteDeath6.position.x = 2000;
 			spriteDeath6.position.y = YLIMIT;
 			spriteDeath6.position.z = 0;
 		}, 6000);
 	}
 	
-	else if (spriteDeath7.position.x == 1000) {
+	else if (spriteDeath7.position.x == 2000) {
 		spriteDeath7.position.x = x;
 		spriteDeath7.position.y = y + 3;
 		spriteDeath7.position.z = z;
@@ -348,13 +348,13 @@ function dragonDeath(x,y,z){
 			};
 		}, 2000);
 		setTimeout(function() {
-			spriteDeath7.position.x = 1000;
+			spriteDeath7.position.x = 2000;
 			spriteDeath7.position.y = YLIMIT;
 			spriteDeath7.position.z = 0;
 		}, 6000);
 	}
 	
-	else if (spriteDeath8.position.x == 1000) {
+	else if (spriteDeath8.position.x == 2000) {
 		spriteDeath8.position.x = x;
 		spriteDeath8.position.y = y + 3;
 		spriteDeath8.position.z = z;
@@ -370,13 +370,13 @@ function dragonDeath(x,y,z){
 			};
 		}, 2000);
 		setTimeout(function() {
-			spriteDeath8.position.x = 1000;
+			spriteDeath8.position.x = 2000;
 			spriteDeath8.position.y = YLIMIT;
 			spriteDeath8.position.z = 0;
 		}, 6000);
 	}
 	
-	else if (spriteDeath9.position.x == 1000) {
+	else if (spriteDeath9.position.x == 2000) {
 		spriteDeath9.position.x = x;
 		spriteDeath9.position.y = y + 3;
 		spriteDeath9.position.z = z;
@@ -392,7 +392,7 @@ function dragonDeath(x,y,z){
 			};
 		}, 2000);
 		setTimeout(function() {
-			spriteDeath9.position.x = 1000;
+			spriteDeath9.position.x = 2000;
 			spriteDeath9.position.y = YLIMIT;
 			spriteDeath9.position.z = 0;
 		}, 6000);
@@ -418,7 +418,7 @@ function dragonDeath(x,y,z){
 		}, 2000);
 		//wait 6 seconds then move the spriteDeath sprite off the map
 		setTimeout(function() {
-			spriteDeath.position.x = 1000;
+			spriteDeath.position.x = 2000;
 			spriteDeath.position.y = YLIMIT;
 			spriteDeath.position.z = 0;
 		}, 6000);
@@ -611,7 +611,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 	
 	//reset the dragon
 	this.reset = function(){
-		dragonMaterial.alpha = 0.3;
+		dragonMaterial.alpha = 0;
 		this.spriteMove.size = 35;
 		this.health = 10;
 		deathAnimated = 0;
@@ -665,7 +665,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= FIREBALL_DAMAGE;
 				//make the fireball invisable and move it off the map
-				fireball.position.x = 1000;
+				fireball.position.x = 2000;
 				fireballMaterial.alpha = 0;
 				smokeSystem.stop();
 				fireSystem.stop();
@@ -682,7 +682,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= FROSTBOLT_DAMAGE;
 				//make the frostbolt invisable and move it off the map
-				frostbolt.position.x = 1000;
+				frostbolt.position.x = 2000;
 				frostSprite.size = 0;
 				this.frozen = true;
 				this.frozenDragon();
@@ -708,7 +708,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 			
 			//after 6 seconds unfreeze the dragon
 			setTimeout(function() {
-				frozenSprite.position.x = 1000;
+				frozenSprite.position.x = 2000;
 				frozenSprite.position.y = YLIMIT;
 				frozenSprite.position.z = 0;
 				//this.frozen = false; //cannot unfreeze within this function
@@ -729,7 +729,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//all the splitter projectiles are naturally affected also since they
 				//spawn off of splitter and the player should aim such that the splitter doesn't
 				//get hit before the projectiles spawn
-				splitter.position.x = 1000;
+				splitter.position.x = 2000;
 				//update status
 				UI.updateStatus("HIT! -" + SPLITTER_DAMAGE, "White");
 			}//if
@@ -743,7 +743,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
-				splitterProjectile0.position.x = 1000;
+				splitterProjectile0.position.x = 2000;
 				//update status
 				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
@@ -757,7 +757,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
-				splitterProjectile1.position.x = 1000;
+				splitterProjectile1.position.x = 2000;
 				//update status
 				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
@@ -771,7 +771,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
-				splitterProjectile2.position.x = 1000;
+				splitterProjectile2.position.x = 2000;
 				//update status
 				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
@@ -785,7 +785,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
-				splitterProjectile3.position.x = 1000;
+				splitterProjectile3.position.x = 2000;
 				//update status
 				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
@@ -799,7 +799,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
-				splitterProjectile4.position.x = 1000;
+				splitterProjectile4.position.x = 2000;
 				//update status
 				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
@@ -813,7 +813,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
-				splitterProjectile5.position.x = 1000;
+				splitterProjectile5.position.x = 2000;
 				//update status
 				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
@@ -827,7 +827,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
-				splitterProjectile6.position.x = 1000;
+				splitterProjectile6.position.x = 2000;
 				//update status
 				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
@@ -841,7 +841,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= SPLITTER_PROJECTILE_DAMAGE;
 				//make the projectile invisable and move it off the map
-				splitterProjectile7.position.x = 1000;
+				splitterProjectile7.position.x = 2000;
 				//update status
 				UI.updateStatus("HIT! -" + SPLITTER_PROJECTILE_DAMAGE, "White");
 			}//if
@@ -855,7 +855,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 				//dragon takes damage
 				this.health -= RECHARGER_DAMAGE;
 				//make the projectile invisable and move it off the map
-				recharger.position.x = 1000;
+				recharger.position.x = 2000;
 				//reset the cooldown
 				rechargerCooldown = false;
 				UI.cooldownOff("recharger");

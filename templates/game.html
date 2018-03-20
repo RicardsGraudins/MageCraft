@@ -140,13 +140,39 @@
 		//chat, append message to chatbox
 		socket.on('message', function(msg) {
 			$("#messages").append('<li>'+msg+'</li>');
-			console.log("Received message!")
+			console.log("Received message!");
+			
+			//chat commands to:
+			//change AI movement patterns which basically increases difficultly
+			//i.e the player can have more enemies flying across the grid and
+			//the player can determine which direction the enemies fly from
+			//e.g. left and right / top and bottom / left and top etc
+			if (msg == "!Left"){
+				altLeft = true;
+			}//if
+			else if (msg == "!Right"){
+				altRight = true
+			}//else if
+			else if (msg == "!Top"){
+				altTop = true;
+			}//else if
+			else if (msg == "!Bot"){
+				altBot = true;
+			}//else if
+		});
+		
+		//bind the enter key to chat send button
+		$(document).keypress(function(e) {
+			if(e.which == 13) {
+				socket.send($('#myMessage').val());
+				$('#myMessage').val('');
+			}//if
 		});
 		
 		//chat button, send message
 		$('#sendbutton').on('click', function(){
 			socket.send($('#myMessage').val());
-			$('#myMessage').val('');
+			$('#myMessage').val(''); //change message to null
 		});
 		
 		//menu button, pauses the game and opens the menu
@@ -178,6 +204,10 @@
 		appendMessage("Use the WASD keys to move.")
 		appendMessage("Use 1-6 for offensive spells.");
 		appendMessage("Use G,H for defensive spells.");
+		appendMessage("----------------------------------");
+		appendMessage("To increase the difficultly change")
+		appendMessage("The AI movement patterns via chat ")
+		appendMessage("Type: !Left / !Right / !Top / !Bot");
 		appendMessage("----------------------------------");
 		
 		//recieving result message from server

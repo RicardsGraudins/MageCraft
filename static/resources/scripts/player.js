@@ -1802,9 +1802,9 @@ Player = function(x, y, z, speed, onGrid, health){
 								deflectionShield.position.y = player.position.y;
 								deflectionShield.position.z = player.position.z - 4;
 								
-								//once i reaches 349 make the moltonBoulder transparent,
+								//once i reaches 350 make the deflectionShield transparent,
 								//move it off the map so it doesn't collide with anyone
-								if(i == 349){
+								if(i == 350){
 									deflectionShield.position.x = 2000;
 									deflectionShieldMaterial.alpha = 0;
 								}//if

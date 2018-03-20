@@ -95,6 +95,14 @@ gameAudio.play();
 //controls when to mute/unmute the music
 var musicEnabled = true;
 
+//player can switch the AI to an alternative movement pattern if set to true
+//i.e the player can have more enemies flying across the grid and the player
+//can mix and match which direction the enemies fly from e.g. left and right
+var altLeft = false;
+var altRight = false;
+var altTop = false;
+var altBot = false;
+
 //dragon(x, y, z, health, speed, sprite, spriteMove, frozen)
 var dragonsLeft = {};
 var howManyDragons = 10;
@@ -186,7 +194,12 @@ engine.runRenderLoop(function(){
 		for (i = 0; i < howManyDragons; i++){
 			//functions @ dragonsLeft
 			dragonsLeft[i].onMap();
-			dragonsLeft[i].move();
+			if (altLeft == false){
+				dragonsLeft[i].move();
+			}//if
+			else{
+				dragonsLeft[i].alternativeMovement(2000, 0);
+			}//else
 			dragonsLeft[i].moveRed();
 			dragonsLeft[i].playerCollision();
 			dragonsLeft[i].fireballCollision();
@@ -208,7 +221,12 @@ engine.runRenderLoop(function(){
 			
 			//functions @ dragonsRight
 			dragonsRight[i].onMap();
-			dragonsRight[i].move();
+			if (altRight == false){
+				dragonsRight[i].move();
+			}//if
+			else {
+				dragonsRight[i].alternativeMovement(-2000, 0);
+			}//else
 			dragonsRight[i].moveRed();
 			dragonsRight[i].playerCollision();
 			dragonsRight[i].fireballCollision();
@@ -230,7 +248,12 @@ engine.runRenderLoop(function(){
 			
 			//functions @ dragonsTop
 			dragonsTop[i].onMap();
-			dragonsTop[i].move();
+			if (altTop == false){
+				dragonsTop[i].move();
+			}//if
+			else {
+				dragonsTop[i].alternativeMovement(0, -2000);
+			}//else
 			dragonsTop[i].moveRed();
 			dragonsTop[i].playerCollision();
 			dragonsTop[i].fireballCollision();
@@ -252,7 +275,12 @@ engine.runRenderLoop(function(){
 			
 			//functions @ dragonsBottom
 			dragonsBottom[i].onMap();
-			dragonsBottom[i].move();
+			if (altBot == false){
+				dragonsBottom[i].move();
+			}//if
+			else {
+				dragonsBottom[i].alternativeMovement(0, 2000);
+			}//else
 			dragonsBottom[i].moveRed();
 			dragonsBottom[i].playerCollision();
 			dragonsBottom[i].fireballCollision();

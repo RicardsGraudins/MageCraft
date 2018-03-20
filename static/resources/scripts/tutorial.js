@@ -564,6 +564,7 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 			dragonDeath(dragon.position.x, dragon.position.y, dragon.position.z); //begin death animation
 			deathAnimation = false; //set deathAnimation back to false
 			deathAnimated = 1; //change deathAnimated from 0 to 1, no longer loops
+			gold += 10; //+10 gold per dragon
 			
 			//reposition the dragon off the map after 1 second
 			setTimeout(function() {
@@ -580,7 +581,6 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 		//if the dragon is dead and respawnTimer hits 600
 		//respawn the dragon and reset the timer
 		if (this.health <= 0 && respawnTimer == 600){
-			console.log(respawnTimer);
 			this.reset();
 			respawnTimer = 0;
 		}
@@ -904,6 +904,94 @@ function dragon(x, y, z, health, speed, sprite, spriteMove, frozen){
 			}//if
 		}//if
 	}//deflectionShieldCollision
+	
+	//alternative movement pattern for dragons instead of going for the player
+	//they simple fly across the grid to the cordinates passed
+	this.alternativeMovement = function(xVal, zVal){
+		var direction = new BABYLON.Vector3(dragon.position.x + xVal, YLIMIT, dragon.position.z + zVal);
+		direction.normalize();
+		distance = this.speed;
+		
+		//if the dragons health is greater than 0, the dragon is outside the warlock's mark zone
+		//the dragon is not frozen and hideSprite is false move towards the player
+		if (this.health > 0 && zoned == false && this.frozen == false && hideSprite == false){
+		  dragon.translate(direction, distance, BABYLON.Space.WORLD);
+		  if (dragon.position.y != YLIMIT){
+				dragon.position.y = YLIMIT;
+		  }//if
+		}//if
+		
+		//if the dragons health is greater than 0 and the dragon is inside the warlock's mark zone
+		//then reduce the speed at which the dragon travels towards the player while in the zone,
+		//intended to have the dragon be pulled towards the center of the mark slowly however the
+		//dragon hitbox simply refuses to go past the intersection point towards the center
+		else if (this.health > 0 && zoned == true){
+			//direction = new BABYLON.Vector3(warlockMark.position.x, YLIMIT, warlockMark.position.z);
+			direction = new BABYLON.Vector3(player.position.x, YLIMIT, player.position.z);
+			direction.normalize();
+			distance = 0.1;
+			dragon.translate(direction, distance, BABYLON.Space.WORLD);
+		}//else if
+		
+		//if the dragon is frozen, stop animations and don't move
+		else if (this.health > 0 && this.frozen == true){
+			this.spriteMove.stopAnimation();
+		}//else if
+		  
+		//make the sprite face right
+		if (xMove > dragon.position.x){
+		  this.spriteMove.invertU = 1;
+		}//if
+		//otherwise face left
+		else {
+		  this.spriteMove.invertU = 0;
+		}//else
+			
+		//restart the animations if unfreeze is set to true
+		if (unfreeze == true){
+			this.frozen = false;
+			this.spriteMove.playAnimation(9, 11, true, 150)
+			unfreeze = false; //set unfreeze back to false
+			this.spriteMove.size = 35; //set the size back to 35
+		}//if
+		
+		//if the burnFrostAnimation is set to true and hideSprite is set to true
+		//then pass the cordinates of this dragon to burnFrost to make the burnFrost sprite animation appear
+		//at this dragon's cordinates while it stays hidden (size = 0) for 2 seconds
+		if (burnFrostAnimation == true && hideSprite == true){
+			burnFrost(dragon.position.x, dragon.position.y, dragon.position.z);
+			this.spriteMove.size = 0;
+		}//if
+		
+		//when deathAnimation is set to true pass dragon cordinates to dragonDeath to begin the death animation
+		//once death animation has begun resposition the dragon off the map
+		if (deathAnimation == true){
+			dragonDeath(dragon.position.x, dragon.position.y, dragon.position.z); //begin death animation
+			deathAnimation = false; //set deathAnimation back to false
+			deathAnimated = 1; //change deathAnimated from 0 to 1, no longer loops
+			gold += 10; //+10 gold per dragon
+			
+			//reposition the dragon off the map after 1 second
+			setTimeout(function() {
+				dragon.setPositionWithLocalVector(new BABYLON.Vector3(1100, 21, 0)); //repositon dragon
+			}, 1000); //wait 1 second
+		}//if
+		
+		//if the dragon is dead and endless is true
+		//start incrementing the timer
+		if (this.health <= 0 && endlessMode == true){
+			respawnTimer++;
+		}//if
+		
+		//if the dragon is dead and respawnTimer hits 600
+		//respawn the dragon and reset the timer
+		if (this.health <= 0 && respawnTimer == 600){
+			this.reset();
+			respawnTimer = 0;
+		}
+		//update xMove every frame
+		xMove = dragon.position.x;
+	}//alternativeMovement
 }//dragon
 
 //dragon inherits the functions of enemy

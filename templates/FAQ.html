@@ -14,12 +14,126 @@
 		html, body {
 			background-color: black;
 		}
+		
+		p {
+			margin: 0;
+			padding: 0;
+		}
+		
+		.customDiv1 {
+			/* background-color: lime; */
+			width: 50%;
+			float: left;		
+		}
+		
+		.customDiv2 {
+			/* background-color: pink; */
+			width: 50%;
+			float: right;
+		}
+		
+		.customDiv3 {
+			/* background-color: teal; */
+			width: 50%;
+			margin-left: 25%;
+			margin-right: 25%;
+			border-style: double;
+			border-color: white;
+		}
+		
+		.customDiv4 {
+			/* background-color: pink; */
+			width: 50%;
+			float: right;
+		}
+		
+		.A {
+			color:#FFFFFF;
+			font-weight: normal;
+			font-size: 100%;
+			font-family:comic sans, comic sans ms, cursive, verdana, arial, sans-serif;
+			text-align:left;
+			word-spacing:2pt;
+			text-shadow:1px 1px 1px rgba(46,39,26,1);
+			list-style-type: none;
+			margin-left: 10%;
+			margin-right: 10%;
+		}
     </style>
 
   </head>
-  
+  <!-- the page is split into 2 divs side by side and both divs contain additional divs for Q & A -->
   <body>
-	<p class="content2"> {{ displayMessage }} </p>
+	<div class="containerTitle3">
+		<span class="txt2 anim-text-flow">Frequently Asked Questions</span>
+	</div>
+	<p class="content2" style="text-decoration:underline"> {{ displayMessage }}</p>
+	<div class="customDiv1">
+		<p class="content4" style="margin-left: 30%; margin-right: 30%; padding-top:.5%; font-weight: bold;">What are the controls?</p>
+		<div class="customDiv3">
+			<p class="A">To move the player use the WASD keys.</p>
+			<p class="A">To cast offensive spells use 1 to 6.</p>
+			<p class="A">To cast defensive spells use G and H.</p>
+			<p class="A">Once a spell is selected aim and click to cast it.</p>
+		</div>
+		<p class="content4" style="margin-left: 30%; margin-right: 30%; padding-top:2%; font-weight: bold;">Is it possible to change the keybinds?</p>
+		<div class="customDiv3">
+			<p class="A">It is currently not possible to change the keybinds but prehaps in the future this feature will be added.</p>
+		</div>
+		<p class="content4" style="margin-left: 30%; margin-right: 30%; padding-top:2%; font-weight: bold;">My FPS is extremely low how I fix this?</p>
+		<div class="customDiv3">
+			<p class="A">Currently the game is not optimised for low end devices and there is no guidelines for improving your FPS other than to wait for the optimised version.</p>
+		</div>
+		<p class="content4" style="margin-left: 30%; margin-right: 30%; padding-top:2%; font-weight: bold;">Where is multiplayer mode?</p>
+		<div class="customDiv3">
+			<p class="A">Multiplayer mode will be added at a later date. For the time being feel free to test everything out in tutorial mode.</p>
+		</div>
+		<p class="content4" style="margin-left: 30%; margin-right: 30%; padding-top:2%; font-weight: bold;">Why is the tutorial so easy?</p>
+		<div class="customDiv3">
+			<p class="A">The AI in the tutorial is not designed to be particularly difficult in order to allow the player to test out the various game concepts at a slow pace.
+			It is possible to increase the difficultly by using the chat commands.</p>
+		</div>
+		<p class="content4" style="margin-left: 30%; margin-right: 30%; padding-top:2%; font-weight: bold;">What do the chat commands do?</p>
+		<div class="customDiv3">
+			<p class="A">The chat commands (!Left, !Right, !Top, !Bot) changes the AI movement pattern to fly across the grid rather than at the player.
+			For a challenge try using 3 out of 4 commands and then running in the opposite direction of the remaining command direction i.e if !Right is the only
+			command remaining try running left.</p>
+		</div>
+	</div>
+	<div class="customDiv2">
+		<p class="content4" style="margin-left: 30%; margin-right: 30%; padding-top:.5%; font-weight: bold;">What do the spells actually do?</p>
+		<div class="customDiv3">
+			<p class="A">Fireball: is a classic mage spell that simply does damage upon collision.</p></br>
+			<p class="A">Frostbolt: inflicts damage and freezes the enemy in place for 6 seconds.</p></br>
+			<p class="A">Splitter: splits into 8 projectiles that all inflict damage.</p></br>
+			<p class="A">Recharger: inflicts damage and it's cooldown is reset on hit.</p></br>
+			<p class="A">Molten Boulder: inflicts damage to all enemies caught in its path.</p></br>
+			<p class="A">Warlock's Sigil: spawns a zone that temporarily slows down enemies.</p></br>
+			<p class="A">Deflection Shield: surrounds the caster in a bubble that blocks all damage.</p></br>
+			<p class="A">Cauterize: Heals the caster for a certain amount.</p>
+		</div>
+		<p class="content4" style="margin-left: 30%; margin-right: 30%; padding-top:2%; font-weight: bold;">How much damage does each spell inflict?</p>
+		<div class="customDiv3">
+			<p class="A">Fireball: 5 Damage.</p>
+			<p class="A">Frostbolt: 5 Damage.</p>
+			<p class="A">Splitter: 5 Damage.</p>
+			<p class="A">Splitter Projectiles: 3 Damage each.</p>
+			<p class="A">Recharger: 5 Damage.</p>
+			<p class="A">Molten Boulder: 10 Damage.</p>
+			<p class="A">Warlock's Sigil: 0 Damage - utility spell.</p>
+			<p class="A">Cauterize: Heals for either 10 or 20 health.</p>
+			<p class="A"></br>These values are not set in stone and are subject to change for multiplayer mode.</p>
+		</div>
+	</div>
+	<script type="text/javascript" src="{{ url_for('static', filename='resources/scripts/jquery_min.js') }}"></script>
+	<script type="text/javascript">
+		//Used for title
+		$('.txt2').html(function(i, html) {
+		  var chars = $.trim(html).split("");
+
+		  return '<span>' + chars.join('</span><span>') + '</span>';
+		});
+  </script>
   </body>
   
 </html>

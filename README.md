@@ -121,6 +121,9 @@ Simple commit summary for project supervisor to keep track of progress.
 42. Profile Menu, Improved Navigation & Delete Account: Replaced placeholder profile menu, improved navigation between pages such that it works on the cloud and added delete account functionality.
 43. Status Updates: Added various status updates for interactions.
 44. Edited Index Page + Chat: Updated index page to be a bit more interesting and improved the chat.
+45. Code Clean Up + Additional Documentation: Cleaned up the code and added more documentation as to how everything works.
+46. Constants + Minor Value Changes: Added constants to player_grid.js & player_ui.js to make it easier to understand and tweaked spawning/positioning of meshes.
+47. Alternative AI Movement: Added a different AI movement pattern that can be triggered using the in game chat.
 
 ## References:
 * [Flask](http://flask.pocoo.org/docs/0.12/)  

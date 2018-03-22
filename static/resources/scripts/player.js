@@ -86,23 +86,16 @@ splitterSprite6.size = 24;
 splitterSprite7.size = 24;
 fireballSprite.size = 12;
 
-//boolean to control moving animation
+//boolean to control moving animation of player
 var moving = false;
-//boolean to control fireball cooldown - can only cast once every 5 seconds
+//booleans to control every spell cooldown - can only cast the selected spell if the spell is off cooldown
 var fireballCooldown = false;
-//boolean to control frostbolt cooldown - can only cast once every 30 seconds
 var frostboltCooldown = false;
-//boolean to control splitter cooldown - can only cast once every 25 seconds
 var splitterCooldown = false;
-//boolean to control recharger cooldown - cast every 15 seconds and cooldown resets on hit
 var rechargerCooldown = false;
-//boolean to control moltonBoulder cooldown - cast only once every 20 seconds
 var moltonBoulderCooldown = false;
-//boolean to control warlock's mark cooldown - can only cast once every 40 seconds
 var warlockMarkCooldown = false;
-//boolean to control deflection shield cooldown - can only cast once every 40 seconds
 var deflectionShieldCooldown = false;
-//boolean to control cauterize cooldown - can only cast once every 40 seconds
 var cauterizeCooldown = false;
 
 //booleans to track if a certain spell is selected
@@ -115,6 +108,37 @@ var moltonBoulderSelected = false;
 var warlockMarkSelected = false;
 var deflectionShieldSelected = false;
 var cauterizeSelected = false;
+
+/* these cooldown timers are optimised for multiplayer, the idea is the player should be able to cast
+* fireball frequently and combo it with recharger, furthermore frostbolt, splitter and molten boulder
+* have medium timers while the remaining 3 spells warlock's mark, deflection shield and cauterize have
+* a longer cooldown of 40 seconds for the following reasons:
+* warlock's mark: utility spell that allows the player to very easily follow up another spell for a lot of damage e.g. 
+* warlock's mark (slow movement) -> molten boulder for a lot of damage combod with another spell e.g. recharger -> frostbolt to
+* freeze the target right after warlock's mark effect wears out -> followed up by fireball/recharger while the target is frozen for a lot of damage
+* deflection shield: is a very powerful defensive spell that blocks all incoming damage while active and can save the player from
+* devestating combos like the one mentioned above for warlock's mark, so naturally this cooldown is high enough such that the player
+* can still make clutch plays when caught in a bad situation but not as often
+* cauterize: a heal for 10 or 20 might not seem like a lot when compared to deflection shield however it can still make a significant difference
+* in a battle therefore 40 seconds seemed like the right value
+*/
+//timers for spell cooldowns, values in milliseconds
+const FIREBALL_COOLDOWN = 5000; //can only cast fireball once every 5 seconds
+const FROSTBOLT_COOLDOWN = 30000; //can only cast frostbolt once every 30 seconds
+const SPLITTER_COOLDOWN = 25000; //can only cast splitter once every 25 seconds
+const RECHARGER_COOLDOWN = 15000; //can cast recharger every 15 seconds and cooldown resets on hit
+const MOLTEN_BOULDER_COOLDOWN = 20000; //can only cast molten boulder once every 20 seconds
+const WARLOCK_MARK_COOLDOWN = 40000; //can only cast warlock's mark once every 40 seconds
+const DEFLECTION_SHIELD_COOLDOWN = 40000; //can only cast deflection shield once every 40 seconds
+const CAUTERIZE_COOLDOWN = 40000; //can only cast cauterize once every 40 seconds
+
+/* considered tweaking the cooldown values down for the tutorial in order for the player to test out
+* various spell combinations more frequently however decided against it since the player might get way
+* too used to the shorter tutorial cooldowns and once the switch from tutorial to multiplayer is made the
+* player would have to get used to the longer multiplayer cooldowns and that might make the game demotivating to play
+* - it could be interesting to add another game mode where the cooldowns are much lower and the objective would be
+* to survive waves of enemies that charge at the player and get more difficult the longer the game goes on
+*/
 
 //handles sprite animations for the player
 playerSpriteHandler = function(){
@@ -1876,7 +1900,7 @@ spellManager = function(){
 			fireballCooldown = false;
 			console.log(fireballCooldown);
 			UI.cooldownOff("fireball"); //change spell border to green
-		}, 5000); //cooldown 5 seconds	
+		}, FIREBALL_COOLDOWN); //cooldown 5 seconds	
 	}//fireballTimer
 	
 	//handles cooldown for frostbolt
@@ -1886,7 +1910,7 @@ spellManager = function(){
 			frostboltCooldown = false;
 			console.log(frostboltCooldown);
 			UI.cooldownOff("frostbolt"); //change spell border to green
-		}, 30000); //cooldown 30 seconds	
+		}, FROSTBOLT_COOLDOWN); //cooldown 30 seconds	
 	}//frostboltTimer
 	
 	//handles cooldown for splitter
@@ -1896,7 +1920,7 @@ spellManager = function(){
 			splitterCooldown = false;
 			console.log(splitterCooldown);
 			UI.cooldownOff("splitter"); //change spell border to green
-		}, 25000); //cooldown 25 seconds	
+		}, SPLITTER_COOLDOWN); //cooldown 25 seconds	
 	}//splitterTimer
 	
 	//handles cooldown for recharger
@@ -1906,7 +1930,7 @@ spellManager = function(){
 			rechargerCooldown = false;
 			console.log(rechargerCooldown);
 			UI.cooldownOff("recharger"); //change spell border to green
-		}, 15000); //cooldown 15 seconds
+		}, RECHARGER_COOLDOWN); //cooldown 15 seconds
 	}//rechargeTimer
 	
 	//handles cooldown for molton boulder
@@ -1916,7 +1940,7 @@ spellManager = function(){
 			moltonBoulderCooldown = false;
 			console.log(moltonBoulderCooldown);
 			UI.cooldownOff("moltonBoulder"); //change spell border to green
-		}, 20000); //cooldown 20 seconds	
+		}, MOLTEN_BOULDER_COOLDOWN); //cooldown 20 seconds	
 	}//moltonBoulderTimer
 	
 	//handles cooldown for warlock's mark
@@ -1926,7 +1950,7 @@ spellManager = function(){
 			warlockMarkCooldown = false;
 			console.log(warlockMarkCooldown);
 			UI.cooldownOff("warlockMark"); //change spell border to green
-		}, 40000); //cooldown 40 seconds	
+		}, WARLOCK_MARK_COOLDOWN); //cooldown 40 seconds	
 	}//warlockMarkTimer
 	
 	//handles cooldown for deflection shield
@@ -1936,7 +1960,7 @@ spellManager = function(){
 			deflectionShieldCooldown = false;
 			console.log(deflectionShieldCooldown);
 			UI.cooldownOff("deflectionShield"); //change spell border to green
-		}, 40000); //cooldown 40 seconds	
+		}, DEFLECTION_SHIELD_COOLDOWN); //cooldown 40 seconds	
 	}//deflectionShieldTimer
 	
 	//handles cooldown for cauterize
@@ -1946,7 +1970,7 @@ spellManager = function(){
 			cauterizeCooldown = false;
 			console.log(cauterizeCooldown);
 			UI.cooldownOff("cauterize"); //change spell border to green
-		}, 40000); //cooldown 40 seconds	
+		}, CAUTERIZE_COOLDOWN); //cooldown 40 seconds	
 	}//cauterizeTimer
 }//spellManager
 

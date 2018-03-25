@@ -11,7 +11,29 @@ The following image depicts the proposed technologies to be used from the Octobe
 </p>
 
 ## What is MageCraft:
-MageCraft is an arcade game built on the StarCraft 2 engine by Team Syntax in 2011. It is a multiplayer game where each player controls a mage with the objective of being the last remaining mage in a free for all mode. There are a variety of spells to chose from and certain spells synergize/combine for a more devestating spell, however each player is limited to 4 offensive spells and 2 defensive spells - once picked, the spells are locked for the remainder of the match therefore each player should consider carefully which spells to take in order to counter the opponent/s and achieve victory. Visit the MageCraft FAQ page for additional information on how to play and the game controls.
+MageCraft is an arcade game built on the StarCraft 2 engine by Team Syntax in 2011. It is a multiplayer game where each player controls a mage with the objective of being the last remaining mage in a free for all mode. There are a variety of spells to choose from and certain spells synergize/combine for a more devestating spell, however each player is limited to 6 offensive spells and 2 defensive spells - once picked, the spells are locked for the remainder of the match therefore each player should consider carefully which spells to take in order to counter the opponent/s and achieve victory. Visit the MageCraft FAQ page for additional information on how to play and the game controls.
+
+## Gameplay Demo @ Cloud:
+[![Link to cloud](https://github.com/RicardsGraudins/MageCraft/blob/master/static/resources/images/documentation/Cloud_Link.gif)](https://magecraft.herokuapp.com/)  
+
+<p align="center">
+:video_game:
+  <strong>
+To play the game either click the above gif or this <a href="https://magecraft.herokuapp.com/">link</a>.
+  </strong>
+:video_game:
+</p>
+<p align="center">
+  <strong>
+    If theres any issues take a look at this <a href="#Firefox">section</a> and the <a href="https://magecraft.herokuapp.com/FAQ">FAQ</a>.
+  </strong>
+</p>
+
+<p align="center">
+  <i>
+Alternatively you can view a short gameplay demo versus AI by clicking this <a href="https://www.youtube.com/watch?v=oAvB4e6fvr4">link</a>.
+  </i>
+</p>
 
 ## Technologies Used:
 This section briefly describes the technologies used in this project and the purpose they serve. If you would like to run the project locally the majority of the technologies mentioned will need to be installed - take a look at this [section](#Installation) for a quick step by step guide on how to run the project.
@@ -42,6 +64,15 @@ SocketIO is a JavaScript library for realtime web applications. It enables realt
 ## BabylonJS:
 BabylonJS is a complete JavaScript framework for building 3D games with HTML 5 and WebGL. A lot of browser games can be built simply using JavaScript however there are limitations to this approach and in order to reduce the difficultly of drawing more complex shapes and animations we will be using this library. Note, since this course does not cover graphic design or WebGL the visuals will most likely be subpar. 
 
+Used the following extensions:
+- [Babylon GUI](https://github.com/BabylonJS/Babylon.js/tree/master/gui)
+- [Babylon Inspector Bundle](https://github.com/BabylonJS/Babylon.js/blob/master/dist/inspector/babylon.inspector.bundle.js)
+- [Fire Material](https://github.com/BabylonJS/Babylon.js/blob/master/dist/preview%20release/materialsLibrary/babylon.fireMaterial.js)
+- [Fire Procedural Texture](https://github.com/BabylonJS/Babylon.js/blob/master/dist/preview%20release/proceduralTexturesLibrary/babylon.fireProceduralTexture.js)
+- [Water Material](https://github.com/BabylonJS/Babylon.js/blob/master/dist/preview%20release/materialsLibrary/babylon.waterMaterial.js)
+
+If you would like to know additional information about these extensions please view the following [link](https://doc.babylonjs.com/extensions).
+
 ## Heroku:  
 Heroku is a cloud platform as a service (PaaS) supporting several programming languages that is used as a web application deployment model. Heroku, one of the first cloud platforms, has been in development since June 2007, when it supported only the Ruby programming language, but now supports Java, Node.js, Scala, Clojure, Python, PHP, and Go. For this reason, Heroku is said to be a polyglot platform as it lets the developer build, run and scale applications in a similar manner across all the languages.
 
@@ -53,9 +84,12 @@ There is a Flask extension for bcrypt([Flask-Bcrypt](https://flask-bcrypt.readth
 ## CannonJS:
 CannonJS is an open source JavaScript 3D physics engine. Unlike other physics engine libraries ported from C++ to JavaScript, CannonJS was written in JavaScript from the start and can take advantage of its features. When compared to other engines it does lack in features however it is easier to get into and more comprehensible than the alternatives which makes it the perfect physics engine for this project since we are not focusing on complicated concepts but rather implementing some really basic ones.
 
-## Bugs - Firefox Version 58:
+## Bugs - Firefox Version 58: <a name="Firefox"></a>
 The purpose of the bugs folder is to demonstrate the current bugs with BabylonJS when using Firefox version 58 that I have encountered. To view the bugs open a html file in Firefox 58 and a different browser for comparison. In the interest of providing the same game experience I have went out of my way to make the game run in a similar manner on Firefox 58 however there are still a few differences which all arise from the manner in which Firefox handles materials i.e the first change(e.g. color/alpha) applied to one material is applied to any and every other material in the game.
 - Do **not** use Firefox version 58 for this game.
+
+## Important: Resolution
+The game is currently optimized for 1920 x 1080 resolution, if you're using a smaller resolution some of the game will most likely be out of place, specifically the menus. To get around this limitation use chrome, press f12 to access the developer tools and press the toggle device toolbar button which is the second top left icon to automatically scale down the canvas so the entire game is visible. The canvas size can further be altered by pulling on the edge of the toolbar or by using input fields at the top to change the size. The game hasn’t been tested on a resolution above 1920 x 1080.
 
 ## How to run locally: <a name="Installation"></a>
 1. Have the following **prerequisites** installed:  
@@ -124,6 +158,9 @@ Simple commit summary for project supervisor to keep track of progress.
 45. Code Clean Up + Additional Documentation: Cleaned up the code and added more documentation as to how everything works.
 46. Constants + Minor Value Changes: Added constants to player_grid.js & player_ui.js to make it easier to understand and tweaked spawning/positioning of meshes.
 47. Alternative AI Movement: Added a different AI movement pattern that can be triggered using the in game chat.
+48. Updated FAQ: Updated the FAQ page to help new players.
+49. Spell Cooldown Constants: Added constants to player.js for spell cooldowns and relevant documentation.
+50. Cloud: Uploaded the project to Heroku and added some code to demonstrate how it runs on the cloud.
 
 ## References:
 * [Flask](http://flask.pocoo.org/docs/0.12/)  

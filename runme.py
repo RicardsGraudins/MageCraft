@@ -22,8 +22,9 @@ app.config['RECAPTCHA_PRIVATE_KEY'] = '6LfeojMUAAAAACJFOQTATc4oawWKHsdr9qv5L8Aa'
 #Temporarily disabling recaptcha
 app.config['TESTING'] = False
 #Loading settings for flask-mail from file config.cfg
-#Note config.cfg file is not supplied, view github readme for additional information
 app.config.from_pyfile('config.cfg')
+
+#Note config.cfg and the various keys should be kept hidden however for the purposes for marking & testing this project they're left exposed for the time being
 
 #Reference variables
 socketio = SocketIO(app)

@@ -8,6 +8,7 @@ from flask_mail import Mail, Message
 import bcrypt
 import random
 import string
+import os
 
 app = Flask(__name__)
 #Setting CSRF encryption key
@@ -21,6 +22,7 @@ app.config['RECAPTCHA_PRIVATE_KEY'] = '6LfeojMUAAAAACJFOQTATc4oawWKHsdr9qv5L8Aa'
 #Temporarily disabling recaptcha
 app.config['TESTING'] = False
 #Loading settings for flask-mail from file config.cfg
+#Note config.cfg file is not supplied, view github readme for additional information
 app.config.from_pyfile('config.cfg')
 
 #Reference variables
@@ -127,7 +129,7 @@ def changePassword():
 					displayMessage = "Password sucessfully changed, you can now login using your new password."
 					userEmail = user['email']
 					emailToString = str(userEmail)
-					emailMessage = Message(body = 'Your password has been changed.\nIf this was not you follow this link to reset your password: ',
+					emailMessage = Message(body = 'Your password has been changed.\nIf this was not you follow this link to reset your password: https://magecraft.herokuapp.com/resetPassword',
 					subject = 'Changed Password', sender = 'testing984566@gmail.com', recipients = [emailToString])
 					mail.send(emailMessage)
 					session.pop('username', None)
@@ -210,7 +212,10 @@ def upload(gold):
 	emit('uploadResult', 'failed')
 
 if __name__ == "__main__":
-	#Run the application with debug enabled
+	#Run the application locally with debug enabled
 	#app.run(debug=True)
-	#Run the application using socketio
-	socketio.run(app)
+	#Run the application locally using socketio
+	#socketio.run(app)
+	#Cloud settings @ heroku
+	port = int(os.environ.get("PORT", 5000))
+	socketio.run(app, host='0.0.0.0', port=port)

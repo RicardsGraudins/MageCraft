@@ -17,8 +17,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 app.config['MONGO_DBNAME'] = 'magecraft_login'
 app.config['MONGO_URI'] = 'mongodb://Richard:987654321@ds040637.mlab.com:40637/magecraft_login'
 #Setting Google recaptcha keys
-app.config['RECAPTCHA_PUBLIC_KEY'] = '6LfeojMUAAAAABjPzNB2ylVl-YZ0AmLG7-vdhB9F'
-app.config['RECAPTCHA_PRIVATE_KEY'] = '6LfeojMUAAAAACJFOQTATc4oawWKHsdr9qv5L8Aa'
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeRzlMUAAAAAGjrl34OpUnDoyFj14J-LWqxIwtx'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeRzlMUAAAAAJ1SGN9g0VIzVHC58Nxly6xriMt-'
 #Temporarily disabling recaptcha
 app.config['TESTING'] = False
 #Loading settings for flask-mail from file config.cfg
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 	#Run the application locally with debug enabled
 	#app.run(debug=True)
 	#Run the application locally using socketio
-	socketio.run(app)
+	#socketio.run(app)
 	#Cloud settings @ heroku
-	#port = int(os.environ.get("PORT", 5000))
-	#socketio.run(app, host='0.0.0.0', port=port)
+	port = int(os.environ.get("PORT", 5000))
+	socketio.run(app, host='0.0.0.0', port=port)

@@ -216,7 +216,7 @@ if __name__ == "__main__":
 	#Run the application locally with debug enabled
 	#app.run(debug=True)
 	#Run the application locally using socketio
-	#socketio.run(app)
+	socketio.run(app)
 	#Cloud settings @ heroku
-	port = int(os.environ.get("PORT", 5000))
-	socketio.run(app, host='0.0.0.0', port=port)
+	#port = int(os.environ.get("PORT", 5000))
+	#socketio.run(app, host='0.0.0.0', port=port)
